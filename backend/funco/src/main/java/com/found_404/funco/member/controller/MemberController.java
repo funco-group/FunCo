@@ -18,12 +18,18 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	private final MemberService memberService;
 
-	// 마이 페이지 조회
+	// 유저 페이지 조회
 	@GetMapping("/{memberId}")
 	public ResponseEntity<MemberResponse> getMember(@AuthMemberId Long loginMemberId,
 													@PathVariable Long memberId
 	) {
 		return ResponseEntity.ok(memberService.readMember(loginMemberId, memberId));
+	}
+
+	// 마이 페이지 조회
+	@GetMapping("/mypage")
+	public ResponseEntity<MemberResponse> getMember(@AuthMemberId Long memberId) {
+		return ResponseEntity.ok(memberService.readMember(memberId));
 	}
 
 	// 닉네임 변경

@@ -56,6 +56,29 @@ public class MemberService {
 			.build();
 	}
 
+	@Transactional(readOnly = true)
+	public MemberResponse readMember(Long memberId) {
+		List<HoldingCoinsDto> holdingCoinsDto = memberRepository.findHoldingCoinsByMemberId(memberId); // 보유 코인 정보
+		MemberInfo memberInfo = memberRepository.findMemberInfoByMemberId(memberId);
+		ZSetOperations<String, Object> zSetOperations = rankZSetRedisTemplate.opsForZSet();
+
+		return MemberResponse.builder()
+			.memberId(memberId)
+			.nickname(memberInfo.nickname())
+			.profileUrl(memberInfo.profileUrl())
+			.introduction(memberInfo.introduction())
+			.assetRank(getRankingByMemberId(memberId, ASSET, zSetOperations))
+			.followingCashRank(getRankingByMemberId(memberId, FOLLOWER_CASH, zSetOperations))
+			.memberAssetInfo(MemberAssetInfo.builder()
+				.cash(memberInfo.cash())
+				.coins(holdingCoinsDto)
+				.build())
+			.topCoins(memberRepository.findRecentTradedCoinByMemberId(memberId))
+			.followerCash(memberRepository.getFollowerCashByMemberId(memberId))
+			.followingCash(memberRepository.getFollowingCashByMemberId(memberId))
+			.build();
+	}
+
 	private Long getRankingByMemberId(Long memberId, RankType rankType, ZSetOperations<String, Object> zSetOperations) {
 		Set<ZSetOperations.TypedTuple<Object>> typedTuples = zSetOperations.reverseRangeWithScores(rankType.toString(),
 			0, -1);
