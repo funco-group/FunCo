@@ -22,7 +22,6 @@ import {
 
 function Home() {
   const [nowTabNumber, setNowTabNumber] = useState(0)
-  // const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
     const timer = setTimeout(() => {
