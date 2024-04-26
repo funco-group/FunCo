@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
-import buttonImage from '@/../public/icon/eclipse-button.svg'
+import buttonImage from '@/../public/icon/eclipse-button.png'
+import Image from 'next/image'
 import {
   HomePageButton,
   HomePageButtonContentDiv,
@@ -47,14 +48,18 @@ function HomePageButtonComponent({
 
   return (
     <HomePageButton
-      $active={nowTabNumber === number}
       direction={buttonList[number].direction}
       number={number}
       onMouseEnter={() => handleSetTabNumber(number)}
     >
       <HomePageButtonFlexDiv direction={buttonList[number].direction}>
         {buttonList[number].direction === 'left' && (
-          <img src={buttonImage} alt="home-button" />
+          <Image
+            src={buttonImage.src}
+            alt="home-button"
+            width={nowTabNumber === number ? 40 : 20}
+            height={nowTabNumber === number ? 40 : 20}
+          />
         )}
         <div>
           <HomePageButtonTitleDiv>
@@ -66,7 +71,12 @@ function HomePageButtonComponent({
           </HomePageButtonContentDiv>
         </div>
         {buttonList[number].direction === 'right' && (
-          <img src={buttonImage} alt="home-button" />
+          <Image
+            src={buttonImage.src}
+            alt="home-button"
+            width={nowTabNumber === number ? 40 : 20}
+            height={nowTabNumber === number ? 40 : 20}
+          />
         )}
       </HomePageButtonFlexDiv>
     </HomePageButton>
