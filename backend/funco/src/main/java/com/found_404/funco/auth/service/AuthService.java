@@ -50,13 +50,11 @@ public class AuthService {
 		}
 
 		// redis oauthAccessToken 저장
+		// 추후 로그아웃 구현 시 필요할 수 있음
 		HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
 		hashOperations.put(dto.member().getOauthId().getOauthServerId(), "oauthAccessToken", dto.accessToken());
 
 		String refreshToken = tokenService.createRefreshToken(member);
-		Cookie cookie = new Cookie("refreshToken", refreshToken);
-		cookie.setHttpOnly(true);
-		cookie.setPath("/");
 		// 기존의 쿠키 설정을 문자열로 변환
 		String cookieValue = "refreshToken=" + refreshToken +
 			"; HttpOnly; Secure; Path=/; SameSite=None";
@@ -73,23 +71,4 @@ public class AuthService {
 				.build();
 	}
 
-	private String createNickname() {
-		Random rd = new Random();
-		StringBuilder sb;
-
-		// 중복된 닉네임이 없을 때까지 반복
-		do {
-			sb = new StringBuilder();
-
-			for (int i = 0; i < 4; i++) {
-				sb.append((char)('a' + rd.nextInt(26)));
-			}
-
-			for (int i = 0; i < 4; i++) {
-				sb.append(rd.nextInt(10));
-			}
-		} while (memberRepository.existsByNickname(sb.toString()));
-
-		return sb.toString();
-	}
 }
