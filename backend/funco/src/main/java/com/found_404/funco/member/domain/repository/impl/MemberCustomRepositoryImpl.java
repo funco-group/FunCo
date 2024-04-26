@@ -2,9 +2,11 @@ package com.found_404.funco.member.domain.repository.impl;
 
 import static com.found_404.funco.follow.domain.QFollow.*;
 import static com.found_404.funco.member.domain.QMember.*;
+import static com.found_404.funco.portfolio.domain.QSubscribe.*;
 import static com.found_404.funco.trade.domain.QHoldingCoin.*;
 import static com.found_404.funco.trade.domain.QTrade.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,7 @@ import com.found_404.funco.trade.dto.HoldingCoinsDto;
 import com.found_404.funco.trade.dto.QHoldingCoinsDto;
 import com.found_404.funco.trade.dto.QRecentTradedCoin;
 import com.found_404.funco.trade.dto.RecentTradedCoin;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -35,10 +38,28 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
 	}
 
 	@Override
-	public MemberInfo findMemberInfoByMemberId(Long memberId) {
+	public MemberInfo findMyInfoByMemberId(Long memberId) {
 		return jpaQueryFactory
 			.select(new QMemberInfo(member.nickname, member.profileUrl, member.introduction, member.cash))
 			.from(member)
+			.where(member.id.eq(memberId))
+			.fetchFirst();
+	}
+
+	public MemberInfo findUserInfoByMemberId(Long memberId) {
+		CaseBuilder caseBuilder = new CaseBuilder();
+		return jpaQueryFactory
+			.select(new QMemberInfo(member.id, member.nickname, member.profileUrl, member.introduction, member.cash,
+				caseBuilder.when(member.portfolioStatus.stringValue().eq("PUBLIC")).then("public")
+					.when(member.portfolioStatus.stringValue().eq("PRIVATE").and(subscribe.id.isNull())).then("private")
+					.when(member.portfolioStatus.stringValue()
+						.eq("PRIVATE")
+						.and(subscribe.id.isNotNull())
+						.and(subscribe.expiredAt.after(
+							LocalDateTime.now()))).then("subscribe")
+					.otherwise("private").as("portfolioStatus"), member.portfolioPrice))
+			.from(subscribe)
+			.rightJoin(member).on(subscribe.toMember.id.eq(member.id))
 			.where(member.id.eq(memberId))
 			.fetchFirst();
 	}
