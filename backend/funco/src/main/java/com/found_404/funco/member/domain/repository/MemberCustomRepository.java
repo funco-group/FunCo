@@ -21,4 +21,5 @@ public interface MemberCustomRepository {
 
 	List<RecentTradedCoin> findRecentTradedCoinByMemberId(Long memberId);
 
+	Long findWearingBadgeByMemberId(Long memberId);
 }

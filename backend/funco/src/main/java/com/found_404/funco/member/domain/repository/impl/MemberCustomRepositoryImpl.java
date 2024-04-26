@@ -1,5 +1,6 @@
 package com.found_404.funco.member.domain.repository.impl;
 
+import static com.found_404.funco.badge.domain.QWearingBadge.*;
 import static com.found_404.funco.follow.domain.QFollow.*;
 import static com.found_404.funco.member.domain.QMember.*;
 import static com.found_404.funco.portfolio.domain.QSubscribe.*;
@@ -102,5 +103,14 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
 			.orderBy(trade.createdAt.desc())
 			.limit(3)
 			.fetch();
+	}
+
+	@Override
+	public Long findWearingBadgeByMemberId(Long memberId) {
+		return jpaQueryFactory
+			.select(wearingBadge.id)
+			.from(wearingBadge)
+			.where(wearingBadge.id.eq(memberId))
+			.fetchFirst();
 	}
 }
