@@ -1,3 +1,3 @@
-export default function Home() {
-  return <div>main</div>
-}
+import Home from '@/containers/HomeContainer'
+
+export default Home
