@@ -17,7 +17,8 @@ import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.dto.MemberAssetInfo;
 import com.found_404.funco.member.dto.MemberInfo;
-import com.found_404.funco.member.dto.response.MemberResponse;
+import com.found_404.funco.member.dto.response.MyInfoResponse;
+import com.found_404.funco.member.dto.response.UserInfoResponse;
 import com.found_404.funco.member.exception.MemberErrorCode;
 import com.found_404.funco.member.exception.MemberException;
 import com.found_404.funco.rank.domain.type.RankType;
@@ -33,12 +34,12 @@ public class MemberService {
 	private final RedisTemplate<String, Object> rankZSetRedisTemplate;
 
 	@Transactional(readOnly = true)
-	public MemberResponse readMember(Long loginMemberId, Long memberId) {
+	public UserInfoResponse readMember(Long loginMemberId, Long memberId) {
 		List<HoldingCoinsDto> holdingCoinsDto = memberRepository.findHoldingCoinsByMemberId(memberId); // 보유 코인 정보
-		MemberInfo memberInfo = memberRepository.findMemberInfoByMemberId(memberId);
+		MemberInfo memberInfo = memberRepository.findUserInfoByMemberId(memberId);
 		ZSetOperations<String, Object> zSetOperations = rankZSetRedisTemplate.opsForZSet();
 
-		return MemberResponse.builder()
+		return UserInfoResponse.builder()
 			.memberId(memberId)
 			.nickname(memberInfo.nickname())
 			.profileUrl(memberInfo.profileUrl())
@@ -53,16 +54,19 @@ public class MemberService {
 			.followerCash(memberRepository.getFollowerCashByMemberId(memberId))
 			.followingCash(memberRepository.getFollowingCashByMemberId(memberId))
 			.isFollow(memberRepository.isFollowedByMemberId(loginMemberId, memberId))
+			.portfolioStatus(memberInfo.portfolioStatus())
+			.portfolioPrice(memberInfo.portfolioPrice())
+			.badgeId(memberRepository.findWearingBadgeByMemberId(memberId))
 			.build();
 	}
 
 	@Transactional(readOnly = true)
-	public MemberResponse readMember(Long memberId) {
+	public MyInfoResponse readMember(Long memberId) {
 		List<HoldingCoinsDto> holdingCoinsDto = memberRepository.findHoldingCoinsByMemberId(memberId); // 보유 코인 정보
-		MemberInfo memberInfo = memberRepository.findMemberInfoByMemberId(memberId);
+		MemberInfo memberInfo = memberRepository.findMyInfoByMemberId(memberId);
 		ZSetOperations<String, Object> zSetOperations = rankZSetRedisTemplate.opsForZSet();
 
-		return MemberResponse.builder()
+		return MyInfoResponse.builder()
 			.memberId(memberId)
 			.nickname(memberInfo.nickname())
 			.profileUrl(memberInfo.profileUrl())
@@ -76,6 +80,7 @@ public class MemberService {
 			.topCoins(memberRepository.findRecentTradedCoinByMemberId(memberId))
 			.followerCash(memberRepository.getFollowerCashByMemberId(memberId))
 			.followingCash(memberRepository.getFollowingCashByMemberId(memberId))
+			.badgeId(memberRepository.findWearingBadgeByMemberId(memberId))
 			.build();
 	}
 
