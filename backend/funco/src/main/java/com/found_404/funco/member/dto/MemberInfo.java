@@ -10,7 +10,9 @@ public record MemberInfo(
 	String nickname,
 	String profileUrl,
 	String introduction,
-	Long cash
+	Long cash,
+	String portfolioStatus,
+	Long portfolioPrice
 ) {
 	@QueryProjection
 	public MemberInfo(Long id, String nickname, String profileUrl) {
@@ -22,11 +24,21 @@ public record MemberInfo(
 		this(null, nickname, profileUrl, introduction, cash);
 	}
 
+	@QueryProjection
 	public MemberInfo(Long id, String nickname, String profileUrl, String introduction, Long cash) {
+		this(id, nickname, profileUrl, introduction, cash, null, null);
+	}
+
+	@QueryProjection
+	public MemberInfo(Long id, String nickname, String profileUrl, String introduction, Long cash,
+		String portfolioStatus,
+		Long portfolioPrice) {
 		this.id = id;
 		this.nickname = nickname;
 		this.profileUrl = profileUrl;
 		this.introduction = introduction;
 		this.cash = cash;
+		this.portfolioStatus = portfolioStatus;
+		this.portfolioPrice = portfolioPrice;
 	}
 }
