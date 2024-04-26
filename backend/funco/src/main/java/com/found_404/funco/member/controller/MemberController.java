@@ -27,15 +27,16 @@ public class MemberController {
 	// 유저 페이지 조회
 	@GetMapping("/{memberId}")
 	public ResponseEntity<UserInfoResponse> getMember(
+		@AuthMemberId Long loginMemberId,
 		@PathVariable Long memberId
 	) {
-		return ResponseEntity.ok(memberService.readMember(2L, memberId));
+		return ResponseEntity.ok(memberService.readMember(loginMemberId, memberId));
 	}
 
 	// 마이 페이지 조회
 	@GetMapping("/mypage")
-	public ResponseEntity<MyInfoResponse> getMember() {
-		return ResponseEntity.ok(memberService.readMember(1L));
+	public ResponseEntity<MyInfoResponse> getMember(@AuthMemberId Long memberId) {
+		return ResponseEntity.ok(memberService.readMember(memberId));
 	}
 
 	// 닉네임 변경
