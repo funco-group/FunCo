@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from 'react'
+import buttonImage from '@/../public/icon/eclipse-button.svg'
 import {
   HomePageButton,
   HomePageButtonContentDiv,
   HomePageButtonFlexDiv,
   HomePageButtonTitleDiv,
 } from './HomePageButtonComponent.styled'
-import buttonImage from '@/assets/icon/eclipse-button.svg'
 
 interface HomePageButtonComponentProps {
   number: number
