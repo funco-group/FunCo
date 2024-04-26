@@ -1,7 +1,6 @@
 package com.found_404.funco.auth.service;
 
-import java.util.Random;
-
+import com.found_404.funco.auth.dto.response.TokenResponse;
 import com.found_404.funco.notification.service.NotificationService;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,7 +15,7 @@ import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.domain.type.MemberStatus;
 
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -69,6 +68,13 @@ public class AuthService {
 				.accessToken(tokenService.createToken(member))
 				.unReadCount(notificationService.getUnReadCount(member.getId()))
 				.build();
+	}
+
+	public TokenResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
+
+		// 유효하다면 accessToken 재발급
+		// 기존 코드 Refactoring 필요
+		return tokenService.reissueAccessToken(request, response);
 	}
 
 }
