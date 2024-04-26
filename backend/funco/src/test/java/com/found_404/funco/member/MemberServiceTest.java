@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.dto.MemberInfo;
+import com.found_404.funco.member.dto.response.MyInfoResponse;
 import com.found_404.funco.member.dto.response.UserInfoResponse;
 import com.found_404.funco.member.service.MemberService;
 import com.found_404.funco.trade.dto.HoldingCoinsDto;
@@ -94,4 +95,50 @@ public class MemberServiceTest {
 		assertEquals(1L, userInfoResponse.badgeId());
 	}
 
+	@Test
+	@Transactional(readOnly = true)
+	@DisplayName("내 정보 조회 성공")
+	void readMyInfoSuccess() {
+		//given
+		Long memberId = 1L;
+		MemberInfo memberInfo = MemberInfo.builder()
+			.nickname("sunju")
+			.profileUrl("https")
+			.introduction("저만 따라오세요")
+			.cash(100000L)
+			.portfolioStatus("public")
+			.portfolioPrice(500000L)
+			.build();
+
+		List<HoldingCoinsDto> holdingCoins = Arrays.asList(
+			new HoldingCoinsDto("KRW-BTC", 0.00002),
+			new HoldingCoinsDto("KRW-ETH", 0.001)
+		);
+
+		List<RecentTradedCoin> recentTradedCoins = Arrays.asList(
+			new RecentTradedCoin("KRW-BTC", LocalDateTime.now()),
+			new RecentTradedCoin("KRW-ETH", LocalDateTime.now())
+		);
+
+		given(memberRepository.findHoldingCoinsByMemberId(memberId)).willReturn(holdingCoins);
+		given(memberRepository.findMyInfoByMemberId(memberId)).willReturn(memberInfo);
+		given(memberRepository.findRecentTradedCoinByMemberId(memberId)).willReturn(recentTradedCoins);
+		given(memberRepository.getFollowerCashByMemberId(memberId)).willReturn(50000L);
+		given(memberRepository.getFollowingCashByMemberId(memberId)).willReturn(60000L);
+		given(memberRepository.findWearingBadgeByMemberId(memberId)).willReturn(1L);
+
+		// when
+		MyInfoResponse myInfoResponse = memberService.readMember(memberId);
+
+		// then
+		assertNotNull(myInfoResponse);
+		assertEquals(memberId, myInfoResponse.memberId());
+		assertEquals("sunju", myInfoResponse.nickname());
+		assertEquals("https", myInfoResponse.profileUrl());
+		assertEquals("저만 따라오세요", myInfoResponse.introduction());
+		assertEquals(2, myInfoResponse.topCoins().size());
+		assertEquals(50000L, myInfoResponse.followerCash());
+		assertEquals(60000L, myInfoResponse.followingCash());
+		assertEquals(1L, myInfoResponse.badgeId());
+	}
 }
