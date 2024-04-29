@@ -48,8 +48,7 @@ public class PortfolioServiceTest {
 		portfolioService.updatePortfolioStatus(memberId, portfolioStatusRequest);
 
 		// then
-		verify(member).updatePortfolioStatus(PortfolioStatusType.PRIVATE);
-		verify(member).updatePortfolioPrice(30000L);
+		verify(member).updatePortfolioStatus(PortfolioStatusType.PRIVATE, 30000L);
 	}
 
 	@Test

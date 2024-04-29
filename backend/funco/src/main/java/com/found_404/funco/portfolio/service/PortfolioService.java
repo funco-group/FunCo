@@ -23,7 +23,7 @@ public class PortfolioService {
 			.orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 
 		member.updatePortfolioStatus(
-			PortfolioStatusType.valueOf(portfolioStatusRequest.portfolioStatus().toUpperCase()));
-		member.updatePortfolioPrice(portfolioStatusRequest.portfolioPrice());
+			PortfolioStatusType.valueOf(portfolioStatusRequest.portfolioStatus().toUpperCase()),
+			portfolioStatusRequest.portfolioPrice());
 	}
 }
