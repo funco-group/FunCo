@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from 'react'
-import buttonImage from '@/../public/icon/eclipse-button.png'
 import Image from 'next/image'
 import {
   HomePageButton,
@@ -46,36 +45,38 @@ function HomePageButtonComponent({
     setNowTabNumber(num)
   }
 
+  const isActive = nowTabNumber === number
+
   return (
     <HomePageButton
       direction={buttonList[number].direction}
-      number={number}
+      $number={number}
       onMouseEnter={() => handleSetTabNumber(number)}
     >
       <HomePageButtonFlexDiv direction={buttonList[number].direction}>
         {buttonList[number].direction === 'left' && (
           <Image
-            src={buttonImage.src}
+            src="/icon/eclipse-button.png"
             alt="home-button"
-            width={nowTabNumber === number ? 40 : 20}
-            height={nowTabNumber === number ? 40 : 20}
+            width={isActive ? 40 : 20}
+            height={isActive ? 40 : 20}
           />
         )}
         <div>
           <HomePageButtonTitleDiv>
             {buttonList[number].title}
           </HomePageButtonTitleDiv>
-          <HomePageButtonContentDiv $active={nowTabNumber === number}>
+          <HomePageButtonContentDiv $active={isActive}>
             <div>{buttonList[number].content[0]}</div>
             <div>{buttonList[number].content[1]}</div>
           </HomePageButtonContentDiv>
         </div>
         {buttonList[number].direction === 'right' && (
           <Image
-            src={buttonImage.src}
+            src="/icon/eclipse-button.png"
             alt="home-button"
-            width={nowTabNumber === number ? 40 : 20}
-            height={nowTabNumber === number ? 40 : 20}
+            width={isActive ? 40 : 20}
+            height={isActive ? 40 : 20}
           />
         )}
       </HomePageButtonFlexDiv>
