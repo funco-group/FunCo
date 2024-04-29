@@ -1,5 +1,6 @@
 package com.found_404.funco.portfolio;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.Optional;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.domain.type.PortfolioStatusType;
+import com.found_404.funco.member.exception.MemberErrorCode;
+import com.found_404.funco.member.exception.MemberException;
 import com.found_404.funco.portfolio.dto.request.PortfolioStatusRequest;
 import com.found_404.funco.portfolio.service.PortfolioService;
 
@@ -49,4 +52,28 @@ public class PortfolioServiceTest {
 		verify(member).updatePortfolioPrice(30000L);
 	}
 
+	@Test
+	@Transactional
+	@DisplayName("포트폴리오 공개 여부 수정 실패")
+	void updatePortfolioStatusFail() {
+		// given
+		Long memberId = 1L;
+
+		PortfolioStatusRequest portfolioStatusRequest = PortfolioStatusRequest.builder()
+			.portfolioStatus("private")
+			.portfolioPrice(30000L)
+			.build();
+
+		given(memberRepository.findById(memberId)).willReturn(Optional.empty());
+
+		// when
+		MemberException exception = assertThrows(MemberException.class, () ->
+			portfolioService.updatePortfolioStatus(memberId, portfolioStatusRequest)
+		);
+
+		// then
+		assertEquals(exception.getErrorCode(), MemberErrorCode.NOT_FOUND_MEMBER.name());
+		assertEquals(exception.getHttpStatus(), MemberErrorCode.NOT_FOUND_MEMBER.getHttpStatus());
+		assertEquals(exception.getMessage(), MemberErrorCode.NOT_FOUND_MEMBER.getErrorMsg());
+	}
 }
