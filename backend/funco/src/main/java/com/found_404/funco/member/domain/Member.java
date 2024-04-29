@@ -112,6 +112,11 @@ public class Member extends BaseEntity {
 		this.introduction = introduction;
 	}
 
+	public void updatePortfolioStatus(PortfolioStatusType portfolioStatus, Long portfolioPrice) {
+		this.portfolioStatus = portfolioStatus;
+		this.portfolioPrice = portfolioPrice;
+	}
+
 	public void withdraw() {
 		this.status = MemberStatus.WITHDRAW;
 	}
