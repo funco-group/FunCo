@@ -8,7 +8,7 @@ import com.found_404.funco.trade.dto.RecentTradedCoin;
 import lombok.Builder;
 
 @Builder
-public record MemberResponse(
+public record UserInfoResponse(
 	Long memberId,
 	String nickname,
 	String profileUrl,
@@ -19,6 +19,9 @@ public record MemberResponse(
 	List<RecentTradedCoin> topCoins,
 	Long followingCash,
 	Long followerCash,
-	Boolean isFollow
+	Boolean isFollow,
+	String portfolioStatus,
+	Long portfolioPrice,
+	Long badgeId
 ) {
 }
