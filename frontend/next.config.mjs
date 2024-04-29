@@ -12,6 +12,20 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/history',
+        destination: '/history/follow',
+        permanent: false,
+      },
+      {
+        source: '/history/follow',
+        destination: '/history/follow/following',
+        permanent: false,
+      },
+    ]
+  },
 }
 
 export default nextConfig
