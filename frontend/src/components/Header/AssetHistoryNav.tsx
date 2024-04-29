@@ -11,7 +11,7 @@ interface NavLinkProps {
 
 function AssetHistoryNav({ path, name }: NavLinkProps) {
   const nowTabName = usePathname()
-  const isActive = nowTabName === path.split('/')[1]
+  const isActive = nowTabName === path
 
   const { onLoginAlertModal } = useLoginAlertModalState()
   const user = useRecoilValue(userState)
