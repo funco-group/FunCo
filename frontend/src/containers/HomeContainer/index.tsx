@@ -2,10 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import HomePageButtonComponent from '@/components/Home/HomePageButtonComponent'
-import preview0 from '@/../public/image/preview0.png'
-import preview1 from '@/../public/image/preview1.png'
-import preview2 from '@/../public/image/preview2.png'
-import preview3 from '@/../public/image/preview3.png'
 import {
   HomePageColumnGridDiv,
   HomePageFlexDiv,
@@ -33,13 +29,11 @@ function Home() {
     }
   }, [nowTabNumber])
 
-  const bgList = [preview0, preview1, preview2, preview3]
-
   return (
     <Background>
       <Content>
         <TextDiv>
-          <MainTextDiv>가상 모의투자 플랫폼</MainTextDiv>
+          <MainTextDiv>가상화폐 모의투자 플랫폼</MainTextDiv>
           <SubTextDiv>
             뻔하게 투자하지 않고 <span>FUN</span>하게 투자
           </SubTextDiv>
@@ -65,7 +59,7 @@ function Home() {
           <PreviewDiv>
             <PreviewInnerDiv>
               <PreviewImage
-                src={bgList[nowTabNumber].src}
+                src={`/image/preview${nowTabNumber}.png`}
                 alt="home-bg"
                 style={{ opacity: 1 }}
               />

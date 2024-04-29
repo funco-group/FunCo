@@ -3,7 +3,7 @@ import palette from '@/lib/palette'
 
 export const HomePageButton = styled.button<{
   direction: string
-  number: number
+  $number: number
 }>`
   display: block;
   width: 28rem;
@@ -13,8 +13,8 @@ export const HomePageButton = styled.button<{
   }
 
   margin-right: 0;
-  margin-top: ${({ number }) =>
-    number === 2 || number === 3 ? '100px' : null};
+  margin-top: ${({ $number }) =>
+    $number === 2 || $number === 3 ? '100px' : null};
   text-align: ${({ direction }) => direction};
   border: none;
   background-color: transparent;
@@ -30,6 +30,7 @@ export const HomePageButtonTitleDiv = styled.div`
   color: ${palette.mainColor2};
   font-size: 1.2rem;
   margin-bottom: 0.625rem;
+  font-family: 'NanumSquareBold';
 `
 
 export const HomePageButtonContentDiv = styled.div<{ $active: boolean }>`
@@ -37,5 +38,7 @@ export const HomePageButtonContentDiv = styled.div<{ $active: boolean }>`
   flex-direction: column;
   color: ${({ $active }) =>
     $active ? palette.brandColor : palette.borderGray};
-  font-size: ${({ $active }) => ($active ? '1.25rem' : '1rem')};
+  font-size: ${({ $active }) => ($active ? '1.1rem' : '1rem')};
+  font-family: ${({ $active }) =>
+    $active ? 'NanumSquareBold' : 'NanumSquare'};
 `
