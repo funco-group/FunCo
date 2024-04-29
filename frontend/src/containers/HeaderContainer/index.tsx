@@ -52,7 +52,7 @@ function Navbar() {
     setIsProfileOpen((prev) => !prev)
   }
 
-  // useSSE()
+  useSSE()
 
   return (
     mounted && (
