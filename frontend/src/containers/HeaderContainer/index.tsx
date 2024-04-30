@@ -60,7 +60,7 @@ function Navbar() {
       <NavBarContainer>
         <NavBarLeftDiv>
           <Link href="/">
-            <LogoSVG className="logo" />
+            <LogoSVG />
           </Link>
           <NavBarLeftLinkDiv>
             <NavLinkComponent path="/trade/KRW-BTC" name="거래소" />
