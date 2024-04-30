@@ -32,4 +32,5 @@ public class Image extends BaseEntity {
 		this.note = note;
 		this.url = url;
 	}
+
 }
