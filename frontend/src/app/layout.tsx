@@ -3,6 +3,7 @@ import './globals.css'
 import StyledComponentsRegistry from '@/lib/registry'
 import Navbar from '@/containers/HeaderContainer'
 import RecoilRootWrapper from './RecoilWrapper'
+import ToastProvider from './ToastProvider'
 
 export const metadata: Metadata = {
   title: 'FUNCO',
@@ -21,10 +22,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <RecoilRootWrapper>
-          <StyledComponentsRegistry>
-            <Navbar />
-            <div style={{ padding: '6.5rem 0' }}>{children}</div>
-          </StyledComponentsRegistry>
+          <ToastProvider>
+            <StyledComponentsRegistry>
+              <Navbar />
+              <div style={{ padding: '6.5rem 0' }}>{children}</div>
+            </StyledComponentsRegistry>
+          </ToastProvider>
         </RecoilRootWrapper>
       </body>
     </html>

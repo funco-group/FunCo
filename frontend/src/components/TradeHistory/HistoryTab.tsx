@@ -31,7 +31,7 @@ function HistoryTab() {
   }
 
   return (
-    <TabContainer columns={5}>
+    <TabContainer $columns={5}>
       {tabList.map((tab) => (
         <TabItemDiv
           key={tab[1]}
