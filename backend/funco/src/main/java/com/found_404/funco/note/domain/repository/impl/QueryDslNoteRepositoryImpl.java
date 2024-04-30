@@ -3,6 +3,7 @@ package com.found_404.funco.note.domain.repository.impl;
 import static com.found_404.funco.note.domain.QNote.note;
 import static com.found_404.funco.note.domain.QNoteLike.noteLike;
 
+import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.note.domain.Note;
 
 import com.found_404.funco.note.domain.repository.QueryDslNoteRepository;
@@ -28,11 +29,10 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Note> getNotesWithFilter(Long memberId, NotesFilterRequest notesFilterRequest) {
-        System.out.println(notesFilterRequest);
+    public List<Note> getNotesWithFilter(Member member, NotesFilterRequest notesFilterRequest) {
         return jpaQueryFactory
             .selectFrom(note)
-            .where(postTypeFilter(memberId, notesFilterRequest.type()),
+            .where(postTypeFilter(member, notesFilterRequest.type()),
                     coinFilter(notesFilterRequest.coin()),
                     searchFilter(notesFilterRequest.search(), notesFilterRequest.keyword()))
             .orderBy(sortedBy(notesFilterRequest.sorted()))
@@ -41,18 +41,18 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
             .fetch();
     }
 
-    private BooleanExpression postTypeFilter(Long memberId, PostType type){
-        if (Objects.isNull(type)) {
+    private BooleanExpression postTypeFilter(Member member, PostType type){
+        if (Objects.isNull(member) || Objects.isNull(type)) {
             return null;
         }
 
         return switch (type) {
             case ALL -> null;
-            case MY ->  note.member.id.eq(memberId);
+            case MY ->  note.member.id.eq(member.getId());
             case LIKE -> JPAExpressions.selectOne()
                 .from(noteLike)
                 .where(noteLike.note.id.eq(note.id)
-                    .and(noteLike.member.id.eq(memberId)))
+                    .and(noteLike.member.id.eq(member.getId())))
                 .exists();
         };
 
