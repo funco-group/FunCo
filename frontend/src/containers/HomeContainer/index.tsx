@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import HomePageButtonComponent from '@/components/Home/HomePageButtonComponent'
+// import { toast } from 'react-toastify'
 import {
   HomePageColumnGridDiv,
   HomePageFlexDiv,
@@ -20,6 +21,7 @@ function Home() {
   const [nowTabNumber, setNowTabNumber] = useState(0)
 
   useEffect(() => {
+    // toast(nowTabNumber)
     const timer = setTimeout(() => {
       setNowTabNumber((nowTabNumber + 1) % 4)
     }, 4000)

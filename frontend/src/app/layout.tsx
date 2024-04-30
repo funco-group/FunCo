@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import StyledComponentsRegistry from '@/lib/registry'
 import Navbar from '@/containers/HeaderContainer'
-import RecoilRootWrapper from './RecoilWrapper'
+import RecoilRootProvider from './RecoilProvider'
 import ToastProvider from './ToastProvider'
 
 export const metadata: Metadata = {
@@ -21,14 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <RecoilRootWrapper>
+        <RecoilRootProvider>
           <ToastProvider>
             <StyledComponentsRegistry>
               <Navbar />
               <div style={{ padding: '6.5rem 0' }}>{children}</div>
             </StyledComponentsRegistry>
           </ToastProvider>
-        </RecoilRootWrapper>
+        </RecoilRootProvider>
       </body>
     </html>
   )

@@ -1,7 +1,7 @@
 'use client'
 
 import { StyledContainer } from '@/styles/CommonStyled'
-import 'react-toastify/dist/ReactToastify.css'
+import './globals.css'
 
 interface ToastProviderProps {
   children: React.ReactNode

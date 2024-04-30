@@ -1,4 +1,5 @@
 @import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square.css');
+@import '~react-toastify/dist/ReactToastify.css';
 
 html,
 body,
