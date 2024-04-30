@@ -15,7 +15,7 @@ export const NavBarContainer = styled.div`
 `
 
 export const NavBarLeftDiv = styled.div`
-  img {
+  svg {
     width: 6.25rem;
     height: 1.875rem;
     margin: 0.625rem 0;

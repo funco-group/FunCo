@@ -26,7 +26,7 @@ export const ColumnTitleDiv = styled.div`
 
 export const StyledContainer = styled(ToastContainer)`
   margin-top: 4rem;
-  width: 25rem;
+  width: 20rem;
 
   .Toastify__toast-body {
     background: ${palette.brandWhite} !important;

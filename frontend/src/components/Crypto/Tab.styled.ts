@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import palette from '@/lib/palette'
 
-export const TabContainer = styled.div<{ columns: number }>`
+export const TabContainer = styled.div<{ $columns: number }>`
   display: grid;
-  grid-template-columns: ${(props) => `repeat(${props.columns}, 1fr)`};
+  grid-template-columns: ${(props) => `repeat(${props.$columns}, 1fr)`};
   border-bottom: 1px solid ${palette.borderGray};
 `
 

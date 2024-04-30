@@ -9,6 +9,7 @@ import useCloseDropdown from '@/hooks/useCloseDropdown'
 import AssetHistoryNav from '@/components/Header/AssetHistoryNav'
 import NotiDropdown from '@/components/Header/NotiDropdown'
 import ProfileDropdown from '@/components/Header/ProfileDropdown'
+import LogoSVG from '@/../public/icon/logo.svg'
 import {
   NavBarContainer,
   NavBarLeftDiv,
@@ -59,7 +60,7 @@ function Navbar() {
       <NavBarContainer>
         <NavBarLeftDiv>
           <Link href="/">
-            <img src="/icon/logo.png" alt="main-logo" draggable={false} />
+            <LogoSVG className="logo" />
           </Link>
           <NavBarLeftLinkDiv>
             <NavLinkComponent path="/trade/KRW-BTC" name="거래소" />
