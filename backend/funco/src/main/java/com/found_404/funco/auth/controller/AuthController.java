@@ -2,6 +2,7 @@ package com.found_404.funco.auth.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import com.found_404.funco.auth.dto.response.LoginResponse;
 import com.found_404.funco.auth.dto.response.TokenResponse;
 import com.found_404.funco.auth.service.AuthService;
 import com.found_404.funco.auth.type.OauthServerType;
+import com.found_404.funco.member.domain.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,8 +38,9 @@ public class AuthController {
 	}
 
 	@PostMapping("/signout")
-	public ResponseEntity<Void> logout(HttpServletResponse response, @PathVariable OauthServerType provider){
-		authService.logout(response, provider);
+	public ResponseEntity<Void> logout(HttpServletResponse response, @PathVariable OauthServerType provider,
+		@AuthenticationPrincipal Member member){
+		authService.logout(response, provider, member);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
