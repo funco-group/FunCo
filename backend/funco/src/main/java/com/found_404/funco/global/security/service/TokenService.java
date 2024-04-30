@@ -50,6 +50,7 @@ public class TokenService {
 	private final RedisTemplate<String, Object> tokenRedisTemplate;
 	private final long TOKEN_PERIOD = 12 * 60 * 60 * 1000L; // 12h
 	private final long REFRESH_PERIOD = 14 * 24 * 60 * 60 * 1000L; // 14일
+	private final String REDIS_TOKEN_KEY = "accessToken";
 	private final String REDIS_REFRESH_TOKEN_KEY = "refreshToken";
 
 	@PostConstruct
@@ -62,12 +63,19 @@ public class TokenService {
 		Claims claims = Jwts.claims().setSubject(String.valueOf(member.getId()));
 		Date now = new Date();
 
-		return Jwts.builder()
+		String accessToken = Jwts.builder()
 			.setClaims(claims)
 			.setIssuedAt(now)
 			.setExpiration(new Date(now.getTime() + TOKEN_PERIOD))
 			.signWith(SignatureAlgorithm.HS256, secretKey)
 			.compact();
+
+		// redis에 accessToken 저장
+		HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
+		hashOperations.put(member.getOauthId().getOauthServerId(), REDIS_TOKEN_KEY, accessToken);
+		tokenRedisTemplate.expire(member.getOauthId().getOauthServerId(), TOKEN_PERIOD, MILLISECONDS);
+
+		return accessToken;
 	}
 
 	public String createRefreshToken(Member member) {
@@ -174,5 +182,17 @@ public class TokenService {
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
+	}
+
+	public void deleteRefreshToken(Member member) {
+
+		// 로그아웃 시 refresh token 제거
+		try{
+			tokenRedisTemplate.opsForValue().getAndDelete(member.getOauthId().getOauthServerId());
+		}
+		catch(NullPointerException e){
+			throw new SecurityException(EMPTY_TOKEN, HttpStatus.UNAUTHORIZED);
+		}
+
 	}
 }
