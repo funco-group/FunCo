@@ -79,7 +79,7 @@ function FollowingUser({ followingUser }: FollowingUserProps) {
         <FollowingDetailDiv>
           <FollowingDetailInnerDiv>
             <ColumnContainer>
-              <ColumnGrid column="7.5rem 1fr 1fr 1fr">
+              <ColumnGrid $column="7.5rem 1fr 1fr 1fr">
                 {columnList.map((column) => (
                   <ColumnTitleDiv key={column}>{column}</ColumnTitleDiv>
                 ))}

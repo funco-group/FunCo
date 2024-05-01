@@ -2,29 +2,29 @@ import {
   ColumnContainer,
   ColumnGrid,
   ColumnTitleDiv,
-} from "@/styles/CommonStyled";
-import AssetListItem from "./AssetListItem";
-import { AssetType } from "@/interfaces/AssetType";
-import AssetListContainer from "./AssetList.styled";
+} from '@/styles/CommonStyled'
+import AssetListItem from './AssetListItem'
+import { AssetType } from '@/interfaces/AssetType'
+import AssetListContainer from './AssetList.styled'
 
 interface AssetListProps {
-  assets: AssetType[];
+  assets: AssetType[]
 }
 
 function AssetList({ assets }: AssetListProps) {
   const columns = [
-    "보유자산",
-    "보유수량",
-    "매수 평균가",
-    "매수 금액",
-    "평가금액",
-    "평가수익률(%)",
-  ];
+    '보유자산',
+    '보유수량',
+    '매수 평균가',
+    '매수 금액',
+    '평가금액',
+    '평가수익률(%)',
+  ]
 
   return (
     <>
       <ColumnContainer>
-        <ColumnGrid column="repeat(6, 1fr)">
+        <ColumnGrid $column="repeat(6, 1fr)">
           {columns.map((column) => (
             <ColumnTitleDiv key={column}>{column}</ColumnTitleDiv>
           ))}
@@ -42,11 +42,11 @@ function AssetList({ assets }: AssetListProps) {
               evaluationAmount={coin.evaluationAmount}
               evaluationProfit={coin.evaluationProfit}
             />
-          );
+          )
         })}
       </AssetListContainer>
     </>
-  );
+  )
 }
 
-export default AssetList;
+export default AssetList

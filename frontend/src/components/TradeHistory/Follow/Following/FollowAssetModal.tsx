@@ -188,7 +188,7 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
         <AssetChangeListContainer>
           <ColumnContainer>
             <AssetChangeListItemContainer>
-              <ColumnGrid column="6rem 5rem 5rem 1.3fr 1fr 1fr 1fr 1fr">
+              <ColumnGrid $column="6rem 5rem 5rem 1.3fr 1fr 1fr 1fr 1fr">
                 {columns.map((column) => (
                   <ColumnTitleDiv key={column}>{column}</ColumnTitleDiv>
                 ))}
