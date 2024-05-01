@@ -12,9 +12,9 @@ export const ColumnContainer = styled.div`
   padding: 0.5rem 0;
 `
 
-export const ColumnGrid = styled.div<{ column: string }>`
+export const ColumnGrid = styled.div<{ $column: string }>`
   display: grid;
-  grid-template-columns: ${(props) => props.column};
+  grid-template-columns: ${(props) => props.$column};
 `
 
 export const ColumnTitleDiv = styled.div`

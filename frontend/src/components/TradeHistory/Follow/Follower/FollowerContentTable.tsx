@@ -40,7 +40,7 @@ function FollowerContentTable({
   return (
     <FollowerContentTableContainer>
       <ColumnContainer>
-        <ColumnGrid column="7.5rem 1fr 1fr 1fr 1fr 1fr 7.5rem">
+        <ColumnGrid $column="7.5rem 1fr 1fr 1fr 1fr 1fr 7.5rem">
           {columnList.map((column) => (
             <ColumnTitleDiv key={column}>{column}</ColumnTitleDiv>
           ))}

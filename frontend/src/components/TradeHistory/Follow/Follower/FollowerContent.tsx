@@ -14,7 +14,7 @@ function FollowerContent({ content }: { content: FollowerContentType }) {
   return (
     <ListItemContainer>
       <FollowerContentContainer>
-        <ColumnGrid column="7.5rem 1fr 1fr 1fr 1fr 1fr 7.5rem">
+        <ColumnGrid $column="7.5rem 1fr 1fr 1fr 1fr 1fr 7.5rem">
           <ListItemDiv align="left" color="black">
             {followedAt}
           </ListItemDiv>
