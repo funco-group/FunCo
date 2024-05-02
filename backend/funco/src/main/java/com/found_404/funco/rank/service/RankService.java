@@ -75,13 +75,15 @@ public class RankService {
 	@Scheduled(cron = "0 0/1 * * * *", zone = "Asia/Seoul") // 1분마다 실행
 	@PostConstruct
 	public void runSchedulingProcess() {
-		log.debug("스케줄링 작업 시간 : " + LocalDateTime.now());
+		log.info("랭킹 스케줄링 작업 시간 : " + LocalDateTime.now());
 		// redis 비우는 작업
 		clearRankingZSets();
 		// 코인 및 가격 정보 조회
 		Map<String, Long> tickerPrice = cryptoPrice.getTickerPriceMap(rankCustomRepository.findHoldingCoin());
 		// 코인 자산 및 팔로워 자산 계산 및 랭킹 업데이트
 		calculateAndSetRanking(tickerPrice);
+
+		log.info("랭킹 스케줄링 작업 종료 : " + LocalDateTime.now());
 	}
 
 	// redis ZSET 비우는 메서드

@@ -13,8 +13,8 @@ public class CorsConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 			.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-			.allowedOrigins("http://localhost:5173", "https://j10a404.p.ssafy.io", "https://j10a404.p.ssafy.io:5173",
-				"http://localhost:3000")
+			.allowedOrigins("http://localhost:3000", "http://localhost:5173", "https://funco.co.kr",
+				"http://funco-fe:80")
 			.allowedHeaders("Content-Type", "Authorization") // Authorization 헤더 허용
 			.allowCredentials(true)
 			.maxAge(3600)
