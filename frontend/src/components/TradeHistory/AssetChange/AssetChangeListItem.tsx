@@ -24,10 +24,10 @@ function AssetChangeListItem({ history }: AssetChangeListItemProps) {
     <ListItemContainer>
       <AssetChangeListItemContainer>
         <ColumnGrid $column="7rem 6rem 5rem 1.3fr 1fr 1fr 1fr 1fr">
-          <ListItemDiv align="left" color="black">
+          <ListItemDiv $align="left" color="black">
             {useParseDate(history.date)}
           </ListItemDiv>
-          <ListItemDiv align="left" color="black">
+          <ListItemDiv $align="left" color="black">
             {history.assetType === 'COIN' ? (
               <>
                 <img
@@ -45,7 +45,7 @@ function AssetChangeListItem({ history }: AssetChangeListItemProps) {
             )}
           </ListItemDiv>
           <ListItemDiv
-            align=""
+            $align=""
             color={
               history.tradeType === 'BUY'
                 ? 'red'
@@ -57,22 +57,25 @@ function AssetChangeListItem({ history }: AssetChangeListItemProps) {
             {tradeTypeMap.get(history.tradeType)}
           </ListItemDiv>
           <ListItemDiv
-            align={history.assetType === 'COIN' ? 'right' : 'center'}
+            $align={history.assetType === 'COIN' ? 'right' : 'center'}
             color="black"
           >
             {history.assetType === 'COIN' ? history.volume : '-'}
             {history.assetType === 'COIN' && <span>WON</span>}
           </ListItemDiv>
-          <ListItemDiv align={history.price ? 'right' : 'center'} color="black">
+          <ListItemDiv
+            $align={history.price ? 'right' : 'center'}
+            color="black"
+          >
             {history.price ? history.price.toLocaleString('ko-KR') : '-'}
             {history.price && <span>WON</span>}
           </ListItemDiv>
-          <ListItemDiv align="right" color="black">
+          <ListItemDiv $align="right" color="black">
             {history.orderCash.toLocaleString('ko-KR')}
             <span>WON</span>
           </ListItemDiv>
           <ListItemDiv
-            align={history.commission !== null ? 'right' : 'center'}
+            $align={history.commission !== null ? 'right' : 'center'}
             color="black"
           >
             {history.commission !== null
@@ -81,7 +84,7 @@ function AssetChangeListItem({ history }: AssetChangeListItemProps) {
             {history.commission !== null && <span>WON</span>}
           </ListItemDiv>
           <ListItemDiv
-            align={history.settlement !== null ? 'right' : 'center'}
+            $align={history.settlement !== null ? 'right' : 'center'}
             color="black"
           >
             {history.settlement !== null
