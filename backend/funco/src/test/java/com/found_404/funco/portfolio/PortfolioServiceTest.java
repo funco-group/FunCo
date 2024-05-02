@@ -135,4 +135,30 @@ public class PortfolioServiceTest {
 		verify(subscribeRepository, times(1)).updateFollower(eq(followingId), eq(followerInfo.followerId()), anyLong());
 	}
 
+	@Test
+	@Transactional
+	@DisplayName("포트폴리오 구매 실패 - subscriber가 없을 경우")
+	void subscribeFail_WhenSubscriberNotFound() {
+		// given
+		Long memberId = 1L;
+		Long sellerId = 2L;
+
+		SubscribeRequest subscribeRequest = SubscribeRequest.builder().memberId(sellerId).build();
+
+		given(memberRepository.findById(memberId)).willReturn(Optional.empty());
+
+		// when
+		MemberException exception = assertThrows(MemberException.class, () ->
+			portfolioService.createPortfolio(memberId, subscribeRequest)
+		);
+
+		// then
+		assertEquals(exception.getErrorCode(), MemberErrorCode.NOT_FOUND_MEMBER.name());
+		assertEquals(exception.getHttpStatus(), MemberErrorCode.NOT_FOUND_MEMBER.getHttpStatus());
+		assertEquals(exception.getMessage(), MemberErrorCode.NOT_FOUND_MEMBER.getErrorMsg());
+
+		verify(memberRepository, never()).save(any(Member.class));
+		verify(subscribeRepository, never()).save(any());
+	}
+
 }
