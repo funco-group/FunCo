@@ -91,7 +91,7 @@ function Navbar() {
                 {user.profileUrl ? (
                   <NavBarProfileImg
                     // src={user.profileUrl}
-                    src="/image/chew.gif"
+                    src="/image/chuu.gif"
                     alt="user-profile"
                     draggable={false}
                   />
