@@ -2,16 +2,16 @@ import {
   GreenContainer,
   GreenDataDiv,
   GreenTitleDiv,
-} from "@/styles/TradeHistoryStyled";
+} from '@/styles/TradeHistoryStyled'
+import { TotalAssetType } from '@/interfaces/AssetType'
 import {
   AssetItemContainer,
   AssetItemDiv,
   TotalAssetContainer,
-} from "./TotalAsset.styled";
-import { TotalAssetType } from "@/interfaces/AssetType";
+} from './TotalAsset.styled'
 
 interface TotalAssetProps {
-  totalAsset: TotalAssetType | undefined;
+  totalAsset: TotalAssetType | undefined
 }
 
 function TotalAsset({ totalAsset }: TotalAssetProps) {
@@ -22,13 +22,13 @@ function TotalAsset({ totalAsset }: TotalAssetProps) {
           <AssetItemDiv>
             <GreenTitleDiv>보유</GreenTitleDiv>
             <GreenDataDiv color="black">
-              {totalAsset?.cash.toLocaleString("ko-KR")} <span>WON</span>
+              {totalAsset?.cash.toLocaleString('ko-KR')} <span>WON</span>
             </GreenDataDiv>
           </AssetItemDiv>
           <AssetItemDiv>
             <GreenTitleDiv>총 보유자산</GreenTitleDiv>
             <GreenDataDiv color="black">
-              {totalAsset?.asset.toLocaleString("ko-KR")} <span>WON</span>
+              {totalAsset?.asset.toLocaleString('ko-KR')} <span>WON</span>
             </GreenDataDiv>
           </AssetItemDiv>
         </AssetItemContainer>
@@ -36,19 +36,19 @@ function TotalAsset({ totalAsset }: TotalAssetProps) {
           <AssetItemDiv>
             <GreenTitleDiv>총 매수금액</GreenTitleDiv>
             <GreenDataDiv color="black">
-              {totalAsset?.price.toLocaleString("ko-KR")} <span>WON</span>
+              {totalAsset?.price.toLocaleString('ko-KR')} <span>WON</span>
             </GreenDataDiv>
           </AssetItemDiv>
           <AssetItemDiv>
             <GreenTitleDiv>총 평가손익</GreenTitleDiv>
             <GreenDataDiv
               color={
-                totalAsset?.returnResult.toString().startsWith("-")
-                  ? "blue"
-                  : "red"
+                totalAsset?.returnResult.toString().startsWith('-')
+                  ? 'blue'
+                  : 'red'
               }
             >
-              {totalAsset?.returnResult.toLocaleString("ko-KR")}{" "}
+              {totalAsset?.returnResult.toLocaleString('ko-KR')}{' '}
               <span>WON</span>
             </GreenDataDiv>
           </AssetItemDiv>
@@ -57,7 +57,7 @@ function TotalAsset({ totalAsset }: TotalAssetProps) {
           <AssetItemDiv>
             <GreenTitleDiv>총 평가금액</GreenTitleDiv>
             <GreenDataDiv color="black">
-              {totalAsset?.evaluationAmount.toLocaleString("ko-KR")}{" "}
+              {totalAsset?.evaluationAmount.toLocaleString('ko-KR')}{' '}
               <span>WON</span>
             </GreenDataDiv>
           </AssetItemDiv>
@@ -65,9 +65,9 @@ function TotalAsset({ totalAsset }: TotalAssetProps) {
             <GreenTitleDiv>총 평가수익률</GreenTitleDiv>
             <GreenDataDiv
               color={
-                totalAsset?.evaluationProfit.toString().startsWith("-")
-                  ? "blue"
-                  : "red"
+                totalAsset?.evaluationProfit.toString().startsWith('-')
+                  ? 'blue'
+                  : 'red'
               }
             >
               {totalAsset?.evaluationProfit} <span>%</span>
@@ -76,7 +76,7 @@ function TotalAsset({ totalAsset }: TotalAssetProps) {
         </AssetItemContainer>
       </GreenContainer>
     </TotalAssetContainer>
-  );
+  )
 }
 
-export default TotalAsset;
+export default TotalAsset

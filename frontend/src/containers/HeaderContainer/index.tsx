@@ -90,7 +90,8 @@ function Navbar() {
               <NavBarNotiProfileDiv onClick={handleProfileDropdown}>
                 {user.profileUrl ? (
                   <NavBarProfileImg
-                    src={user.profileUrl}
+                    // src={user.profileUrl}
+                    src="/image/chew.gif"
                     alt="user-profile"
                     draggable={false}
                   />
