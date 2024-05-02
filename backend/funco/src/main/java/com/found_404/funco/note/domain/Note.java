@@ -45,4 +45,10 @@ public class Note extends BaseEntity {
 		this.content = content;
 		this.ticker = ticker;
 	}
+
+	public void editNote(String title, String content, String ticker) {
+		this.title = title;
+		this.content = content;
+		this.ticker = ticker;
+	}
 }
