@@ -10,6 +10,7 @@ import AssetHistoryNav from '@/components/Header/AssetHistoryNav'
 import NotiDropdown from '@/components/Header/NotiDropdown'
 import ProfileDropdown from '@/components/Header/ProfileDropdown'
 import LogoSVG from '@/../public/icon/logo.svg'
+import GoogleSVG from '@/../public/icon/google.svg'
 import {
   NavBarContainer,
   NavBarLeftDiv,
@@ -111,7 +112,8 @@ function Navbar() {
           </NavBarRightDiv>
         ) : (
           <NavBarLoginButton type="button" onClick={handleLoginClick}>
-            <img src="/icon/google.png" alt="google-logo" draggable={false} />
+            {/* <img src="/icon/google.png" alt="google-logo" draggable={false} /> */}
+            <GoogleSVG />
             <p>Google로 시작하기</p>
           </NavBarLoginButton>
         )}
