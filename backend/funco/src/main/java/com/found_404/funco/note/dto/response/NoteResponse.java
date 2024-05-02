@@ -8,7 +8,6 @@ import lombok.Getter;
 
 @Builder
 public record NoteResponse(
-
     Long noteId,
     String nickname,
     String profileImage,
@@ -16,7 +15,6 @@ public record NoteResponse(
     String content,
     String coinName,
     LocalDateTime writeDate,
-
     Long likeCount,
     boolean liked,
     Long commentCount
