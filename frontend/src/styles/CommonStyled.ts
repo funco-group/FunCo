@@ -73,11 +73,22 @@ export const ListItemDiv = styled.div<{ $align: string; color: string }>`
     return 'center'
   }};
 
+  text-align: ${(props) => {
+    if (props.$align === 'left') {
+      return 'left'
+    }
+    if (props.$align === 'right') {
+      return 'right'
+    }
+    return null
+  }};
+
   img {
     margin-right: 0.4rem;
   }
 
   span {
+    margin-left: 0.2rem;
     font-size: 0.7rem;
     color: ${palette.brandDarkGray};
   }
