@@ -55,7 +55,7 @@ public class FollowService {
 	private final CryptoPrice cryptoPrice;
 
 	private static final double FOLLOW_FEE = 0.03;
-	private static final int PAGE_SIZE = 10;
+	private static final int PAGE_SIZE = Integer.MAX_VALUE; // 임시
 	private static final long PERCENT = 100L;
 
 	private final NotificationService notificationService;
