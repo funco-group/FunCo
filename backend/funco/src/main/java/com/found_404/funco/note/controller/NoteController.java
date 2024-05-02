@@ -46,7 +46,7 @@ public class NoteController {
 
     // 게시글 작성
     @PostMapping
-    public ResponseEntity<?> addNote(
+    public ResponseEntity<Void> addNote(
         @AuthenticationPrincipal Member member,
         @RequestBody @Valid NoteRequest request) {
         noteService.addNote(member, request);
@@ -58,7 +58,7 @@ public class NoteController {
 
     // 게시글 수정
     @PutMapping("/{noteId}")
-    public ResponseEntity<?> editNote(
+    public ResponseEntity<Void> editNote(
         @AuthenticationPrincipal Member member,
         @PathVariable Long noteId,
         @RequestBody @Valid NoteRequest request) {
@@ -68,7 +68,7 @@ public class NoteController {
 
     // 게시글 삭제
     @DeleteMapping("/{noteId}")
-    public ResponseEntity<?> removeNote(
+    public ResponseEntity<Void> removeNote(
         @AuthMemberId Long memberId,
         @PathVariable Long noteId) {
         noteService.removeNote(memberId, noteId);

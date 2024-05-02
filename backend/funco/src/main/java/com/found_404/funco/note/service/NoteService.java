@@ -1,9 +1,11 @@
 package com.found_404.funco.note.service;
 
+import static com.found_404.funco.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 import static com.found_404.funco.note.exception.NoteErrorCode.NOT_FOUND_NOTE;
 
 import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
+import com.found_404.funco.member.exception.MemberException;
 import com.found_404.funco.note.domain.Note;
 import com.found_404.funco.note.domain.repository.ImageRepository;
 import com.found_404.funco.note.domain.repository.NoteCommentRepository;
@@ -81,7 +83,7 @@ public class NoteService {
 
     public void addNote(Member member, NoteRequest request) {
         if (Objects.nonNull(member)) {
-            Member tempMember = memberRepository.findById(1L).orElseThrow();
+            Member tempMember = memberRepository.findById(member.getId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
             noteRepository.save(Note.builder()
                 .member(tempMember)
                 .title(request.title())
