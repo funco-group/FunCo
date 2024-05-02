@@ -163,7 +163,7 @@ function FollowModal({ member, setMember }: FollowModalProps) {
             color={null}
             $cancel={false}
             onClick={handleFollowClick}
-            disabled={!isCheckTerms}
+            disabled={!isCheckTerms || validation}
             data-tooltip-content="약관에 동의해주세요"
             data-tooltip-id={isCheckTerms ? '' : 'buttonTooltip'}
           >
