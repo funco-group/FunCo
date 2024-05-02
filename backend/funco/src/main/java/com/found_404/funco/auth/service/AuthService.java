@@ -71,7 +71,7 @@ public class AuthService {
 				.profileUrl(member.getProfileUrl())
 				.nickname(member.getNickname())
 				.memberId(member.getId())
-				.accessToken(tokenService.createToken(member))
+				.accessToken(tokenService.createAccessToken(member))
 				.unReadCount(notificationService.getUnReadCount(member.getId()))
 				.build();
 	}
