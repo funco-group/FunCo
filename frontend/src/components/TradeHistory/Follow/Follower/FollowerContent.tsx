@@ -15,23 +15,23 @@ function FollowerContent({ content }: { content: FollowerContentType }) {
     <ListItemContainer>
       <FollowerContentContainer>
         <ColumnGrid $column="7.5rem 1fr 1fr 1fr 1fr 1fr 7.5rem">
-          <ListItemDiv align="left" color="black">
+          <ListItemDiv $align="left" color="black">
             {followedAt}
           </ListItemDiv>
-          <ListItemDiv align="" color="black">
+          <ListItemDiv $align="" color="black">
             {content.nickname}
           </ListItemDiv>
-          <ListItemDiv align="right" color="black">
+          <ListItemDiv $align="right" color="black">
             {content.investment.toLocaleString('ko-KR')} <span>WON</span>
           </ListItemDiv>
-          <ListItemDiv align={content.settlement ? 'right' : ''} color="black">
+          <ListItemDiv $align={content.settlement ? 'right' : ''} color="black">
             {content.settlement
               ? content.settlement.toLocaleString('ko-KR')
               : '-'}
             {content.settlement && <span>WON</span>}
           </ListItemDiv>
           <ListItemDiv
-            align={content.returnRate !== null ? 'right' : ''}
+            $align={content.returnRate !== null ? 'right' : ''}
             color={
               content.returnRate && content.returnRate > 0 ? 'red' : 'blue'
             }
@@ -42,7 +42,7 @@ function FollowerContent({ content }: { content: FollowerContentType }) {
             {content.returnRate && <span>%</span>}
           </ListItemDiv>
           <ListItemDiv
-            align={content.commission !== null ? 'right' : ''}
+            $align={content.commission !== null ? 'right' : ''}
             color="black"
           >
             {content.commission !== null
@@ -50,7 +50,7 @@ function FollowerContent({ content }: { content: FollowerContentType }) {
               : '-'}
             {content.commission !== null && <span>WON</span>}
           </ListItemDiv>
-          <ListItemDiv align="right" color="black">
+          <ListItemDiv $align="right" color="black">
             {settleDate}
           </ListItemDiv>
         </ColumnGrid>

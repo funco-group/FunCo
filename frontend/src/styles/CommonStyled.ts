@@ -48,7 +48,7 @@ export const ListItemContainer = styled.div`
   text-align: center;
 `
 
-export const ListItemDiv = styled.div<{ align: string; color: string }>`
+export const ListItemDiv = styled.div<{ $align: string; color: string }>`
   /* background-color: red; */
   display: flex;
   align-items: center;
@@ -64,10 +64,10 @@ export const ListItemDiv = styled.div<{ align: string; color: string }>`
   }};
 
   justify-content: ${(props) => {
-    if (props.align === 'left') {
+    if (props.$align === 'left') {
       return 'left'
     }
-    if (props.align === 'right') {
+    if (props.$align === 'right') {
       return 'right'
     }
     return 'center'
