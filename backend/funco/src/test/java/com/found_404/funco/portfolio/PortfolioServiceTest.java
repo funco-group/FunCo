@@ -18,13 +18,18 @@ import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.domain.type.PortfolioStatusType;
 import com.found_404.funco.member.exception.MemberErrorCode;
 import com.found_404.funco.member.exception.MemberException;
+import com.found_404.funco.portfolio.domain.Subscribe;
+import com.found_404.funco.portfolio.domain.repository.SubscribeRepository;
 import com.found_404.funco.portfolio.dto.request.PortfolioStatusRequest;
+import com.found_404.funco.portfolio.dto.request.SubscribeRequest;
 import com.found_404.funco.portfolio.service.PortfolioService;
 
 @ExtendWith(MockitoExtension.class)
 public class PortfolioServiceTest {
 	@Mock
 	private MemberRepository memberRepository;
+	@Mock
+	private SubscribeRepository subscribeRepository;
 	@InjectMocks
 	PortfolioService portfolioService;
 
@@ -57,7 +62,6 @@ public class PortfolioServiceTest {
 	void updatePortfolioStatusFail() {
 		// given
 		Long memberId = 1L;
-
 		PortfolioStatusRequest portfolioStatusRequest = PortfolioStatusRequest.builder()
 			.portfolioStatus("private")
 			.portfolioPrice(30000L)
@@ -75,4 +79,35 @@ public class PortfolioServiceTest {
 		assertEquals(exception.getHttpStatus(), MemberErrorCode.NOT_FOUND_MEMBER.getHttpStatus());
 		assertEquals(exception.getMessage(), MemberErrorCode.NOT_FOUND_MEMBER.getErrorMsg());
 	}
+
+	@Test
+	@Transactional
+	@DisplayName("포트폴리오 구매 성공")
+	void subscribeSuccess() {
+		// given
+		Long memberId = 1L;
+		Long sellerId = 2L;
+
+		Member subscriber = Member.builder()
+			.cash(100000L)
+			.build();
+		Member seller = Member.builder()
+			.cash(750000L)
+			.portfolioStatus(PortfolioStatusType.PRIVATE)
+			.portfolioPrice(50000L)
+			.build();
+		SubscribeRequest subscribeRequest = SubscribeRequest.builder().memberId(sellerId).build();
+
+		// when
+		given(memberRepository.findById(memberId)).willReturn(Optional.of(subscriber));
+		given(memberRepository.findById(sellerId)).willReturn(Optional.of(seller));
+
+		portfolioService.createPortfolio(memberId, subscribeRequest);
+
+		// then
+		assertEquals(50000L, subscriber.getCash());
+		assertEquals(800000L, seller.getCash());
+		verify(subscribeRepository, times(1)).save(any(Subscribe.class));
+	}
+
 }
