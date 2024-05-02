@@ -53,7 +53,7 @@ public class PortfolioService {
 		}
 
 		double ratio = divide(portfolioPrice, seller.getCash(), ScaleType.RETURN_RATE_SCALE);
-		
+
 		subscriber.decreaseCash(portfolioPrice);
 		seller.increaseCashWithoutCommission(portfolioPrice);
 
@@ -72,7 +72,7 @@ public class PortfolioService {
 			.orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 	}
 
-	private void synchronizeFollowers(Long followingId, double ratio) {
+	public void synchronizeFollowers(Long followingId, double ratio) {
 		List<FollowerInfo> followerInfos = subscribeRepository.findFollowInfoByFollowingId(followingId);
 		followerInfos.forEach(
 			info -> {
