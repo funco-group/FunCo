@@ -4,10 +4,11 @@ import palette from '@/lib/palette'
 export const HomePageButton = styled.button<{
   direction: string
   $number: number
+  $active: boolean
 }>`
   display: block;
   width: 28rem;
-  img {
+  svg {
     margin: ${({ direction }) =>
       direction === 'right' ? '0 0 50px 50px' : '0 50px 50px 0'};
   }

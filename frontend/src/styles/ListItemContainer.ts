@@ -1,6 +1,7 @@
-import styled from "styled-components";
-import palette from "@/lib/palette";
+import styled from 'styled-components'
+import palette from '@/lib/palette'
 
+// eslint-disable-next-line import/prefer-default-export
 export const ListItemContainer = styled.div`
   font-size: 0.85rem;
   padding: 0.7rem 0;
@@ -9,4 +10,4 @@ export const ListItemContainer = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-`;
+`

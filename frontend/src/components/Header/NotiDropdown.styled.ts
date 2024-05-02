@@ -1,8 +1,8 @@
-import styled, { css, keyframes } from "styled-components";
-import palette from "@/lib/palette";
+import styled, { css, keyframes } from 'styled-components'
+import palette from '@/lib/palette'
 
 export interface DropdownContainerProps {
-  $visible: boolean;
+  $visible: boolean
 }
 
 export const fadeIn = keyframes`
@@ -14,7 +14,7 @@ export const fadeIn = keyframes`
     opacity: 1;
     transform: translateY(0);
   }
-`;
+`
 
 export const fadeOut = keyframes`
   from {
@@ -25,13 +25,13 @@ export const fadeOut = keyframes`
     opacity: 0;
     transform: translateY(-10px);
   }
-`;
+`
 
 export const modalSettings = ($visible: boolean) => css`
-  visibility: ${$visible ? "visible" : "hidden"};
+  visibility: ${$visible ? 'visible' : 'hidden'};
   animation: ${$visible ? fadeIn : fadeOut} 0.5s ease-out;
   transition: visibility 0.5s ease-out;
-`;
+`
 
 export const NotiDropdownContainer = styled.div<DropdownContainerProps>`
   width: 25rem;
@@ -49,12 +49,12 @@ export const NotiDropdownContainer = styled.div<DropdownContainerProps>`
   right: 5.9375rem;
 
   ${(props) => modalSettings(props.$visible)}
-`;
+`
 
 export const NotiHistoryContentContainer = styled.div`
   height: 27.4rem;
   overflow: auto;
-`;
+`
 
 export const NotiMoreButton = styled.button`
   display: block;
@@ -69,11 +69,5 @@ export const NotiMoreButton = styled.button`
     margin: auto;
   }
 
-  img {
-    display: block;
-    margin: auto;
-    margin-bottom: 0.1875rem;
-  }
-
   cursor: pointer;
-`;
+`

@@ -9,6 +9,8 @@ import useCloseDropdown from '@/hooks/useCloseDropdown'
 import AssetHistoryNav from '@/components/Header/AssetHistoryNav'
 import NotiDropdown from '@/components/Header/NotiDropdown'
 import ProfileDropdown from '@/components/Header/ProfileDropdown'
+import LogoSVG from '@/../public/icon/logo.svg'
+import GoogleSVG from '@/../public/icon/google.svg'
 import {
   NavBarContainer,
   NavBarLeftDiv,
@@ -59,7 +61,7 @@ function Navbar() {
       <NavBarContainer>
         <NavBarLeftDiv>
           <Link href="/">
-            <img src="/icon/logo.png" alt="main-logo" draggable={false} />
+            <LogoSVG />
           </Link>
           <NavBarLeftLinkDiv>
             <NavLinkComponent path="/trade/KRW-BTC" name="거래소" />
@@ -72,7 +74,7 @@ function Navbar() {
             <div ref={notiDropDownRef}>
               <NavBarNotiProfileDiv onClick={handleNotiDropdown}>
                 <NavBarNotiImg
-                  src="/icon/notification-off.png"
+                  src="/icon/notification-off.svg"
                   alt="noti-off-icon"
                   draggable={false}
                 />
@@ -94,7 +96,7 @@ function Navbar() {
                   />
                 ) : (
                   <NavBarProfileImg
-                    src="icon/user-default.png"
+                    src="icon/user-default.svg"
                     alt="default-profile"
                     draggable={false}
                   />
@@ -110,7 +112,7 @@ function Navbar() {
           </NavBarRightDiv>
         ) : (
           <NavBarLoginButton type="button" onClick={handleLoginClick}>
-            <img src="/icon/google.png" alt="google-logo" draggable={false} />
+            <GoogleSVG />
             <p>Google로 시작하기</p>
           </NavBarLoginButton>
         )}
