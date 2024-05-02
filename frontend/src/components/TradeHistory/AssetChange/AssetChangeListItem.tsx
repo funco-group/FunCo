@@ -4,7 +4,6 @@ import { AssetHistoryType } from '@/interfaces/AssetType'
 import { AssetChangeListItemContainer } from './AssetChangeListItem.styled'
 import { useRecoilValue } from 'recoil'
 import { codeNameMapState } from '@/recoils/crypto'
-import followIcon from '@/assets/icon/follow-icon.png'
 import parseDate from '@/utils/parseDate'
 
 interface AssetChangeListItemProps {
@@ -39,7 +38,7 @@ function AssetChangeListItem({ history }: AssetChangeListItemProps) {
               </>
             ) : (
               <>
-                <img src={followIcon} alt={'팔로우'} width={13} />
+                <img src="/icon/follow-icon.png" alt={'팔로우'} width={13} />
                 {'팔로우'}
               </>
             )}
