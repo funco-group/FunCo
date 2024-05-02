@@ -94,8 +94,13 @@ public class TokenService {
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new SecurityException(MEMBER_NOT_FOUND, HttpStatus.UNAUTHORIZED));
 
+		/*
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 		grantedAuthorities.add(new SimpleGrantedAuthority(member.getNickname()));
+		*/
+
+		// 기존 List 생성 방식을 List.of로 변경하여 불변 리스트로 만들어 줌
+		List<GrantedAuthority> grantedAuthorities = List.of(new SimpleGrantedAuthority(member.getNickname()));
 
 		return new UsernamePasswordAuthenticationToken(member, "", grantedAuthorities);
 	}
