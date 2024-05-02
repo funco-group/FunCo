@@ -24,6 +24,11 @@ const nextConfig = {
         destination: '/history/follow/following',
         permanent: false,
       },
+      {
+        source: '/trade',
+        destination: '/trade/KRW-BTC',
+        permanent: false,
+      },
     ]
   },
 }

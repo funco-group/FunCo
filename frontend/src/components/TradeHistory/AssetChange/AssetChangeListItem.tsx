@@ -2,10 +2,9 @@ import { ListItemDiv, ColumnGrid } from '@/styles/CommonStyled'
 import { ListItemContainer } from '@/styles/ListItemContainer'
 import { AssetHistoryType } from '@/interfaces/AssetType'
 import { AssetChangeListItemContainer } from './AssetChangeListItem.styled'
-import useParseDate from '@/hooks/useParseDate'
 import { useRecoilValue } from 'recoil'
 import { codeNameMapState } from '@/recoils/crypto'
-import followIcon from '@/assets/icon/follow-icon.png'
+import parseDate from '@/utils/parseDate'
 
 interface AssetChangeListItemProps {
   history: AssetHistoryType
@@ -25,7 +24,7 @@ function AssetChangeListItem({ history }: AssetChangeListItemProps) {
       <AssetChangeListItemContainer>
         <ColumnGrid $column="7rem 6rem 5rem 1.3fr 1fr 1fr 1fr 1fr">
           <ListItemDiv $align="left" color="black">
-            {useParseDate(history.date)}
+            {parseDate(history.date)}
           </ListItemDiv>
           <ListItemDiv $align="left" color="black">
             {history.assetType === 'COIN' ? (
@@ -39,7 +38,7 @@ function AssetChangeListItem({ history }: AssetChangeListItemProps) {
               </>
             ) : (
               <>
-                <img src={followIcon} alt={'팔로우'} width={13} />
+                <img src="/icon/follow-icon.png" alt={'팔로우'} width={13} />
                 {'팔로우'}
               </>
             )}

@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { ColumnContainer, ColumnTitleDiv } from '@/styles/CommonStyled'
 import { TradeListType } from '@/interfaces/TradeType'
 import tradeTypeMap from '@/lib/tradeTypeMap'
-import useParseDate from '@/hooks/useParseDate'
 import { getFollowingTradeList } from '@/apis/follow'
 import { OrderTypeSpan } from '@/components/TradeHistory/OpenOrder/OpenOrderContent.styled'
+import parseDate from '@/utils/parseDate'
 import {
   FollowTradeHistoryContainer,
   FollowTradeHistoryColumnGridDiv,
@@ -27,7 +27,6 @@ function TradeHistoryModal({
   const tradeHistortColumnList = ['거래시간', '구분', '거래가격', '거래수량']
   const [tradeHistoryList, setTradeHistoryList] = useState<TradeListType[]>()
   const [isLoading, setIsLoading] = useState(false)
-  const parseDate = useParseDate
 
   useEffect(() => {
     setIsLoading(true)
