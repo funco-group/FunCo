@@ -9,8 +9,6 @@ export const HomePageButton = styled.button<{
   display: block;
   width: 28rem;
   svg {
-    width: ${({ $active }) => ($active ? '40px' : '20px')};
-    height: ${({ $active }) => ($active ? '40px' : '20px')};
     margin: ${({ direction }) =>
       direction === 'right' ? '0 0 50px 50px' : '0 50px 50px 0'};
   }
