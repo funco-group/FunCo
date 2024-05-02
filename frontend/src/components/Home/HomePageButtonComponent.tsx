@@ -55,7 +55,12 @@ function HomePageButtonComponent({
       onMouseEnter={() => handleSetTabNumber(number)}
     >
       <HomePageButtonFlexDiv direction={buttonList[number].direction}>
-        {buttonList[number].direction === 'left' && <ButtonSvg />}
+        {buttonList[number].direction === 'left' && (
+          <ButtonSvg
+            width={isActive ? '40px' : '20px'}
+            height={isActive ? '40px' : '20px'}
+          />
+        )}
         <div>
           <HomePageButtonTitleDiv>
             {buttonList[number].title}
@@ -65,7 +70,12 @@ function HomePageButtonComponent({
             <div>{buttonList[number].content[1]}</div>
           </HomePageButtonContentDiv>
         </div>
-        {buttonList[number].direction === 'right' && <ButtonSvg />}
+        {buttonList[number].direction === 'right' && (
+          <ButtonSvg
+            width={isActive ? '40px' : '20px'}
+            height={isActive ? '40px' : '20px'}
+          />
+        )}
       </HomePageButtonFlexDiv>
     </HomePageButton>
   )
