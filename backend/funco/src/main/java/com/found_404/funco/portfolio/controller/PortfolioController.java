@@ -31,8 +31,9 @@ public class PortfolioController {
 
 	@PostMapping("/subscribe")
 	public ResponseEntity<Void> addPortfolio(
+		@AuthMemberId Long memberId,
 		@RequestBody SubscribeRequest subscribeRequest) {
-		portfolioService.createPortfolio(1L, subscribeRequest);
+		portfolioService.createPortfolio(memberId, subscribeRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 }
