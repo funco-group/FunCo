@@ -3,8 +3,8 @@ package com.found_404.funco.note.service;
 import static com.found_404.funco.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 import static com.found_404.funco.note.exception.NoteErrorCode.NOT_FOUND_NOTE;
 
-import com.found_404.funco.badge.domain.Badge;
 import com.found_404.funco.badge.domain.repository.BadgeRepository;
+import com.found_404.funco.badge.domain.repository.HoldingBadgeRepository;
 import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.exception.MemberException;
@@ -23,12 +23,9 @@ import com.found_404.funco.note.dto.response.NotesResponse;
 import com.found_404.funco.note.dto.type.PostType;
 import com.found_404.funco.note.exception.NoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +38,7 @@ public class NoteService {
     private final NoteCommentRepository noteCommentRepository;
     private final NoteLikeRepository noteLikeRepository;
     private final MemberRepository memberRepository;
-    private final BadgeRepository badgeRepository;
+    private final HoldingBadgeRepository holdingBadgeRepository;
 
 
     public List<NotesResponse> getNotes(Member member, NotesFilterRequest notesFilterRequest) {
@@ -131,7 +128,7 @@ public class NoteService {
                         .memberId(parentComment.getMember().getId())
                         .nickname(parentComment.getMember().getNickname())
                         .profileUrl(parentComment.getMember().getProfileUrl())
-                        .badgeId(badgeRepository.findByMember(parentComment.getMember()).getId())
+                        .badgeId(holdingBadgeRepository.findByMember(parentComment.getMember()).getBadge().getId())
                         .build())
                     .childComments(childComments
                         .stream().map(childComment -> CommentsResponse.builder()
@@ -140,7 +137,7 @@ public class NoteService {
                                 .memberId(childComment.getMember().getId())
                                 .nickname(childComment.getMember().getNickname())
                                 .profileUrl(childComment.getMember().getProfileUrl())
-                                .badgeId(badgeRepository.findByMember(childComment.getMember()).getId())
+                                .badgeId(holdingBadgeRepository.findByMember(childComment.getMember()).getBadge().getId())
                                 .build())
                             .childComments(null)
                             .content(childComment.getContent())

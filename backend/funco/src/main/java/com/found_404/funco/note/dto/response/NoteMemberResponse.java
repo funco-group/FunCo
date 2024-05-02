@@ -9,5 +9,4 @@ public record NoteMemberResponse(
     String profileUrl,
     Long badgeId
 ) {
-
 }

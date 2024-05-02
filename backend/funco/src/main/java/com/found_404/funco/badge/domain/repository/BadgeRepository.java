@@ -7,5 +7,4 @@ import com.found_404.funco.badge.domain.Badge;
 
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
 
-    Badge findByMember(Member member);
 }
