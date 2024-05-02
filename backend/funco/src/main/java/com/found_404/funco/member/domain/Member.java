@@ -88,6 +88,10 @@ public class Member extends BaseEntity {
 		this.cash += getCashWithCommission(orderCash);
 	}
 
+	public void increaseCashWithoutCommission(long orderCash) {
+		this.cash += orderCash;
+	}
+
 	public long getCashWithCommission(long orderCash) {
 		return orderCash - (long)(DecimalCalculator.multiple(orderCash, COMMISSION, ScaleType.NORMAL_SCALE));
 	}
