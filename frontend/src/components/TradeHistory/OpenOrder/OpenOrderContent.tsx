@@ -1,4 +1,3 @@
-import useParseDate from '@/hooks/useParseDate'
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
 import { TradeListType } from '@/interfaces/TradeType'
 import tradeTypeMap from '@/lib/tradeTypeMap'
@@ -9,6 +8,7 @@ import {
 } from '@/styles/CommonStyled'
 import { useRecoilValue } from 'recoil'
 import { codeNameMapState } from '@/recoils/crypto'
+import parseDate from '@/utils/parseDate'
 import { DateDiv } from './OpenOrderContent.styled'
 
 interface OpenOrderContentProps {
@@ -20,7 +20,6 @@ function OpenOrderContent({
   content,
   handleCancelOpenOrder,
 }: OpenOrderContentProps) {
-  const parseDate = useParseDate
   const tradeDate = parseDate(content.tradeDate).split(' ').join('\n')
 
   const nameMap = useRecoilValue(codeNameMapState)

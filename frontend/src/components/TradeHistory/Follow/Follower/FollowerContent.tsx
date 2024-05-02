@@ -1,11 +1,10 @@
 import { FollowerContentType } from '@/interfaces/tradeHistory/follow/FollowerContentType'
-import useParseDate from '@/hooks/useParseDate'
+import parseDate from '@/utils/parseDate'
 import { ListItemDiv, ColumnGrid } from '@/styles/CommonStyled'
 import { ListItemContainer } from '@/styles/ListItemContainer'
 import { FollowerContentContainer } from './FollowerContent.styled'
 
 function FollowerContent({ content }: { content: FollowerContentType }) {
-  const parseDate = useParseDate
   const followedAt = parseDate(content.followedAt).split(' ').join('\n')
   let settleDate = '-'
   if (content.settleDate) {

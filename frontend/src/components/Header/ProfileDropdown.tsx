@@ -24,7 +24,7 @@ function ProfileDropdown({
   const router = useRouter()
 
   const handleNavigateMypage = () => {
-    router.push(`member/${memberId}`)
+    router.push(`/member/${memberId}`)
     setIsProfileOpen((prev) => !prev)
   }
 

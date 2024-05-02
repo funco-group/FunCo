@@ -6,11 +6,11 @@ import {
   ColumnGrid,
   ColumnTitleDiv,
 } from '@/styles/CommonStyled'
-import useParseDate from '@/hooks/useParseDate'
 import palette from '@/lib/palette'
 import useSettleModalState from '@/hooks/recoilHooks/useSettleModalState'
 import MonochromePieChart from '@/components/Common/Chart/MonochromePieChart'
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
+import parseDate from '@/utils/parseDate'
 import TradeHistoryModal from './TradeHistoryModal'
 import {
   FollowingColumnGridDiv,
@@ -35,7 +35,7 @@ interface FollowingUserProps {
 function FollowingUser({ followingUser }: FollowingUserProps) {
   const { onModal } = useSettleModalState()
   const columnList = ['날짜', '투자 금액', '예상 금액', '수익률']
-  const followDate = useParseDate(followingUser.date).split(' ').join('\n')
+  const followDate = parseDate(followingUser.date).split(' ').join('\n')
   const estimatedProfitRate = (
     ((followingUser.estimatedValue - followingUser.investment) /
       followingUser.investment) *
