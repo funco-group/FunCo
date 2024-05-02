@@ -1,6 +1,7 @@
 package com.found_404.funco.auth.service;
 
 import com.found_404.funco.auth.dto.response.TokenResponse;
+import com.found_404.funco.member.domain.type.PortfolioStatusType;
 import com.found_404.funco.notification.service.NotificationService;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -42,6 +43,8 @@ public class AuthService {
 				.profileUrl(dto.member().getProfileUrl())
 				.cash(INIT_CASH)
 				.status(MemberStatus.NORMAL)
+				.portfolioStatus(PortfolioStatusType.PUBLIC)
+				.badgeYn(Boolean.FALSE)
 				.build());
 		if (member.getOauthId() == null) {
 			member.updateOauthId(dto.member().getOauthId());
