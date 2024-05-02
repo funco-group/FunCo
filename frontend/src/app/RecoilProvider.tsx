@@ -2,12 +2,12 @@
 
 import { RecoilRoot } from 'recoil'
 
-interface RecoilRootWrapperProps {
+interface RecoilRootProviderProps {
   children: React.ReactNode
 }
 
-export default function RecoilRootWrapper({
+export default function RecoilRootProvider({
   children,
-}: RecoilRootWrapperProps) {
+}: RecoilRootProviderProps) {
   return <RecoilRoot>{children}</RecoilRoot>
 }

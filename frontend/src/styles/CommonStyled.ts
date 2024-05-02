@@ -12,9 +12,9 @@ export const ColumnContainer = styled.div`
   padding: 0.5rem 0;
 `
 
-export const ColumnGrid = styled.div<{ column: string }>`
+export const ColumnGrid = styled.div<{ $column: string }>`
   display: grid;
-  grid-template-columns: ${(props) => props.column};
+  grid-template-columns: ${(props) => props.$column};
 `
 
 export const ColumnTitleDiv = styled.div`
@@ -26,7 +26,7 @@ export const ColumnTitleDiv = styled.div`
 
 export const StyledContainer = styled(ToastContainer)`
   margin-top: 4rem;
-  width: 25rem;
+  width: 22rem;
 
   .Toastify__toast-body {
     background: ${palette.brandWhite} !important;
@@ -48,7 +48,7 @@ export const ListItemContainer = styled.div`
   text-align: center;
 `
 
-export const ListItemDiv = styled.div<{ align: string; color: string }>`
+export const ListItemDiv = styled.div<{ $align: string; color: string }>`
   /* background-color: red; */
   display: flex;
   align-items: center;
@@ -64,13 +64,23 @@ export const ListItemDiv = styled.div<{ align: string; color: string }>`
   }};
 
   justify-content: ${(props) => {
-    if (props.align === 'left') {
+    if (props.$align === 'left') {
       return 'left'
     }
-    if (props.align === 'right') {
+    if (props.$align === 'right') {
       return 'right'
     }
     return 'center'
+  }};
+
+  text-align: ${(props) => {
+    if (props.$align === 'left') {
+      return 'left'
+    }
+    if (props.$align === 'right') {
+      return 'right'
+    }
+    return null
   }};
 
   img {
@@ -78,6 +88,7 @@ export const ListItemDiv = styled.div<{ align: string; color: string }>`
   }
 
   span {
+    margin-left: 0.2rem;
     font-size: 0.7rem;
     color: ${palette.brandDarkGray};
   }

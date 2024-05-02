@@ -15,7 +15,7 @@ export const NavBarContainer = styled.div`
 `
 
 export const NavBarLeftDiv = styled.div`
-  img {
+  svg {
     width: 6.25rem;
     height: 1.875rem;
     margin: 0.625rem 0;
@@ -142,13 +142,6 @@ export const NavBarLoginButton = styled.button`
 
   display: flex;
   align-items: center;
-
-  img {
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    margin-right: 0;
-  }
 
   p {
     font-size: 0.9rem;
