@@ -117,39 +117,49 @@ public class NoteService {
     }
 
     public List<CommentsResponse> getComments(Long noteId) {
-        List<NoteComment> parentComments = noteCommentRepository.findByNoteIdAndParentIdIsNull(noteId);
+        List<NoteComment> comments = noteCommentRepository.findByNoteId(noteId);
         List<CommentsResponse> commentsResponses = new ArrayList<>();
 
-        for (NoteComment parentComment : parentComments) {
-            List<NoteComment> childComments = noteCommentRepository.findByParentId(parentComment.getId());
+        for (NoteComment comment : comments) {
+            if (Objects.isNull(comment.getParentId())) {
+                Long parentId = comment.getId();
+                List<NoteComment> childComments = new ArrayList<>();
+                for (NoteComment childComment : comments) {
+                    if (parentId.equals(childComment.getParentId())) {
+                        childComments.add(comment);
+                    }
 
-            commentsResponses.add(
-                CommentsResponse.builder()
-                    .commentId(parentComment.getId())
-                    .member(NoteMemberResponse.builder()
-                        .memberId(parentComment.getMember().getId())
-                        .nickname(parentComment.getMember().getNickname())
-                        .profileUrl(parentComment.getMember().getProfileUrl())
-                        .badgeId(getHoldingBadge(parentComment))
-                        .build())
-                    .childComments(childComments
-                        .stream().map(childComment -> CommentsResponse.builder()
-                            .commentId(childComment.getId())
-                            .member(NoteMemberResponse.builder()
-                                .memberId(childComment.getMember().getId())
-                                .nickname(childComment.getMember().getNickname())
-                                .profileUrl(childComment.getMember().getProfileUrl())
-                                .badgeId(getHoldingBadge(childComment))
-                                .build())
-                            .childComments(Collections.emptyList())
-                            .content(childComment.getContent())
-                            .date(childComment.getCreatedAt())
+                }
+
+                commentsResponses.add(
+                    CommentsResponse.builder()
+                        .commentId(comment.getId())
+                        .member(NoteMemberResponse.builder()
+                            .memberId(comment.getMember().getId())
+                            .nickname(comment.getMember().getNickname())
+                            .profileUrl(comment.getMember().getProfileUrl())
+                            .badgeId(getHoldingBadge(comment))
                             .build())
-                        .toList())
-                    .content(parentComment.getContent())
-                    .date(parentComment.getCreatedAt())
-                    .build()
-            );
+                        .content(comment.getContent())
+                        .date(comment.getCreatedAt())
+                        .childComments(childComments
+                            .stream().map(childComment -> CommentsResponse.builder()
+                                .commentId(childComment.getId())
+                                .member(NoteMemberResponse.builder()
+                                    .memberId(childComment.getMember().getId())
+                                    .nickname(childComment.getMember().getNickname())
+                                    .profileUrl(childComment.getMember().getProfileUrl())
+                                    .badgeId(getHoldingBadge(childComment))
+                                    .build())
+                                .childComments(Collections.emptyList())
+                                .content(childComment.getContent())
+                                .date(childComment.getCreatedAt())
+                                .build())
+                            .toList())
+                        .build()
+                );
+            }
+
         }
 
         return commentsResponses;
