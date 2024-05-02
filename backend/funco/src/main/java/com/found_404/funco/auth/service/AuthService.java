@@ -1,5 +1,7 @@
 package com.found_404.funco.auth.service;
 
+import java.util.Objects;
+
 import com.found_404.funco.auth.dto.response.TokenResponse;
 import com.found_404.funco.notification.service.NotificationService;
 import org.springframework.data.redis.core.HashOperations;
@@ -43,17 +45,21 @@ public class AuthService {
 				.cash(INIT_CASH)
 				.status(MemberStatus.NORMAL)
 				.build());
-		if (member.getOauthId() == null) {
+		if (Objects.isNull(member.getOauthId())) {
 			member.updateOauthId(dto.member().getOauthId());
 			memberRepository.save(member);
 		}
 
-		// redis oauthAccessToken 저장
-		// 추후 로그아웃 구현 시 필요할 수 있음
+
+		/*
+		// OAuthAccessToken 저장
+		// 추가적인 소셜 로그인 제공 서비스 구현 시 필요
 		HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
 		hashOperations.put(dto.member().getOauthId().getOauthServerId(), "oauthAccessToken", dto.accessToken());
+		*/
 
-		String refreshToken = tokenService.createRefreshToken(member);
+		// Refresh Token 생성 및 저장
+ 		String refreshToken = tokenService.createRefreshToken(member);
 		// 기존의 쿠키 설정을 문자열로 변환
 		String cookieValue = "refreshToken=" + refreshToken +
 			"; HttpOnly; Secure; Path=/; SameSite=None";
@@ -65,16 +71,26 @@ public class AuthService {
 				.profileUrl(member.getProfileUrl())
 				.nickname(member.getNickname())
 				.memberId(member.getId())
-				.accessToken(tokenService.createToken(member))
+				.accessToken(tokenService.createAccessToken(member))
 				.unReadCount(notificationService.getUnReadCount(member.getId()))
 				.build();
 	}
 
 	public TokenResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
 
-		// 유효하다면 accessToken 재발급
-		// 기존 코드 Refactoring 필요
 		return tokenService.reissueAccessToken(request, response);
 	}
 
+	public void logout(HttpServletResponse response, OauthServerType oauthServerType, Member Member) {
+
+		// 로그아웃 로직 구현
+		// 1. 헤더의 accessToken과 refreshToken을 모두 지워준다.
+		// Next.js 상황에 맞게 추후 변경될 수 있음
+		tokenService.deleteHeader(response);
+		// 2. redis의 refreshToken을 지워준다.
+		tokenService.deleteRefreshToken(Member);
+		// 추후 고려해야 할 사항
+			// 서버 타입을 여러 개 둘 때 refreshToken의 키 값을 어떻게 줘야할까?
+
+	}
 }
