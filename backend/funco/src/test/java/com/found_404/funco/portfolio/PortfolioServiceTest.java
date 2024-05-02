@@ -161,4 +161,32 @@ public class PortfolioServiceTest {
 		verify(subscribeRepository, never()).save(any());
 	}
 
+	@Test
+	@Transactional
+	@DisplayName("포트폴리오 구매 실패 - seller 없을 경우")
+	void subscribeFail_WhenSellerNotFound() {
+		// given
+		Long memberId = 1L;
+		Long sellerId = 2L;
+
+		Member subscriber = mock(Member.class);
+		SubscribeRequest subscribeRequest = SubscribeRequest.builder().memberId(sellerId).build();
+
+		given(memberRepository.findById(memberId)).willReturn(Optional.of(subscriber));
+		given(memberRepository.findById(sellerId)).willReturn(Optional.empty());
+
+		// when
+		MemberException exception = assertThrows(MemberException.class, () ->
+			portfolioService.createPortfolio(memberId, subscribeRequest)
+		);
+
+		// then
+		assertEquals(exception.getErrorCode(), MemberErrorCode.NOT_FOUND_MEMBER.name());
+		assertEquals(exception.getHttpStatus(), MemberErrorCode.NOT_FOUND_MEMBER.getHttpStatus());
+		assertEquals(exception.getMessage(), MemberErrorCode.NOT_FOUND_MEMBER.getErrorMsg());
+
+		verify(memberRepository, never()).save(any(Member.class));
+		verify(subscribeRepository, never()).save(any());
+	}
+
 }
