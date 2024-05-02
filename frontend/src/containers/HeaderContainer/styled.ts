@@ -143,13 +143,6 @@ export const NavBarLoginButton = styled.button`
   display: flex;
   align-items: center;
 
-  img {
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    margin-right: 0;
-  }
-
   p {
     font-size: 0.9rem;
     margin: auto 0.3125rem auto 0.625rem;

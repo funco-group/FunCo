@@ -74,7 +74,7 @@ function Navbar() {
             <div ref={notiDropDownRef}>
               <NavBarNotiProfileDiv onClick={handleNotiDropdown}>
                 <NavBarNotiImg
-                  src="/icon/notification-off.png"
+                  src="/icon/notification-off.svg"
                   alt="noti-off-icon"
                   draggable={false}
                 />
@@ -96,7 +96,7 @@ function Navbar() {
                   />
                 ) : (
                   <NavBarProfileImg
-                    src="icon/user-default.png"
+                    src="icon/user-default.svg"
                     alt="default-profile"
                     draggable={false}
                   />
@@ -112,7 +112,6 @@ function Navbar() {
           </NavBarRightDiv>
         ) : (
           <NavBarLoginButton type="button" onClick={handleLoginClick}>
-            {/* <img src="/icon/google.png" alt="google-logo" draggable={false} /> */}
             <GoogleSVG />
             <p>Google로 시작하기</p>
           </NavBarLoginButton>

@@ -1,4 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import ArrowLeft from '@/../public/icon/pagination-arrow-left.svg'
+import ArrowRight from '@/../public/icon/pagination-arrow-right.svg'
 import {
   RankArrowDiv,
   RankPaginationButton,
@@ -53,11 +55,7 @@ function RankPagination({
       <RankPaginationDiv>
         {startPage !== 0 ? (
           <RankArrowDiv onClick={handlePaginationPrevArrowClick}>
-            <img
-              src="/icon/pagination-arrow-left.png"
-              alt="rank-pagination-left-arrow"
-              draggable={false}
-            />
+            <ArrowLeft />
           </RankArrowDiv>
         ) : null}
         {pageList.map((pageNum) => (
@@ -71,11 +69,7 @@ function RankPagination({
         ))}
         {startPage !== Math.floor(totalPage / 5) * 5 ? (
           <RankArrowDiv onClick={handlePaginationNextArrowClick}>
-            <img
-              src="/icon/pagination-arrow-right.png"
-              alt="rank-pagination-right-arrow"
-              draggable={false}
-            />
+            <ArrowRight />
           </RankArrowDiv>
         ) : null}
       </RankPaginationDiv>

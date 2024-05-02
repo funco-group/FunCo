@@ -8,6 +8,7 @@ import NotiHistoryType from '@/interfaces/notification/NotiHistoryType'
 import NotiHistoryContent from '@/components/Header/NotiHistoryContent'
 import { getNotiHistoryList, sendReadNotiList } from '@/apis/notification'
 import useUserState from '@/hooks/recoilHooks/useUserState'
+import DownArrow from '@/../public/icon/chevron-down.svg'
 
 interface NotiDropdownProps {
   visible: boolean
@@ -59,7 +60,7 @@ function NotiDropdown({ visible }: NotiDropdownProps) {
       </NotiHistoryContentContainer>
       <NotiMoreButton>
         <p>더보기</p>
-        <img src="/icon/chevron-down.png" alt="more-icon" />
+        <DownArrow />
       </NotiMoreButton>
     </NotiDropdownContainer>
   )
