@@ -25,6 +25,8 @@ import com.found_404.funco.portfolio.domain.repository.SubscribeRepository;
 import com.found_404.funco.portfolio.dto.FollowerInfo;
 import com.found_404.funco.portfolio.dto.request.PortfolioStatusRequest;
 import com.found_404.funco.portfolio.dto.request.SubscribeRequest;
+import com.found_404.funco.portfolio.exception.PortfolioErrorCode;
+import com.found_404.funco.portfolio.exception.PortfolioException;
 import com.found_404.funco.portfolio.service.PortfolioService;
 
 @ExtendWith(MockitoExtension.class)
@@ -189,4 +191,39 @@ public class PortfolioServiceTest {
 		verify(subscribeRepository, never()).save(any());
 	}
 
+	@Test
+	@Transactional
+	@DisplayName("포트폴리오 구매 실패 - subscriber가 자산이 충분하지 않을 경우")
+	void subscribeFail_InsufficientCash() {
+		// given
+		Long memberId = 1L;
+		Long sellerId = 2L;
+
+		Member subscriber = Member.builder()
+			.cash(50000L)
+			.build();
+		Member seller = Member.builder()
+			.cash(750000L)
+			.portfolioStatus(PortfolioStatusType.PRIVATE)
+			.portfolioPrice(100000L)
+			.build();
+		SubscribeRequest subscribeRequest = SubscribeRequest.builder().memberId(sellerId).build();
+
+		given(memberRepository.findById(memberId)).willReturn(Optional.of(subscriber));
+		given(memberRepository.findById(sellerId)).willReturn(Optional.of(seller));
+
+		// when
+		PortfolioException exception = assertThrows(PortfolioException.class, () ->
+			portfolioService.createPortfolio(memberId, subscribeRequest)
+		);
+
+		// then
+		assertTrue(exception instanceof PortfolioException);
+		assertEquals(exception.getErrorCode(), PortfolioErrorCode.INSUFFICIENT_CASH.name());
+		assertEquals(exception.getHttpStatus(), PortfolioErrorCode.INSUFFICIENT_CASH.getHttpStatus());
+		assertEquals(exception.getMessage(), PortfolioErrorCode.INSUFFICIENT_CASH.getErrorMsg());
+
+		verify(memberRepository, never()).save(any(Member.class));
+		verify(subscribeRepository, never()).save(any());
+	}
 }
