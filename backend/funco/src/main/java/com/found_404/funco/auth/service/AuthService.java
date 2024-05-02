@@ -1,5 +1,7 @@
 package com.found_404.funco.auth.service;
 
+import java.util.Objects;
+
 import com.found_404.funco.auth.dto.response.TokenResponse;
 import com.found_404.funco.notification.service.NotificationService;
 import org.springframework.data.redis.core.HashOperations;
@@ -43,7 +45,7 @@ public class AuthService {
 				.cash(INIT_CASH)
 				.status(MemberStatus.NORMAL)
 				.build());
-		if (member.getOauthId() == null) {
+		if (Objects.isNull(member.getOauthId())) {
 			member.updateOauthId(dto.member().getOauthId());
 			memberRepository.save(member);
 		}

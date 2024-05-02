@@ -70,11 +70,6 @@ public class TokenService {
 			.signWith(SignatureAlgorithm.HS256, secretKey)
 			.compact();
 
-		// redis에 accessToken 저장
-		HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
-		hashOperations.put(member.getOauthId().getOauthServerId(), REDIS_TOKEN_KEY, accessToken);
-		tokenRedisTemplate.expire(member.getOauthId().getOauthServerId(), TOKEN_PERIOD, MILLISECONDS);
-
 		return accessToken;
 	}
 
@@ -111,7 +106,7 @@ public class TokenService {
 	public String resolveToken(HttpServletRequest request) {
 		String accessToken = request.getHeader("Authorization");
 
-		if (accessToken == null || accessToken.trim().isEmpty()) {
+		if (Objects.isNull(accessToken) || accessToken.trim().isEmpty()) {
 			throw new SecurityException(EMPTY_TOKEN, HttpStatus.UNAUTHORIZED);
 		}
 
