@@ -26,5 +26,12 @@ public class SubscribeCustomRepositoryImpl implements SubscribeCustomRepository 
 			.where(follow.following.id.eq(followingId))
 			.fetch();
 	}
-	
+
+	@Override
+	public void updateFollower(Long followingId, Long followerId, Long cash) {
+		jpaQueryFactory.update(follow).set(follow.cash, cash)
+			.where(follow.following.id.eq(followingId),
+				follow.follower.id.eq(followerId))
+			.execute();
+	}
 }
