@@ -6,8 +6,8 @@ interface NavLinkProps {
   name: string
 }
 function NavLinkComponent({ path, name }: NavLinkProps) {
-  const nowTabName = usePathname()
-  const isActive = nowTabName === path
+  const pathname = usePathname()
+  const isActive = pathname.split('/')[1] === path.split('/')[1]
 
   return (
     <Link href={path} className={isActive ? 'nav-link active' : 'nav-link'}>
