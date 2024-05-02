@@ -80,7 +80,7 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
             return note.createdAt.desc();
         }
 
-        if ("RECOMMENDED".equals(sorted.name())) {
+        if (SortedType.RECOMMENDED.name().equals(sorted.name())) {
             JPQLQuery<Long> likeCount = JPAExpressions
                 .select(noteLike.count())
                 .from(noteLike)
