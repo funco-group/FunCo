@@ -3,7 +3,7 @@ package com.found_404.funco.note.service;
 import static com.found_404.funco.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 import static com.found_404.funco.note.exception.NoteErrorCode.NOT_FOUND_NOTE;
 
-import com.found_404.funco.badge.domain.repository.BadgeRepository;
+import com.found_404.funco.badge.domain.HoldingBadge;
 import com.found_404.funco.badge.domain.repository.HoldingBadgeRepository;
 import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
@@ -23,8 +23,10 @@ import com.found_404.funco.note.dto.response.NotesResponse;
 import com.found_404.funco.note.dto.type.PostType;
 import com.found_404.funco.note.exception.NoteException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,7 +130,7 @@ public class NoteService {
                         .memberId(parentComment.getMember().getId())
                         .nickname(parentComment.getMember().getNickname())
                         .profileUrl(parentComment.getMember().getProfileUrl())
-                        .badgeId(holdingBadgeRepository.findByMember(parentComment.getMember()).getBadge().getId())
+                        .badgeId(getHoldingBadge(parentComment))
                         .build())
                     .childComments(childComments
                         .stream().map(childComment -> CommentsResponse.builder()
@@ -137,9 +139,9 @@ public class NoteService {
                                 .memberId(childComment.getMember().getId())
                                 .nickname(childComment.getMember().getNickname())
                                 .profileUrl(childComment.getMember().getProfileUrl())
-                                .badgeId(holdingBadgeRepository.findByMember(childComment.getMember()).getBadge().getId())
+                                .badgeId(getHoldingBadge(childComment))
                                 .build())
-                            .childComments(null)
+                            .childComments(Collections.emptyList())
                             .content(childComment.getContent())
                             .date(childComment.getCreatedAt())
                             .build())
@@ -151,5 +153,10 @@ public class NoteService {
         }
 
         return commentsResponses;
+    }
+
+    public Long getHoldingBadge(NoteComment comment) {
+        Optional<HoldingBadge> optionalHoldingBadge = holdingBadgeRepository.findByMember(comment.getMember());
+        return optionalHoldingBadge.isPresent() ? optionalHoldingBadge.get().getId() : -1L;
     }
 }
