@@ -88,6 +88,10 @@ public class Member extends BaseEntity {
 		this.cash += getCashWithCommission(orderCash);
 	}
 
+	public void increaseCashWithoutCommission(long orderCash) {
+		this.cash += orderCash;
+	}
+
 	public long getCashWithCommission(long orderCash) {
 		return orderCash - (long)(DecimalCalculator.multiple(orderCash, COMMISSION, ScaleType.NORMAL_SCALE));
 	}
@@ -110,6 +114,11 @@ public class Member extends BaseEntity {
 
 	public void updateIntroduction(String introduction) {
 		this.introduction = introduction;
+	}
+
+	public void updatePortfolioStatus(PortfolioStatusType portfolioStatus, Long portfolioPrice) {
+		this.portfolioStatus = portfolioStatus;
+		this.portfolioPrice = portfolioPrice;
 	}
 
 	public void withdraw() {
