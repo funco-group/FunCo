@@ -5,7 +5,7 @@ import {
   NotiHistoryContentMsgP,
   NotiHistoryContentDateP,
 } from '@/components/Header/NotiHistoryContent.styled'
-import useParseDate from '@/hooks/useParseDate'
+import parseDate from '@/utils/parseDate'
 
 interface NotiHistoryContentProps {
   notiHistory: NotiHistoryType
@@ -20,7 +20,7 @@ function NotiHistoryContent({ notiHistory }: NotiHistoryContentProps) {
     ['FOLLOW', '팔로우 알림'],
   ])
 
-  const time = useParseDate(notiHistory.notificationDate)
+  const time = parseDate(notiHistory.notificationDate)
 
   return (
     <NotiHistoryContentContainer $isRead={notiHistory.isRead}>
