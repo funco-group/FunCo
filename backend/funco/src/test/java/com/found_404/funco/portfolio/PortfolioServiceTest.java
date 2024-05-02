@@ -3,6 +3,8 @@ package com.found_404.funco.portfolio;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +22,7 @@ import com.found_404.funco.member.exception.MemberErrorCode;
 import com.found_404.funco.member.exception.MemberException;
 import com.found_404.funco.portfolio.domain.Subscribe;
 import com.found_404.funco.portfolio.domain.repository.SubscribeRepository;
+import com.found_404.funco.portfolio.dto.FollowerInfo;
 import com.found_404.funco.portfolio.dto.request.PortfolioStatusRequest;
 import com.found_404.funco.portfolio.dto.request.SubscribeRequest;
 import com.found_404.funco.portfolio.service.PortfolioService;
@@ -108,6 +111,28 @@ public class PortfolioServiceTest {
 		assertEquals(50000L, subscriber.getCash());
 		assertEquals(800000L, seller.getCash());
 		verify(subscribeRepository, times(1)).save(any(Subscribe.class));
+	}
+
+	@Test
+	@Transactional
+	@DisplayName("포트폴리오 구매 후 팔로워 동기화 성공")
+	void synchronizeFollowersSuccess() {
+		// given
+		Long followingId = 1L;
+		double ratio = 0.5;
+		FollowerInfo followerInfo = FollowerInfo.builder()
+			.followerId(2L)
+			.cash(1000L)
+			.build();
+		List<FollowerInfo> followerInfos = Collections.singletonList(followerInfo);
+
+		given(subscribeRepository.findFollowInfoByFollowingId(followingId)).willReturn(followerInfos);
+
+		// when
+		portfolioService.synchronizeFollowers(followingId, ratio);
+
+		// then
+		verify(subscribeRepository, times(1)).updateFollower(eq(followingId), eq(followerInfo.followerId()), anyLong());
 	}
 
 }
