@@ -24,7 +24,9 @@ import com.found_404.funco.note.dto.type.PostType;
 import com.found_404.funco.note.exception.NoteException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -120,47 +122,46 @@ public class NoteService {
         List<NoteComment> comments = noteCommentRepository.findByNoteId(noteId);
         List<CommentsResponse> commentsResponses = new ArrayList<>();
 
+        Map<Long, List<NoteComment>> childComments = new HashMap<>();
         for (NoteComment comment : comments) {
             if (Objects.isNull(comment.getParentId())) {
-                Long parentId = comment.getId();
-                List<NoteComment> childComments = new ArrayList<>();
-                for (NoteComment childComment : comments) {
-                    if (parentId.equals(childComment.getParentId())) {
-                        childComments.add(comment);
-                    }
-
-                }
-
-                commentsResponses.add(
-                    CommentsResponse.builder()
-                        .commentId(comment.getId())
-                        .member(NoteMemberResponse.builder()
-                            .memberId(comment.getMember().getId())
-                            .nickname(comment.getMember().getNickname())
-                            .profileUrl(comment.getMember().getProfileUrl())
-                            .badgeId(getHoldingBadge(comment))
-                            .build())
-                        .content(comment.getContent())
-                        .date(comment.getCreatedAt())
-                        .childComments(childComments
-                            .stream().map(childComment -> CommentsResponse.builder()
-                                .commentId(childComment.getId())
-                                .member(NoteMemberResponse.builder()
-                                    .memberId(childComment.getMember().getId())
-                                    .nickname(childComment.getMember().getNickname())
-                                    .profileUrl(childComment.getMember().getProfileUrl())
-                                    .badgeId(getHoldingBadge(childComment))
-                                    .build())
-                                .childComments(Collections.emptyList())
-                                .content(childComment.getContent())
-                                .date(childComment.getCreatedAt())
-                                .build())
-                            .toList())
-                        .build()
-                );
+                childComments.getOrDefault(0L, new ArrayList<>()).add(comment);
             }
-
+            else {
+                childComments.getOrDefault(comment.getParentId(), new ArrayList<>()).add(comment);
+            }
         }
+
+        for (NoteComment comment : childComments.getOrDefault(0L, Collections.emptyList())) {
+            commentsResponses.add(
+                CommentsResponse.builder()
+                    .commentId(comment.getId())
+                    .member(NoteMemberResponse.builder()
+                        .memberId(comment.getMember().getId())
+                        .nickname(comment.getMember().getNickname())
+                        .profileUrl(comment.getMember().getProfileUrl())
+                        .badgeId(getHoldingBadge(comment))
+                        .build())
+                    .content(comment.getContent())
+                    .date(comment.getCreatedAt())
+                    .childComments(childComments.get(comment.getParentId())
+                        .stream().map(childComment -> CommentsResponse.builder()
+                            .commentId(childComment.getId())
+                            .member(NoteMemberResponse.builder()
+                                .memberId(childComment.getMember().getId())
+                                .nickname(childComment.getMember().getNickname())
+                                .profileUrl(childComment.getMember().getProfileUrl())
+                                .badgeId(getHoldingBadge(childComment))
+                                .build())
+                            .childComments(Collections.emptyList())
+                            .content(childComment.getContent())
+                            .date(childComment.getCreatedAt())
+                            .build())
+                        .toList())
+                    .build()
+            );
+        }
+
 
         return commentsResponses;
     }
