@@ -29,6 +29,4 @@ public class NoteCommentController {
         return ResponseEntity.ok().build();
     }
 
-
-
 }
