@@ -4,6 +4,7 @@ import com.found_404.funco.global.util.AuthMemberId;
 import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.note.dto.request.NoteRequest;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
+import com.found_404.funco.note.dto.response.CommentsResponse;
 import com.found_404.funco.note.dto.response.NoteResponse;
 import com.found_404.funco.note.dto.response.NotesResponse;
 import com.found_404.funco.note.service.NoteService;
@@ -73,6 +74,14 @@ public class NoteController {
         @PathVariable Long noteId) {
         noteService.removeNote(memberId, noteId);
         return ResponseEntity.ok().build();
+    }
+
+    // 댓글 목록 조회
+    @GetMapping("/{noteId}/comments")
+    public ResponseEntity<List<CommentsResponse>> getComments(
+        @PathVariable Long noteId
+    ) {
+        return ResponseEntity.ok(noteService.getComments(noteId));
     }
 
 }
