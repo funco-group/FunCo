@@ -124,41 +124,38 @@ public class NoteService {
 
         Map<Long, List<NoteComment>> childComments = new HashMap<>();
         for (NoteComment comment : comments) {
-            childComments.getOrDefault(Objects.isNull(comment.getParentId()) ? 0L : comment.getParentId(), new ArrayList<>()).add(comment);
+            long key = Objects.isNull(comment.getParentId()) ? 0 : comment.getParentId();
+            childComments.putIfAbsent(key, new ArrayList<>());
+            childComments.get(key).add(comment);
         }
+
 
         for (NoteComment comment : childComments.getOrDefault(0L, Collections.emptyList())) {
             commentsResponses.add(
-                CommentsResponse.builder()
-                    .commentId(comment.getId())
-                    .member(NoteMemberResponse.builder()
-                        .memberId(comment.getMember().getId())
-                        .nickname(comment.getMember().getNickname())
-                        .profileUrl(comment.getMember().getProfileUrl())
-                        .badgeId(getHoldingBadge(comment))
-                        .build())
-                    .content(comment.getContent())
-                    .date(comment.getCreatedAt())
-                    .childComments(childComments.get(comment.getParentId())
-                        .stream().map(childComment -> CommentsResponse.builder()
-                            .commentId(childComment.getId())
-                            .member(NoteMemberResponse.builder()
-                                .memberId(childComment.getMember().getId())
-                                .nickname(childComment.getMember().getNickname())
-                                .profileUrl(childComment.getMember().getProfileUrl())
-                                .badgeId(getHoldingBadge(childComment))
-                                .build())
-                            .childComments(Collections.emptyList())
-                            .content(childComment.getContent())
-                            .date(childComment.getCreatedAt())
-                            .build())
-                        .toList())
-                    .build()
+                getCommentsResponse(childComments, comment)
             );
         }
 
 
         return commentsResponses;
+    }
+
+    private CommentsResponse getCommentsResponse(Map<Long, List<NoteComment>> childComments,
+        NoteComment comment) {
+        return CommentsResponse.builder()
+            .commentId(comment.getId())
+            .member(NoteMemberResponse.builder()
+                .memberId(comment.getMember().getId())
+                .nickname(comment.getMember().getNickname())
+                .profileUrl(comment.getMember().getProfileUrl())
+                .badgeId(getHoldingBadge(comment))
+                .build())
+            .content(comment.getContent())
+            .date(comment.getCreatedAt())
+            .childComments(childComments.getOrDefault(comment.getId(), Collections.emptyList())
+                .stream().map(childComment -> getCommentsResponse(childComments, childComment))
+                .toList())
+            .build();
     }
 
     public Long getHoldingBadge(NoteComment comment) {
