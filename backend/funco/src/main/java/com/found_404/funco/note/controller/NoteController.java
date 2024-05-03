@@ -55,7 +55,8 @@ public class NoteController {
     }
 
     // 이미지 업로드
-
+//    @PostMapping()
+//    public
 
     // 게시글 수정
     @PutMapping("/{noteId}")
