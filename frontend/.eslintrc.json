@@ -8,7 +8,7 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": ["next.config.mjs"],
+  "ignorePatterns": ["next.config.mjs", "tailwind.config.js"],
   "rules": {
     "react/react-in-jsx-scope": "off"
   }
