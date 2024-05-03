@@ -124,12 +124,7 @@ public class NoteService {
 
         Map<Long, List<NoteComment>> childComments = new HashMap<>();
         for (NoteComment comment : comments) {
-            if (Objects.isNull(comment.getParentId())) {
-                childComments.getOrDefault(0L, new ArrayList<>()).add(comment);
-            }
-            else {
-                childComments.getOrDefault(comment.getParentId(), new ArrayList<>()).add(comment);
-            }
+            childComments.getOrDefault(Objects.isNull(comment.getParentId()) ? 0L : comment.getParentId(), new ArrayList<>()).add(comment);
         }
 
         for (NoteComment comment : childComments.getOrDefault(0L, Collections.emptyList())) {
