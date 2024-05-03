@@ -136,7 +136,6 @@ public class NoteService {
             );
         }
 
-
         return commentsResponses;
     }
 
