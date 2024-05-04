@@ -12,12 +12,12 @@ function NotesFilterBtn({
   handleBtn,
 }: NotesFilterBtnProps) {
   const activeClasses = active
-    ? 'border-mainColor border-2 text-brandColor'
-    : 'border-deactivatedGray  border text-brandDarkGray'
+    ? 'border-brandColor border-2 text-brandColor'
+    : 'border-deactivatedGray border text-brandDarkGray'
   return (
     <button
       type="button"
-      className={`rounded-md ${activeClasses} bg-brandWhite h-9 w-20 cursor-pointer border-solid text-sm outline-none`}
+      className={`rounded-md ${activeClasses} h-9 w-20 cursor-pointer border-solid bg-brandWhite text-sm outline-none`}
       onClick={() => handleBtn(buttonName)}
     >
       {content}

@@ -4,19 +4,12 @@ import SearchSVG from '@/../public/icon/search-icon-copy.svg'
 import palette from '@/lib/palette'
 
 interface NotesSearchProps {
-  search: string
   setSearch: Dispatch<SetStateAction<string>>
-  keyword: string
   setKeyword: Dispatch<SetStateAction<string>>
 }
 
-function NotesSearch({
-  search,
-  setSearch,
-  keyword,
-  setKeyword,
-}: NotesSearchProps) {
-  const [searchCategory, setSearchCategory] = useState('title') // 검색 카테고리 상태
+function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
+  const [searchCategory, setSearchCategory] = useState('TITLE') // 검색 카테고리 상태
   const [searchText, setSearchText] = useState('') // 검색 텍스트 상태
   const [isInputFocus, setIsInputFocus] = useState(false)
 
@@ -40,10 +33,10 @@ function NotesSearch({
   }
 
   const focusClasses =
-    'focus:border-mainColor focus:border-2 focus:text-brandColor'
+    'focus:border-brandColor focus:border-2 focus:text-brandColor'
 
   const inptFocusClasses = isInputFocus
-    ? 'border-mainColor border-2 text-brandColor'
+    ? 'border-brandColor border-2 text-brandColor'
     : 'border-deactivatedGray border'
 
   return (
@@ -54,9 +47,9 @@ function NotesSearch({
           value={searchCategory}
           className={`h-9 rounded border border-solid border-deactivatedGray text-brandDarkGray outline-none ${focusClasses}`}
         >
-          <option value="title">제목</option>
-          <option value="content">내용</option>
-          <option value="author">작성자</option>
+          <option value="TITLE">제목</option>
+          <option value="CONTENT">내용</option>
+          <option value="WRITER">작성자</option>
         </select>
       </div>
       <div
