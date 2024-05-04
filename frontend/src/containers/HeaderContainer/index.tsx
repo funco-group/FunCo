@@ -67,7 +67,7 @@ function Navbar() {
             <NavLinkComponent path="/trade" name="거래소" />
             <AssetHistoryNav path="/history" name="투자내역" />
             <NavLinkComponent path="/rank" name="랭킹" />
-            <NavLinkComponent path="/note" name="투자노트" />
+            <NavLinkComponent path="/notes" name="투자노트" />
           </NavBarLeftLinkDiv>
         </NavBarLeftDiv>
         {user ? (
