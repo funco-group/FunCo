@@ -15,6 +15,7 @@ import com.found_404.funco.note.domain.repository.ImageRepository;
 import com.found_404.funco.note.domain.repository.NoteCommentRepository;
 import com.found_404.funco.note.domain.repository.NoteLikeRepository;
 import com.found_404.funco.note.domain.repository.NoteRepository;
+import com.found_404.funco.note.dto.request.CommentRequest;
 import com.found_404.funco.note.dto.request.NoteRequest;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
 import com.found_404.funco.note.dto.response.CommentsResponse;
@@ -162,5 +163,20 @@ public class NoteService {
     public Long getHoldingBadge(NoteComment comment) {
         Optional<HoldingBadge> optionalHoldingBadge = holdingBadgeRepository.findByMember(comment.getMember());
         return optionalHoldingBadge.isPresent() ? optionalHoldingBadge.get().getId() : -1L;
+    }
+
+    public void addComment(Member member, Long noteId, CommentRequest request) {
+        if (Objects.isNull(member)) {
+            throw new MemberException(NOT_FOUND_MEMBER);
+        }
+
+        Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+
+        noteCommentRepository.save(NoteComment.builder()
+                .member(member)
+                .note(note)
+                .parentId(request.parentCommentId())
+                .content(request.content())
+            .build());
     }
 }
