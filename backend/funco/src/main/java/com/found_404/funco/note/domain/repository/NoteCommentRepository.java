@@ -10,4 +10,6 @@ public interface NoteCommentRepository extends JpaRepository<NoteComment, Long> 
     Long countByNote(Note note);
 
     List<NoteComment> findByNoteId(Long noteId);
+
+    boolean existsByParentId(Long parentId);
 }
