@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.found_404.funco.rank.dto.response.RankResponse;
+import com.found_404.funco.rank.service.RankSchedulerService;
 import com.found_404.funco.rank.service.RankService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/v1/rank")
 public class RankController {
 	private final RankService rankService;
+	private final RankSchedulerService rankSchedulerService;
 
 	@GetMapping
 	public ResponseEntity<Page<RankResponse>> getRanking(@RequestParam String type,
@@ -29,7 +31,7 @@ public class RankController {
 
 	@GetMapping("/test")
 	public ResponseEntity<Void> testRanking() {
-		rankService.runSchedulingProcess();
+		rankSchedulerService.runSchedulingProcess();
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }
