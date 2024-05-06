@@ -10,8 +10,10 @@ import com.found_404.funco.note.dto.response.NoteResponse;
 import com.found_404.funco.note.dto.response.NotesResponse;
 import com.found_404.funco.note.service.NoteService;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/v1/notes")
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NoteController {
 
     private final NoteService noteService;
+
 
     // 게시글 목록 조회
     @GetMapping()
@@ -56,8 +60,17 @@ public class NoteController {
     }
 
     // 이미지 업로드
-//    @PostMapping()
-//    public
+    @PostMapping("/image")
+    public ResponseEntity<String> uploadImage(
+        MultipartFile file)  {
+        try {
+            String imageUrl = noteService.uploadImage(file);
+            return ResponseEntity.ok().body(imageUrl);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not upload file");
+        }
+
+    }
 
     // 게시글 수정
     @PutMapping("/{noteId}")
