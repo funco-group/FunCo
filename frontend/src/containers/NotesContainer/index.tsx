@@ -1,6 +1,7 @@
 'use client'
 
 import TabButton from '@/components/Common/Button/TabButton.styled'
+import NotePreviewList from '@/components/Note/Notes/NotePreviewList'
 import NotesFilterBtnList from '@/components/Note/Notes/NotesFilterBtnList'
 import NotesSearch from '@/components/Note/Notes/NotesSearch'
 import { useRouter } from 'next/navigation'
@@ -16,7 +17,7 @@ function Notes() {
 
   const sortedList: [string, string, 'left' | 'right' | ''][] = [
     ['최신 순', 'LATEST', 'left'],
-    ['추천 순', 'RECOMMENDED', 'right'],
+    ['좋아요 순', 'RECOMMENDED', 'right'],
   ]
 
   const handleTabClick = (tabName: string) => {
@@ -28,7 +29,7 @@ function Notes() {
   }
 
   return (
-    <div>
+    <>
       <div className="flex justify-between">
         <NotesFilterBtnList
           nowFilter={nowFilter}
@@ -38,7 +39,7 @@ function Notes() {
         />
         <NotesSearch setSearch={setSearch} setKeyword={setKeyword} />
       </div>
-      <div className="mt-3 flex justify-between">
+      <div className="mt-5 flex justify-between">
         <div>
           {sortedList.map((item) => (
             <TabButton
@@ -61,16 +62,8 @@ function Notes() {
           글 작성
         </button>
       </div>
-      <div className="grid grid-cols-3 gap-8">
-        <div className="h-11 bg-black" />
-        <div className="h-11 bg-black" />
-        <div className="h-11 bg-black" />
-        <div className="h-11 bg-black" />
-        <div className="h-11 bg-black" />
-        <div className="h-11 bg-black" />
-        <div className="h-11 bg-black" />
-      </div>
-    </div>
+      <NotePreviewList />
+    </>
   )
 }
 
