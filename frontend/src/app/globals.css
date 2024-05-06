@@ -14,3 +14,12 @@ body,
   background-color: #fafafa;
   font-family: 'NanumSquare';
 }
+
+.toastui-editor-contents h1,
+.toastui-editor-contents h2,
+.toastui-editor-contents h3,
+.toastui-editor-contents h4,
+.toastui-editor-contents h5,
+.toastui-editor-contents h6 {
+  margin: 4px !important;
+}
