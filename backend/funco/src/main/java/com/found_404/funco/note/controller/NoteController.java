@@ -2,6 +2,7 @@ package com.found_404.funco.note.controller;
 
 import com.found_404.funco.global.util.AuthMemberId;
 import com.found_404.funco.member.domain.Member;
+import com.found_404.funco.note.dto.request.CommentRequest;
 import com.found_404.funco.note.dto.request.NoteRequest;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
 import com.found_404.funco.note.dto.response.CommentsResponse;
@@ -83,6 +84,16 @@ public class NoteController {
         @PathVariable Long noteId
     ) {
         return ResponseEntity.ok(noteService.getComments(noteId));
+    }
+
+    // 댓글 작성
+    @PostMapping("/{noteId}/comments")
+    public ResponseEntity<Void> addComment(
+        @AuthenticationPrincipal Member member,
+        @PathVariable Long noteId,
+        @RequestBody @Valid CommentRequest request) {
+        noteService.addComment(member, noteId, request);
+        return ResponseEntity.ok().build();
     }
 
 }

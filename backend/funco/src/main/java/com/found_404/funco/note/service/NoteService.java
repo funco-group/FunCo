@@ -1,5 +1,6 @@
 package com.found_404.funco.note.service;
 
+import static com.found_404.funco.member.exception.MemberErrorCode.INVALID_MEMBER;
 import static com.found_404.funco.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 import static com.found_404.funco.note.exception.NoteErrorCode.NOT_FOUND_NOTE;
 
@@ -14,6 +15,7 @@ import com.found_404.funco.note.domain.repository.ImageRepository;
 import com.found_404.funco.note.domain.repository.NoteCommentRepository;
 import com.found_404.funco.note.domain.repository.NoteLikeRepository;
 import com.found_404.funco.note.domain.repository.NoteRepository;
+import com.found_404.funco.note.dto.request.CommentRequest;
 import com.found_404.funco.note.dto.request.NoteRequest;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
 import com.found_404.funco.note.dto.response.CommentsResponse;
@@ -50,7 +52,7 @@ public class NoteService {
             if (Objects.nonNull(notesFilterRequest.type())
                 && (PostType.MY.name().equals(notesFilterRequest.type().name())
                 || PostType.LIKE.name().equals(notesFilterRequest.type().name()))) {
-                return null;
+                throw new MemberException(NOT_FOUND_MEMBER);
             }
         }
 
@@ -91,31 +93,32 @@ public class NoteService {
 
 
     public void addNote(Member member, NoteRequest request) {
-        if (Objects.nonNull(member)) {
-            Member tempMember = memberRepository.findById(member.getId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-            noteRepository.save(Note.builder()
-                .member(tempMember)
-                .title(request.title())
-                .content(request.content())
-                .ticker(request.ticker())
-                .build());
+        if (Objects.isNull(member)) {
+            throw new MemberException(NOT_FOUND_MEMBER);
         }
-
+        noteRepository.save(Note.builder()
+            .member(member)
+            .title(request.title())
+            .content(request.content())
+            .ticker(request.ticker())
+            .build());
     }
 
     public void removeNote(Long memberId, Long noteId) {
         Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
-        if (note.getMember().getId().equals(memberId)) {
-            noteRepository.delete(note);
+        if (!note.getMember().getId().equals(memberId)) {
+           throw new MemberException(INVALID_MEMBER);
         }
+        noteRepository.delete(note);
     }
 
     @Transactional
     public void editNote(Member member, Long noteId, NoteRequest request) {
         Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
-        if (Objects.nonNull(member) && note.getMember().getId().equals(member.getId())) {
-            note.editNote(request.title(), request.content(), request.ticker());
+        if (Objects.isNull(member) || !note.getMember().getId().equals(member.getId())) {
+            throw new MemberException(INVALID_MEMBER);
         }
+        note.editNote(request.title(), request.content(), request.ticker());
     }
 
     public List<CommentsResponse> getComments(Long noteId) {
@@ -160,5 +163,20 @@ public class NoteService {
     public Long getHoldingBadge(NoteComment comment) {
         Optional<HoldingBadge> optionalHoldingBadge = holdingBadgeRepository.findByMember(comment.getMember());
         return optionalHoldingBadge.isPresent() ? optionalHoldingBadge.get().getId() : -1L;
+    }
+
+    public void addComment(Member member, Long noteId, CommentRequest request) {
+        if (Objects.isNull(member)) {
+            throw new MemberException(NOT_FOUND_MEMBER);
+        }
+
+        Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+
+        noteCommentRepository.save(NoteComment.builder()
+                .member(member)
+                .note(note)
+                .parentId(request.parentCommentId())
+                .content(request.content())
+            .build());
     }
 }
