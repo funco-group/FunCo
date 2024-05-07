@@ -37,7 +37,7 @@ function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
 
   const inptFocusClasses = isInputFocus
     ? 'border-brandColor border-2 text-brandColor'
-    : 'border-deactivatedGray border'
+    : 'border-deactivatedGray border-2'
 
   return (
     <div className="flex h-9">
@@ -45,7 +45,7 @@ function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
         <select
           onChange={handleCategoryChange}
           value={searchCategory}
-          className={`h-9 rounded border border-solid border-deactivatedGray text-brandDarkGray outline-none ${focusClasses}`}
+          className={`h-9 rounded border-2 border-solid border-deactivatedGray text-brandDarkGray outline-none ${focusClasses}`}
         >
           <option value="TITLE">제목</option>
           <option value="CONTENT">내용</option>
@@ -53,7 +53,7 @@ function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
         </select>
       </div>
       <div
-        className={` ml-1 flex items-center rounded border-solid bg-brandWhite ${inptFocusClasses}`}
+        className={` ml-1 flex items-center rounded border-solid bg-brandWhite ${inptFocusClasses} p-1`}
       >
         <input
           type="text"
@@ -67,7 +67,7 @@ function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
         <button
           type="button"
           onClick={handleSearch}
-          className="h-7 w-7 cursor-pointer border-none bg-transparent"
+          className="h-7 w-7 border-none bg-transparent"
         >
           <SearchSVG fill={palette.brandColor} />
         </button>

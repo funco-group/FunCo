@@ -17,7 +17,7 @@ function NotesFilterBtn({
   return (
     <button
       type="button"
-      className={`rounded-md ${activeClasses} h-9 w-20 cursor-pointer border-solid bg-brandWhite text-sm outline-none`}
+      className={`rounded-md ${activeClasses} h-9 w-20 border-solid bg-brandWhite text-sm outline-none`}
       onClick={() => handleBtn(buttonName)}
     >
       {content}
