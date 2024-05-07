@@ -4,13 +4,20 @@ import { usePathname } from 'next/navigation'
 interface NavLinkProps {
   path: string
   name: string
+  // eslint-disable-next-line react/require-default-props
+  query?: {
+    filter: string
+  }
 }
-function NavLinkComponent({ path, name }: NavLinkProps) {
+function NavLinkComponent({ path, name, query }: NavLinkProps) {
   const pathname = usePathname()
   const isActive = pathname.split('/')[1] === path.split('/')[1]
 
   return (
-    <Link href={path} className={isActive ? 'nav-link active' : 'nav-link'}>
+    <Link
+      href={{ pathname: path, query }}
+      className={isActive ? 'nav-link active' : 'nav-link'}
+    >
       {name}
     </Link>
   )

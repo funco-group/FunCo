@@ -13,7 +13,6 @@ import {
   useState,
 } from 'react'
 import { useRecoilValue } from 'recoil'
-import * as hangul from 'hangul-js'
 import searchByChosung from '@/utils/searchByChosung'
 
 interface Coin {
@@ -46,7 +45,6 @@ function CoinFilterModal({
   )
   const [isInputFocus, setIsInputFocus] = useState(false)
   const [searchText, setSearchText] = useState('')
-  const searcher = new hangul.Searcher(searchText)
 
   useEffect(() => {
     setMappingCoinList(initializeMappingCoinList)
@@ -120,9 +118,7 @@ function CoinFilterModal({
           <div className="no-scrollbar mb-3 h-80 overflow-auto border-b border-l-0 border-r-0 border-t-0 border-solid border-borderGray py-2">
             {MappingCoinList.filter(
               (coin) =>
-                (searcher.search(coin.name) >= 0 ||
-                  searchByChosung(searchText, coin.name)) &&
-                !coin.selected,
+                searchByChosung(searchText, coin.name) && !coin.selected,
             ).map((coin) => (
               <button
                 key={coin.name}
