@@ -68,6 +68,4 @@ export const NotiMoreButton = styled.button`
     color: #999999;
     margin: auto;
   }
-
-  cursor: pointer;
 `
