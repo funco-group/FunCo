@@ -52,7 +52,6 @@ const TabButton = styled.button<TabButtonProps>`
   }};
   font-family: ${({ $active }) =>
     $active ? 'NanumSquareBold' : 'NanumSquare'};
-  cursor: pointer;
 `
 
 export default TabButton

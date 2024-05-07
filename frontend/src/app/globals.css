@@ -13,6 +13,10 @@ body,
   height: 100%;
   background-color: #fafafa;
   font-family: 'NanumSquare';
+
+  button {
+    cursor: pointer;
+  }
 }
 
 .toastui-editor-contents h1,
