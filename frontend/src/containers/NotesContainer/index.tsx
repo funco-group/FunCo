@@ -56,7 +56,7 @@ function Notes() {
         </div>
         <button
           type="button"
-          className="block h-9 cursor-pointer rounded border-none bg-brandColor px-4 font-NSB text-xs text-brandWhite"
+          className="block h-9 rounded border-none bg-brandColor px-4 font-NSB text-xs text-brandWhite"
           onClick={handleWriteClick}
         >
           글 작성

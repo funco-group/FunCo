@@ -16,6 +16,7 @@ body,
 
   button {
     cursor: pointer;
+    user-select: none;
   }
 }
 
@@ -26,4 +27,13 @@ body,
 .toastui-editor-contents h5,
 .toastui-editor-contents h6 {
   margin: 4px !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
