@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import { NotePreviewType } from '@/interfaces/note/notePreviewType'
+import { NotePreviewType } from '@/interfaces/note/NotePreviewType'
 import noteParseDate from '@/utils/noteParseDate'
 import LikeSVG from '@/../public/icon/like.svg'
 import MsgSVG from '@/../public/icon/message-text-alt.svg'
@@ -18,6 +18,7 @@ interface NotePreviewProps {
 function NotePreview({ notePreviewData }: NotePreviewProps) {
   const buttonDivClasses =
     'flex items-center gap-2 border-solid border-transparent px-2 hover:rounded hover:border-brandColor'
+
   return (
     <div className="space-y-2 rounded border-2 border-solid border-deactivatedGray bg-brandWhite p-1 hover:border-brandColor">
       <img
@@ -48,7 +49,7 @@ function NotePreview({ notePreviewData }: NotePreviewProps) {
       </div>
       <div className="flex justify-end">
         <div className={`${buttonDivClasses}`}>
-          <div className="mt-0.5">
+          <div className="mt-1.5">
             {notePreviewData.liked ? (
               <LikeSVG fill="red" />
             ) : (
@@ -58,7 +59,9 @@ function NotePreview({ notePreviewData }: NotePreviewProps) {
           <div>{notePreviewData.likeCount}</div>
         </div>
         <div className={`${buttonDivClasses}`}>
-          <MsgSVG />
+          <div className="mt-1.5">
+            <MsgSVG />
+          </div>
           <div>{notePreviewData.commentCount}</div>
         </div>
       </div>

@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import NotesFilterBtn from './NotesFilterBtn'
+import CoinFilterModal from './CoinFilterModal'
 
 interface NotesFilterBtnListProps {
   nowFilter: string
@@ -14,6 +15,8 @@ function NotesFilterBtnList({
   coinList,
   setCoinList,
 }: NotesFilterBtnListProps) {
+  const [openModal, setOpenModal] = useState(false)
+
   const buttonList = [
     ['전체', 'ALL'],
     ['작성한 글', 'MY'],
@@ -26,16 +29,22 @@ function NotesFilterBtnList({
 
   const handleCoinBtn = () => {
     // 모달 오픈
-    console.log('모달 오픈')
-    if (coinList.length) {
-      setCoinList([])
-    } else {
-      setCoinList(['비트코인', '이더리움'])
-    }
+    setOpenModal(true)
+  }
+
+  const handleCoinFilterBtn = (btnName: string) => {
+    setCoinList((prev) => prev.filter((coin) => coin !== btnName))
   }
 
   return (
-    <div>
+    <div className=" min-h-[76px]">
+      {openModal && (
+        <CoinFilterModal
+          setCoinList={setCoinList}
+          setOpenModal={setOpenModal}
+          coinList={coinList}
+        />
+      )}
       <div className="flex gap-2">
         {buttonList.map((button) => (
           <NotesFilterBtn
@@ -53,11 +62,20 @@ function NotesFilterBtnList({
           handleBtn={handleCoinBtn}
         />
       </div>
-      {coinList.length > 0 ? (
-        <p className="font-NSB text-brandColor my-1 text-sm">
-          코인 필터 : {coinList.join(' ')}
-        </p>
-      ) : null}
+      <div className="mt-2">
+        {coinList.length > 0
+          ? coinList.map((coin) => (
+              <button
+                key={coin}
+                type="button"
+                className="my-1 mr-1 w-fit rounded border-none bg-brandColor p-1 text-xs text-brandWhite"
+                onClick={() => handleCoinFilterBtn(coin)}
+              >
+                {coin}
+              </button>
+            ))
+          : null}
+      </div>
     </div>
   )
 }
