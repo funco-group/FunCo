@@ -100,7 +100,7 @@ function CoinFilterModal({
                 placeholder="코인 이름 검색"
                 onFocus={handleInputFocus}
                 onBlur={handleInputFocus}
-                className="ml-1 h-5 border-none bg-transparent text-brandDarkGray outline-none placeholder:text-brandDarkGray focus:text-brandColor focus:placeholder:text-brandColor"
+                className="ml-1 h-7 border-none bg-transparent text-brandDarkGray outline-none placeholder:text-brandDarkGray focus:text-brandColor focus:placeholder:text-brandColor"
               />
             </div>
             <div className="mt-3 min-h-[38px]">

@@ -40,7 +40,7 @@ function NotesFilterBtnList({
   }
 
   return (
-    <div className=" min-h-[76px]">
+    <div className="min-h-[76px]">
       {openModal && (
         <CoinFilterModal
           setCoinList={setCoinList}
