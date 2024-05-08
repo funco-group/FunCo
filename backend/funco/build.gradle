@@ -59,10 +59,6 @@ dependencies {
 
     // s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-//    implementation 'org.springframework.boot:spring-boot-starter-web'
-//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//    implementation 'com.amazonaws:aws-java-sdk-s3'
-//    runtimeOnly 'mysql:mysql-connector-java'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
@@ -73,7 +69,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'io.projectreactor:reactor-test'
 
-
+    // html 파싱
+    implementation 'org.jsoup:jsoup:1.17.2'
 }
 
 tasks.named('test') {
