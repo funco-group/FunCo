@@ -16,7 +16,10 @@ public record NoteRequest (
     String content,
 
     @NotBlank
-    String ticker
+    String ticker,
+
+    @NotBlank
+    String thumbnail
     )
 {
 }

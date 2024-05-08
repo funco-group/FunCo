@@ -121,6 +121,7 @@ public class NoteService {
             .title(request.title())
             .content(request.content())
             .ticker(request.ticker())
+            .thumbnail(request.thumbnail())
             .build());
 
         return AddNoteResponse.builder()
