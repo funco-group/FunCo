@@ -104,8 +104,7 @@ public class FavoriteCoinSchedulingService {
 
 	// redis 에서 empty set row 삭제
 	private void deleteEmptySet(Set<String> updatedKeys) {
-		updatedKeys.stream().forEach(key -> {
-			// Fetch the FavoriteCoinInfo object from Redis
+		updatedKeys.forEach(key -> {
 			FavoriteCoinInfo favoriteCoinInfo = (FavoriteCoinInfo)favoriteCoinRedisTemplate.opsForValue().get(key);
 
 			if (favoriteCoinInfo == null || favoriteCoinInfo.getTickerSet().isEmpty()) { // delete the key from Redis
