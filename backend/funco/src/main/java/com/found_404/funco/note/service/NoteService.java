@@ -13,11 +13,11 @@ import com.amazonaws.util.IOUtils;
 import com.found_404.funco.badge.domain.HoldingBadge;
 import com.found_404.funco.badge.domain.repository.HoldingBadgeRepository;
 import com.found_404.funco.member.domain.Member;
-import com.found_404.funco.member.domain.repository.MemberRepository;
+
 import com.found_404.funco.member.exception.MemberException;
 import com.found_404.funco.note.domain.Note;
 import com.found_404.funco.note.domain.NoteComment;
-import com.found_404.funco.note.domain.repository.ImageRepository;
+
 import com.found_404.funco.note.domain.repository.NoteCommentRepository;
 import com.found_404.funco.note.domain.repository.NoteLikeRepository;
 import com.found_404.funco.note.domain.repository.NoteRepository;
@@ -43,6 +43,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +57,9 @@ public class NoteService {
     private final NoteCommentRepository noteCommentRepository;
     private final NoteLikeRepository noteLikeRepository;
     private final HoldingBadgeRepository holdingBadgeRepository;
-    private AmazonS3 amazonS3;
+
+    private final AmazonS3 amazonS3;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
@@ -194,32 +197,27 @@ public class NoteService {
             .build());
     }
 
-    public String uploadImage(MultipartFile file) throws IOException {
+    public String uploadImage(MultipartFile file) {
         String originalFilename = file.getOriginalFilename(); //원본 파일 명
         String extension = Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf(".")); //확장자 명
 
         String s3FileName = UUID.randomUUID().toString().substring(0, 10) + originalFilename; //변경된 파일 명
 
-        InputStream is = file.getInputStream();
-        byte[] bytes = IOUtils.toByteArray(is);
-
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType("image/" + extension);
-        metadata.setContentLength(bytes.length);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
-        try{
+        try (
+            InputStream is = file.getInputStream();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(IOUtils.toByteArray(is))) {
+
+            metadata.setContentLength(IOUtils.toByteArray(is).length);
             PutObjectRequest putObjectRequest =
                 new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead);
             amazonS3.putObject(putObjectRequest);
-        }catch (Exception e){
+        } catch (Exception e){
             throw new S3Exception(PUT_OBJECT_EXCEPTION);
-        }finally {
-            byteArrayInputStream.close();
-            is.close();
         }
-
         return amazonS3.getUrl(bucketName, s3FileName).toString();
     }
 }

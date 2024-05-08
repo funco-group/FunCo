@@ -63,13 +63,7 @@ public class NoteController {
     @PostMapping("/image")
     public ResponseEntity<String> uploadImage(
         MultipartFile file)  {
-        try {
-            String imageUrl = noteService.uploadImage(file);
-            return ResponseEntity.ok().body(imageUrl);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not upload file");
-        }
-
+        return ResponseEntity.ok().body(noteService.uploadImage(file));
     }
 
     // 게시글 수정
