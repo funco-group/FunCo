@@ -28,4 +28,23 @@ public class NoteCommentService {
         }
         comment.editNoteComment(request.content());
     }
+
+    public void removeComment(Long memberId, Long commentId) {
+        NoteComment comment = noteCommentRepository.findById(commentId).orElseThrow(() -> new NoteCommentException(NOT_FOUND_NOTE_COMMENT));
+
+        if (!comment.getMember().getId().equals(memberId)) {
+            throw new MemberException(INVALID_MEMBER);
+        }
+
+        boolean childExist = noteCommentRepository.existsByParentId(comment.getId());
+        // 자식 댓글이 있을 경우 soft delete
+        if (childExist) {
+            comment.editNoteComment("");
+        }
+        // 자식 댓글이 없을 경우 hard delete
+        else {
+            noteCommentRepository.delete(comment);
+        }
+
+    }
 }
