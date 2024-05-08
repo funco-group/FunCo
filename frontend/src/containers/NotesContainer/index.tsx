@@ -31,7 +31,7 @@ function Notes() {
   }
 
   const handleWriteClick = () => {
-    router.push('/note/write')
+    router.push('/notes/write')
   }
 
   useEffect(() => {

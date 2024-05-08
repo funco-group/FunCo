@@ -34,6 +34,9 @@ const BrandButton = styled.button<BrandButtonProps>`
   font-size: 0.9rem;
   font-family: 'NanumSquareBold';
   padding: 0.7rem 2rem;
+  &:disabled {
+    cursor: not-allowed !important;
+  }
 `
 
 export default BrandButton

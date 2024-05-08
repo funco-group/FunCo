@@ -26,7 +26,6 @@ function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
   }
 
   const handleSearch = () => {
-    console.log(`검색: ${searchCategory}, 키워드: ${searchText}`)
     if (searchText) {
       setSearch(searchCategory)
       setKeyword(searchText)
