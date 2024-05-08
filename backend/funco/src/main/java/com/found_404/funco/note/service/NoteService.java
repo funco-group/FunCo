@@ -3,15 +3,21 @@ package com.found_404.funco.note.service;
 import static com.found_404.funco.member.exception.MemberErrorCode.INVALID_MEMBER;
 import static com.found_404.funco.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 import static com.found_404.funco.note.exception.NoteErrorCode.NOT_FOUND_NOTE;
+import static com.found_404.funco.note.exception.S3ErrorCode.PUT_OBJECT_EXCEPTION;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.IOUtils;
 import com.found_404.funco.badge.domain.HoldingBadge;
 import com.found_404.funco.badge.domain.repository.HoldingBadgeRepository;
 import com.found_404.funco.member.domain.Member;
-import com.found_404.funco.member.domain.repository.MemberRepository;
+
 import com.found_404.funco.member.exception.MemberException;
 import com.found_404.funco.note.domain.Note;
 import com.found_404.funco.note.domain.NoteComment;
-import com.found_404.funco.note.domain.repository.ImageRepository;
+
 import com.found_404.funco.note.domain.repository.NoteCommentRepository;
 import com.found_404.funco.note.domain.repository.NoteLikeRepository;
 import com.found_404.funco.note.domain.repository.NoteRepository;
@@ -24,6 +30,10 @@ import com.found_404.funco.note.dto.response.NoteResponse;
 import com.found_404.funco.note.dto.response.NotesResponse;
 import com.found_404.funco.note.dto.type.PostType;
 import com.found_404.funco.note.exception.NoteException;
+import com.found_404.funco.note.exception.S3Exception;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,20 +41,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class NoteService {
 
     private final NoteRepository noteRepository;
-    private final ImageRepository imageRepository;
     private final NoteCommentRepository noteCommentRepository;
     private final NoteLikeRepository noteLikeRepository;
-    private final MemberRepository memberRepository;
     private final HoldingBadgeRepository holdingBadgeRepository;
+
+    private final AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
 
 
     public List<NotesResponse> getNotes(Member member, NotesFilterRequest notesFilterRequest) {
@@ -178,5 +195,29 @@ public class NoteService {
                 .parentId(request.parentCommentId())
                 .content(request.content())
             .build());
+    }
+
+    public String uploadImage(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename(); //원본 파일 명
+        String extension = Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf(".")); //확장자 명
+
+        String s3FileName = UUID.randomUUID().toString().substring(0, 10) + originalFilename; //변경된 파일 명
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType("image/" + extension);
+
+        try (
+            InputStream is = file.getInputStream();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(IOUtils.toByteArray(is))) {
+
+            metadata.setContentLength(IOUtils.toByteArray(is).length);
+            PutObjectRequest putObjectRequest =
+                new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead);
+            amazonS3.putObject(putObjectRequest);
+        } catch (Exception e){
+            throw new S3Exception(PUT_OBJECT_EXCEPTION);
+        }
+        return amazonS3.getUrl(bucketName, s3FileName).toString();
     }
 }
