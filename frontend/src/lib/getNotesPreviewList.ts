@@ -1,0 +1,13 @@
+import DummyNotes from './DummyNote'
+
+const getNotesPreviewList = (link: string) => {
+  if (link.includes('MY')) {
+    return DummyNotes.filter((note) => note.noteId === 1)
+  }
+if (link.includes('LIKE')) {
+    return DummyNotes.filter((note) => note.liked)
+  }
+  return DummyNotes
+}
+
+export default getNotesPreviewList

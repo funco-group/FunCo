@@ -15,7 +15,8 @@ import {
 import { useRecoilValue } from 'recoil'
 import searchByChosung from '@/utils/searchByChosung'
 
-interface Coin {
+interface NoteCoinType {
+  ticker: string
   name: string
   selected: boolean
 }
@@ -36,11 +37,12 @@ function CoinFilterModal({
 
   const initializeMappingCoinList = () =>
     AllCoinList.map((coin) => ({
+      ticker: coin,
       name: coinMap.get(coin) || '',
-      selected: coinList.includes(coinMap.get(coin) || ''),
+      selected: coinList.includes(coin),
     }))
 
-  const [MappingCoinList, setMappingCoinList] = useState<Coin[]>(
+  const [MappingCoinList, setMappingCoinList] = useState<NoteCoinType[]>(
     initializeMappingCoinList,
   )
   const [isInputFocus, setIsInputFocus] = useState(false)
@@ -64,7 +66,7 @@ function CoinFilterModal({
 
   const handleCheckBtn = () => {
     const selectedCoins = MappingCoinList.filter((coin) => coin.selected).map(
-      (coin) => coin.name,
+      (coin) => coin.ticker,
     )
     setCoinList(selectedCoins)
     setOpenModal(false)

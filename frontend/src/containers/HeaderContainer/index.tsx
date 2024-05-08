@@ -70,7 +70,7 @@ function Navbar() {
             <NavLinkComponent
               path="/notes"
               name="투자노트"
-              query={{ filter: 'ALL' }}
+              query={{ type: 'ALL' }}
             />
           </NavBarLeftLinkDiv>
         </NavBarLeftDiv>

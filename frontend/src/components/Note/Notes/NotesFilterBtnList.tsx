@@ -1,4 +1,6 @@
 import { Dispatch, SetStateAction, useState } from 'react'
+import { codeNameMapState } from '@/recoils/crypto'
+import { useRecoilValue } from 'recoil'
 import NotesFilterBtn from './NotesFilterBtn'
 import CoinFilterModal from './CoinFilterModal'
 
@@ -16,6 +18,7 @@ function NotesFilterBtnList({
   setCoinList,
 }: NotesFilterBtnListProps) {
   const [openModal, setOpenModal] = useState(false)
+  const coinMap = useRecoilValue(codeNameMapState)
 
   const buttonList = [
     ['전체', 'ALL'],
@@ -71,7 +74,7 @@ function NotesFilterBtnList({
                 className="my-1 mr-1 w-fit rounded border-none bg-brandColor p-1 text-xs text-brandWhite"
                 onClick={() => handleCoinFilterBtn(coin)}
               >
-                {coin}
+                {coinMap.get(coin)}
               </button>
             ))
           : null}
