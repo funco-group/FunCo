@@ -17,6 +17,7 @@ body,
   button {
     cursor: pointer;
     user-select: none;
+    outline: none;
   }
 }
 

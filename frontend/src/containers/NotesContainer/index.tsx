@@ -54,6 +54,7 @@ function Notes() {
 
     console.log('api 호출', apiParams)
     setNotePreviewList(getNotePreviewList(`/notes?${apiParams.join('&')}`))
+    setIsLoading(false)
   }, [searchParams])
 
   useEffect(() => {
@@ -90,11 +91,7 @@ function Notes() {
           coinList={coinList}
           setCoinList={setCoinList}
         />
-        <NotesSearch
-          nowFilter={nowFilter}
-          coinList={coinList}
-          sorted={sorted}
-        />
+        <NotesSearch setSearch={setSearch} setKeyword={setKeyword} />
       </div>
       <div className="mt-5 flex justify-between">
         <div>
