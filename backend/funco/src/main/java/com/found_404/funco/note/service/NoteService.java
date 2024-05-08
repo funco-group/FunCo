@@ -131,9 +131,9 @@ public class NoteService {
     }
 
     @Transactional
-    public void editNote(Member member, Long noteId, NoteRequest request) {
+    public void editNote(Long memberId, Long noteId, NoteRequest request) {
         Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
-        if (Objects.isNull(member) || !note.getMember().getId().equals(member.getId())) {
+        if (!note.getMember().getId().equals(memberId)) {
             throw new MemberException(INVALID_MEMBER);
         }
         note.editNote(request.title(), request.content(), request.ticker());
@@ -183,11 +183,9 @@ public class NoteService {
         return optionalHoldingBadge.isPresent() ? optionalHoldingBadge.get().getId() : -1L;
     }
 
-    public void addComment(Member member, Long noteId, CommentRequest request) {
-        if (Objects.isNull(member)) {
-            throw new MemberException(NOT_FOUND_MEMBER);
-        }
-
+    public void addComment(Long memberId, Long noteId, CommentRequest request) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
         Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
 
         noteCommentRepository.save(NoteComment.builder()

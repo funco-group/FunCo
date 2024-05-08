@@ -67,10 +67,10 @@ public class NoteController {
     // 게시글 수정
     @PutMapping("/{noteId}")
     public ResponseEntity<Void> editNote(
-        @AuthenticationPrincipal Member member,
+        @AuthMemberId Long memberId,
         @PathVariable Long noteId,
         @RequestBody @Valid NoteRequest request) {
-        noteService.editNote(member, noteId, request);
+        noteService.editNote(memberId, noteId, request);
         return  ResponseEntity.ok().build();
     }
 
@@ -94,10 +94,10 @@ public class NoteController {
     // 댓글 작성
     @PostMapping("/{noteId}/comments")
     public ResponseEntity<Void> addComment(
-        @AuthenticationPrincipal Member member,
+        @AuthMemberId Long memberId,
         @PathVariable Long noteId,
         @RequestBody @Valid CommentRequest request) {
-        noteService.addComment(member, noteId, request);
+        noteService.addComment(memberId, noteId, request);
         return ResponseEntity.ok().build();
     }
 

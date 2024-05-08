@@ -21,9 +21,9 @@ public class NoteCommentService {
     private final NoteCommentRepository noteCommentRepository;
 
     @Transactional
-    public void editComment(Member member, Long commentId, EditNoteCommentRequest request) {
+    public void editComment(Long memberId, Long commentId, EditNoteCommentRequest request) {
         NoteComment comment = noteCommentRepository.findById(commentId).orElseThrow(() -> new NoteCommentException(NOT_FOUND_NOTE_COMMENT));
-        if (Objects.isNull(member) || !comment.getMember().getId().equals(member.getId())) {
+        if (!comment.getMember().getId().equals(memberId)) {
             throw new MemberException(INVALID_MEMBER);
         }
         comment.editNoteComment(request.content());
