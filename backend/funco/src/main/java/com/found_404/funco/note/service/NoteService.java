@@ -197,7 +197,7 @@ public class NoteService {
             .build());
     }
 
-    public String uploadImage(MultipartFile file) {
+    public ImageResponse uploadImage(MultipartFile file) {
         String originalFilename = file.getOriginalFilename(); //원본 파일 명
         String extension = Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf(".")); //확장자 명
 
@@ -216,8 +216,11 @@ public class NoteService {
                     .withCannedAcl(CannedAccessControlList.PublicRead);
             amazonS3.putObject(putObjectRequest);
         } catch (Exception e){
+            log.error("s3 bucket upload error msg : {}", e.getMessage());
             throw new S3Exception(PUT_OBJECT_EXCEPTION);
         }
-        return amazonS3.getUrl(bucketName, s3FileName).toString();
+        return ImageResponse.builder()
+            .url(amazonS3.getUrl(bucketName, s3FileName).toString())
+            .build();
     }
 }
