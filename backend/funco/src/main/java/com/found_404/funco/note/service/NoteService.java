@@ -31,7 +31,6 @@ import com.found_404.funco.note.dto.response.ImageResponse;
 import com.found_404.funco.note.dto.response.NoteMemberResponse;
 import com.found_404.funco.note.dto.response.NoteResponse;
 import com.found_404.funco.note.dto.response.NotesResponse;
-import com.found_404.funco.note.dto.type.PostType;
 import com.found_404.funco.note.exception.NoteException;
 import com.found_404.funco.note.exception.S3Exception;
 import java.io.ByteArrayInputStream;
@@ -69,16 +68,8 @@ public class NoteService {
     private String bucketName;
 
 
-    public List<NotesResponse> getNotes(Member member, NotesFilterRequest notesFilterRequest) {
-        if (Objects.isNull(member)) {
-            if (Objects.nonNull(notesFilterRequest.type())
-                && (PostType.MY.name().equals(notesFilterRequest.type().name())
-                || PostType.LIKE.name().equals(notesFilterRequest.type().name()))) {
-                throw new MemberException(NOT_FOUND_MEMBER);
-            }
-        }
-
-        return noteRepository.getNotesWithFilter(member, notesFilterRequest)
+    public List<NotesResponse> getNotes(NotesFilterRequest notesFilterRequest) {
+        return noteRepository.getNotesWithFilter(notesFilterRequest)
             .stream().map(note ->  NotesResponse.builder()
                 .noteId(note.getId())
                 .nickname(note.getMember().getNickname())

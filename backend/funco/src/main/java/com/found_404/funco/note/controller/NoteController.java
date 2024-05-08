@@ -12,10 +12,8 @@ import com.found_404.funco.note.dto.response.NoteResponse;
 import com.found_404.funco.note.dto.response.NotesResponse;
 import com.found_404.funco.note.service.NoteService;
 import jakarta.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,9 +38,8 @@ public class NoteController {
     // 게시글 목록 조회
     @GetMapping()
     public ResponseEntity<List<NotesResponse>> getNotes(
-        @AuthenticationPrincipal Member member,
         @ModelAttribute  NotesFilterRequest notesFilterRequest) {
-        return ResponseEntity.ok(noteService.getNotes(member, notesFilterRequest));
+        return ResponseEntity.ok(noteService.getNotes(notesFilterRequest));
     }
 
     // 게시글 상세 조회

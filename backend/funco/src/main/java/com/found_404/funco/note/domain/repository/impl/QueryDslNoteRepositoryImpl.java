@@ -14,6 +14,7 @@ import com.found_404.funco.note.dto.type.SortedType;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -29,10 +30,16 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Note> getNotesWithFilter(Member member, NotesFilterRequest notesFilterRequest) {
+    public List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest) {
+//        if (Objects.isNull(notesFilterRequest)) {
+//            return jpaQueryFactory
+//                .selectFrom(note)
+//                .fetch();
+//        }
+
         return jpaQueryFactory
             .selectFrom(note)
-            .where(postTypeFilter(member, notesFilterRequest.type()),
+            .where(postTypeFilter(notesFilterRequest.id(), notesFilterRequest.type()),
                     coinFilter(notesFilterRequest.coin()),
                     searchFilter(notesFilterRequest.search(), notesFilterRequest.keyword()))
             .orderBy(sortedBy(notesFilterRequest.sorted()))
@@ -41,18 +48,18 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
             .fetch();
     }
 
-    private BooleanExpression postTypeFilter(Member member, PostType type){
-        if (Objects.isNull(member) || Objects.isNull(type)) {
+    private BooleanExpression postTypeFilter(Long id, PostType type){
+        if (Objects.isNull(type)) {
             return null;
         }
-
         return switch (type) {
             case ALL -> null;
-            case MY ->  note.member.id.eq(member.getId());
-            case LIKE -> JPAExpressions.selectOne()
+            case MY -> Objects.isNull(id) ? Expressions.asBoolean(false).isTrue() : note.member.id.eq(id);
+            case LIKE -> Objects.isNull(id) ? Expressions.asBoolean(false).isTrue() :
+                JPAExpressions.selectOne()
                 .from(noteLike)
                 .where(noteLike.note.id.eq(note.id)
-                    .and(noteLike.member.id.eq(member.getId())))
+                    .and(noteLike.member.id.eq(id)))
                 .exists();
         };
 
@@ -63,7 +70,7 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
     }
 
     private BooleanExpression searchFilter(SearchType search, String keyword) {
-        if (Objects.isNull(search)) {
+        if (Objects.isNull(search) || Objects.isNull(keyword)) {
             return null;
         }
 

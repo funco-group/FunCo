@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 public record NotesFilterRequest(
+
+    Long id,
+
     PostType type,
 
     List<String> coin,

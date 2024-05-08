@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface QueryDslNoteRepository {
 
-    List<Note> getNotesWithFilter(Member member, NotesFilterRequest notesFilterRequest);
+    List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest);
 }
