@@ -74,7 +74,7 @@ public class NoteService {
                 .noteId(note.getId())
                 .nickname(note.getMember().getNickname())
                 .profileImage(note.getMember().getProfileUrl())
-                .thumbnail(null) // 수정!!
+                .thumbnail(note.getThumbnail())
                 .title(note.getTitle())
                 .content(note.getContent())
                 .coinName(note.getTicker())
