@@ -3,7 +3,6 @@ package com.found_404.funco.note.domain.repository.impl;
 import static com.found_404.funco.note.domain.QNote.note;
 import static com.found_404.funco.note.domain.QNoteLike.noteLike;
 
-import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.note.domain.Note;
 
 import com.found_404.funco.note.domain.repository.QueryDslNoteRepository;
@@ -17,12 +16,10 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
@@ -31,12 +28,6 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
 
     @Override
     public List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest) {
-//        if (Objects.isNull(notesFilterRequest)) {
-//            return jpaQueryFactory
-//                .selectFrom(note)
-//                .fetch();
-//        }
-
         return jpaQueryFactory
             .selectFrom(note)
             .where(postTypeFilter(notesFilterRequest.id(), notesFilterRequest.type()),
