@@ -19,7 +19,7 @@ public record NoteRequest (
     String ticker,
 
     @NotBlank
-    String thumbnail
+    String thumbnailImage
     )
 {
 }

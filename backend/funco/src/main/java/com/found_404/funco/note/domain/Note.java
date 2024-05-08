@@ -38,22 +38,29 @@ public class Note extends BaseEntity {
 	@Column(nullable = false)
 	private String ticker;
 
-	@Comment("썸네일")
+	@Comment("썸네일 이미지")
 	@Column(nullable = false)
-	private String thumbnail;
+	private String thumbnailImage;
+
+	@Comment("썸네일 내용")
+	@Column(nullable = false)
+	private String thumbnailContent;
 
 	@Builder
-	public Note(Member member, String title, String content, String ticker, String thumbnail) {
+	public Note(Member member, String title, String content, String ticker, String thumbnailImage, String thumbnailContent) {
 		this.member = member;
 		this.title = title;
 		this.content = content;
 		this.ticker = ticker;
-		this.thumbnail = thumbnail;
+		this.thumbnailImage = thumbnailImage;
+		this.thumbnailContent = thumbnailContent;
 	}
 
-	public void editNote(String title, String content, String ticker) {
+	public void editNote(String title, String content, String ticker, String thumbnailImage, String thumbnailContent) {
 		this.title = title;
 		this.content = content;
 		this.ticker = ticker;
+		this.thumbnailImage = thumbnailImage;
+		this.thumbnailContent = thumbnailContent;
 	}
 }

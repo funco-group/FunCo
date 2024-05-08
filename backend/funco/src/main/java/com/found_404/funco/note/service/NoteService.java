@@ -51,6 +51,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 @Service
 @Slf4j
@@ -70,21 +72,14 @@ public class NoteService {
 
 
     public List<NotesResponse> getNotes(NotesFilterRequest notesFilterRequest) {
-        String htmlContent = "<h2>변경사항</h2><ul><li><p>로그인 모달</p></li><li><p>거래소</p><ul><li><p>네브바 수정</p><ul><li><p>클릭 시 일반 거래소, 선물 거래소 드랍 다운 나옴</p></li><li><p>디폴트</p></li></ul></li><li><p>선물 거래소 페이지 추가</p><ul><li><p>포지션 현황</p><ul><li><p>주문금액</p></li><li><p>변동폭</p></li><li><p>수익률</p></li><li><p>손익</p></li><li><p>레버리지(내가 주문한 금액의 몇 배로 움직이는지)</p></li><li><p>정산금</p></li><li><p><br></p></li></ul></li></ul></li></ul><p><img src=\"/image/hanni-hat.gif\" alt=\"db2bbf150bc7ff4b99271298af0ccbda35dbdd57222086e7176210f43066aba0.jpg\" contenteditable=\"false\"><br></p></li></ul>";
-//        Document doc = Jsoup.parse(htmlContent);
-//        doc.select("img").remove();  // 모든 이미지 태그 제거
-//        return doc.text();  // 텍스트 내용만 추출
-
-
-
         return noteRepository.getNotesWithFilter(notesFilterRequest)
             .stream().map(note ->  NotesResponse.builder()
                 .noteId(note.getId())
                 .nickname(note.getMember().getNickname())
                 .profileImage(note.getMember().getProfileUrl())
-                .thumbnail(note.getThumbnail())
+                .thumbnailImage(note.getThumbnailImage())
+                .thumbnailContent(note.getThumbnailContent())
                 .title(note.getTitle())
-                .content(note.getContent())
                 .coinName(note.getTicker())
                 .writeDate(note.getCreatedAt())
                 .likeCount(noteLikeRepository.countByNote(note))
@@ -94,6 +89,7 @@ public class NoteService {
             .toList();
 
     }
+
 
     public NoteResponse getNote(Long noteId) {
          Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
@@ -122,13 +118,15 @@ public class NoteService {
             .title(request.title())
             .content(request.content())
             .ticker(request.ticker())
-            .thumbnail(request.thumbnail())
+            .thumbnailImage(request.thumbnailImage())
+            .thumbnailContent(getThumbnailContent(request.content(), 30))
             .build());
 
         return AddNoteResponse.builder()
             .noteId(note.getId())
             .build();
     }
+
 
     public void removeNote(Long memberId, Long noteId) {
         Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
@@ -144,7 +142,7 @@ public class NoteService {
         if (!note.getMember().getId().equals(memberId)) {
             throw new MemberException(INVALID_MEMBER);
         }
-        note.editNote(request.title(), request.content(), request.ticker());
+        note.editNote(request.title(), request.content(), request.ticker(), request.thumbnailImage(), getThumbnailContent(request.content(), 30));
     }
 
     public List<CommentsResponse> getComments(Long noteId) {
@@ -157,7 +155,6 @@ public class NoteService {
             childComments.putIfAbsent(key, new ArrayList<>());
             childComments.get(key).add(comment);
         }
-
 
         for (NoteComment comment : childComments.getOrDefault(0L, Collections.emptyList())) {
             commentsResponses.add(
@@ -229,5 +226,11 @@ public class NoteService {
         return ImageResponse.builder()
             .url(amazonS3.getUrl(bucketName, s3FileName).toString())
             .build();
+    }
+
+    public String getThumbnailContent(String content, int cut) {
+        Document doc = Jsoup.parse(content);
+        doc.select("img").remove();  // 모든 이미지 태그 제거
+        return doc.text().substring(cut);
     }
 }
