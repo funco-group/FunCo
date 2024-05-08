@@ -6,7 +6,7 @@ interface NavLinkProps {
   name: string
   // eslint-disable-next-line react/require-default-props
   query?: {
-    filter: string
+    type: string
   }
 }
 function NavLinkComponent({ path, name, query }: NavLinkProps) {

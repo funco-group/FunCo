@@ -1,17 +1,20 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import SearchSVG from '@/../public/icon/search-icon-copy.svg'
 import palette from '@/lib/palette'
+import { useRouter } from 'next/navigation'
 
 interface NotesSearchProps {
-  setSearch: Dispatch<SetStateAction<string>>
-  setKeyword: Dispatch<SetStateAction<string>>
+  nowFilter: string
+  coinList: string[]
+  sorted: string
 }
 
-function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
+function NotesSearch({ nowFilter, coinList, sorted }: NotesSearchProps) {
   const [searchCategory, setSearchCategory] = useState('TITLE') // 검색 카테고리 상태
   const [searchText, setSearchText] = useState('') // 검색 텍스트 상태
   const [isInputFocus, setIsInputFocus] = useState(false)
+  const router = useRouter()
 
   const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSearchCategory(event.target.value)
@@ -27,9 +30,7 @@ function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
 
   const handleSearch = () => {
     console.log(`검색: ${searchCategory}, 키워드: ${searchText}`)
-    // 검색 로직 추가 위치
-    setSearch(searchCategory)
-    setKeyword(searchText)
+    router.push()
   }
 
   const focusClasses =
