@@ -73,7 +73,7 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
 
     public OrderSpecifier<?> sortedBy(SortedType sorted) {
         if (Objects.isNull(sorted)) {
-            return note.createdAt.desc();
+            return note.id.desc();
         }
 
         if (SortedType.RECOMMENDED.name().equals(sorted.name())) {
@@ -85,7 +85,7 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
             return new OrderSpecifier<>(Order.DESC, likeCount);
         }
 
-        return note.createdAt.desc();
+        return note.id.desc();
     }
 
 }
