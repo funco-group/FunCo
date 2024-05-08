@@ -59,6 +59,8 @@ import org.jsoup.nodes.Document;
 @RequiredArgsConstructor
 public class NoteService {
 
+    private final static int THUMBNAIL_CONTENT_CUT = 30;
+
     private final NoteRepository noteRepository;
     private final NoteCommentRepository noteCommentRepository;
     private final NoteLikeRepository noteLikeRepository;
@@ -119,7 +121,7 @@ public class NoteService {
             .content(request.content())
             .ticker(request.ticker())
             .thumbnailImage(request.thumbnailImage())
-            .thumbnailContent(getThumbnailContent(request.content(), 30))
+            .thumbnailContent(getThumbnailContent(request.content(), THUMBNAIL_CONTENT_CUT))
             .build());
 
         return AddNoteResponse.builder()
@@ -142,7 +144,7 @@ public class NoteService {
         if (!note.getMember().getId().equals(memberId)) {
             throw new MemberException(INVALID_MEMBER);
         }
-        note.editNote(request.title(), request.content(), request.ticker(), request.thumbnailImage(), getThumbnailContent(request.content(), 30));
+        note.editNote(request.title(), request.content(), request.ticker(), request.thumbnailImage(), getThumbnailContent(request.content(), THUMBNAIL_CONTENT_CUT));
     }
 
     public List<CommentsResponse> getComments(Long noteId) {
