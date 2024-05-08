@@ -61,7 +61,7 @@ import org.jsoup.nodes.Document;
 @RequiredArgsConstructor
 public class NoteService {
 
-    private final static int THUMBNAIL_CONTENT_CUT = 30;
+    private final static int THUMBNAIL_CONTENT_LENGTH = 30;
 
     private final NoteRepository noteRepository;
     private final NoteCommentRepository noteCommentRepository;
@@ -128,7 +128,7 @@ public class NoteService {
             .content(request.content())
             .ticker(request.ticker())
             .thumbnailImage(request.thumbnailImage())
-            .thumbnailContent(getThumbnailContent(request.content(), THUMBNAIL_CONTENT_CUT))
+            .thumbnailContent(getThumbnailContent(request.content(), THUMBNAIL_CONTENT_LENGTH))
             .build());
 
         return AddNoteResponse.builder()
@@ -151,7 +151,7 @@ public class NoteService {
         if (!note.getMember().getId().equals(memberId)) {
             throw new MemberException(INVALID_MEMBER);
         }
-        note.editNote(request.title(), request.content(), request.ticker(), request.thumbnailImage(), getThumbnailContent(request.content(), THUMBNAIL_CONTENT_CUT));
+        note.editNote(request.title(), request.content(), request.ticker(), request.thumbnailImage(), getThumbnailContent(request.content(), THUMBNAIL_CONTENT_LENGTH));
     }
 
     public List<CommentsResponse> getComments(Long noteId) {
@@ -237,9 +237,9 @@ public class NoteService {
             .build();
     }
 
-    public String getThumbnailContent(String content, int cut) {
+    public String getThumbnailContent(String content, int length) {
         Document doc = Jsoup.parse(content);
-        doc.select("img").remove();  // 모든 이미지 태그 제거
-        return doc.text().substring(cut);
+        doc.select("img").remove();
+        return doc.text().substring(length);
     }
 }
