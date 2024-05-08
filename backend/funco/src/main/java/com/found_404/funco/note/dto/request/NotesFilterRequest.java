@@ -9,7 +9,7 @@ import lombok.Setter;
 
 public record NotesFilterRequest(
 
-    Long id,
+    Long memberId,
 
     PostType type,
 

@@ -2,6 +2,7 @@ package com.found_404.funco.note.service;
 
 import static com.found_404.funco.member.exception.MemberErrorCode.INVALID_MEMBER;
 import static com.found_404.funco.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
+import static com.found_404.funco.note.exception.NoteErrorCode.INVALID_FILTER;
 import static com.found_404.funco.note.exception.NoteErrorCode.NOT_FOUND_NOTE;
 import static com.found_404.funco.note.exception.S3ErrorCode.PUT_OBJECT_EXCEPTION;
 
@@ -31,6 +32,7 @@ import com.found_404.funco.note.dto.response.ImageResponse;
 import com.found_404.funco.note.dto.response.NoteMemberResponse;
 import com.found_404.funco.note.dto.response.NoteResponse;
 import com.found_404.funco.note.dto.response.NotesResponse;
+import com.found_404.funco.note.dto.type.PostType;
 import com.found_404.funco.note.exception.NoteException;
 import com.found_404.funco.note.exception.S3Exception;
 import java.io.ByteArrayInputStream;
@@ -74,6 +76,11 @@ public class NoteService {
 
 
     public List<NotesResponse> getNotes(NotesFilterRequest notesFilterRequest) {
+        if ((notesFilterRequest.type() == PostType.MY || notesFilterRequest.type() == PostType.LIKE)
+                && Objects.isNull(notesFilterRequest.memberId())) {
+            throw new NoteException(INVALID_FILTER);
+        }
+
         return noteRepository.getNotesWithFilter(notesFilterRequest)
             .stream().map(note ->  NotesResponse.builder()
                 .noteId(note.getId())

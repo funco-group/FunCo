@@ -30,7 +30,7 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
     public List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest) {
         return jpaQueryFactory
             .selectFrom(note)
-            .where(postTypeFilter(notesFilterRequest.id(), notesFilterRequest.type()),
+            .where(postTypeFilter(notesFilterRequest.memberId(), notesFilterRequest.type()),
                     coinFilter(notesFilterRequest.coin()),
                     searchFilter(notesFilterRequest.search(), notesFilterRequest.keyword()))
             .orderBy(sortedBy(notesFilterRequest.sorted()))
@@ -39,18 +39,17 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
             .fetch();
     }
 
-    private BooleanExpression postTypeFilter(Long id, PostType type){
+    private BooleanExpression postTypeFilter(Long memberId, PostType type){
         if (Objects.isNull(type)) {
             return null;
         }
         return switch (type) {
             case ALL -> null;
-            case MY -> Objects.isNull(id) ? Expressions.asBoolean(false).isTrue() : note.member.id.eq(id);
-            case LIKE -> Objects.isNull(id) ? Expressions.asBoolean(false).isTrue() :
-                JPAExpressions.selectOne()
+            case MY -> note.member.id.eq(memberId);
+            case LIKE -> JPAExpressions.selectOne()
                 .from(noteLike)
                 .where(noteLike.note.id.eq(note.id)
-                    .and(noteLike.member.id.eq(id)))
+                    .and(noteLike.member.id.eq(memberId)))
                 .exists();
         };
 
