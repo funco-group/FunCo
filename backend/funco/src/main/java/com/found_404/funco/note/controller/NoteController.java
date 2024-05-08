@@ -6,6 +6,7 @@ import com.found_404.funco.note.dto.request.CommentRequest;
 import com.found_404.funco.note.dto.request.NoteRequest;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
 import com.found_404.funco.note.dto.response.CommentsResponse;
+import com.found_404.funco.note.dto.response.ImageResponse;
 import com.found_404.funco.note.dto.response.NoteResponse;
 import com.found_404.funco.note.dto.response.NotesResponse;
 import com.found_404.funco.note.service.NoteService;
@@ -61,9 +62,9 @@ public class NoteController {
 
     // 이미지 업로드
     @PostMapping("/image")
-    public ResponseEntity<String> uploadImage(
+    public ResponseEntity<ImageResponse> uploadImage(
         MultipartFile file)  {
-        return ResponseEntity.ok().body(noteService.uploadImage(file));
+        return ResponseEntity.ok(noteService.uploadImage(file));
     }
 
     // 게시글 수정
