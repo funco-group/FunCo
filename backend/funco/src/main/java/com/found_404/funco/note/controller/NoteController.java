@@ -5,6 +5,7 @@ import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.note.dto.request.CommentRequest;
 import com.found_404.funco.note.dto.request.NoteRequest;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
+import com.found_404.funco.note.dto.response.AddNoteResponse;
 import com.found_404.funco.note.dto.response.CommentsResponse;
 import com.found_404.funco.note.dto.response.ImageResponse;
 import com.found_404.funco.note.dto.response.NoteResponse;
@@ -53,11 +54,10 @@ public class NoteController {
 
     // 게시글 작성
     @PostMapping
-    public ResponseEntity<Void> addNote(
+    public ResponseEntity<AddNoteResponse> addNote(
         @AuthenticationPrincipal Member member,
         @RequestBody @Valid NoteRequest request) {
-        noteService.addNote(member, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(noteService.addNote(member, request));
     }
 
     // 이미지 업로드

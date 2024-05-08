@@ -24,7 +24,9 @@ import com.found_404.funco.note.domain.repository.NoteRepository;
 import com.found_404.funco.note.dto.request.CommentRequest;
 import com.found_404.funco.note.dto.request.NoteRequest;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
+import com.found_404.funco.note.dto.response.AddNoteResponse;
 import com.found_404.funco.note.dto.response.CommentsResponse;
+import com.found_404.funco.note.dto.response.ImageResponse;
 import com.found_404.funco.note.dto.response.NoteMemberResponse;
 import com.found_404.funco.note.dto.response.NoteResponse;
 import com.found_404.funco.note.dto.response.NotesResponse;
@@ -32,7 +34,7 @@ import com.found_404.funco.note.dto.type.PostType;
 import com.found_404.funco.note.exception.NoteException;
 import com.found_404.funco.note.exception.S3Exception;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,13 +45,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class NoteService {
 
@@ -109,16 +112,20 @@ public class NoteService {
     }
 
 
-    public void addNote(Member member, NoteRequest request) {
+    public AddNoteResponse addNote(Member member, NoteRequest request) {
         if (Objects.isNull(member)) {
             throw new MemberException(NOT_FOUND_MEMBER);
         }
-        noteRepository.save(Note.builder()
+        Note note = noteRepository.save(Note.builder()
             .member(member)
             .title(request.title())
             .content(request.content())
             .ticker(request.ticker())
             .build());
+
+        return AddNoteResponse.builder()
+            .noteId(note.getId())
+            .build();
     }
 
     public void removeNote(Long memberId, Long noteId) {
