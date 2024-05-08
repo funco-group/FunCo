@@ -55,9 +55,9 @@ public class NoteController {
     // 게시글 작성
     @PostMapping
     public ResponseEntity<AddNoteResponse> addNote(
-        @AuthenticationPrincipal Member member,
+        @AuthMemberId Long memberId,
         @RequestBody @Valid NoteRequest request) {
-        return ResponseEntity.ok(noteService.addNote(member, request));
+        return ResponseEntity.ok(noteService.addNote(memberId, request));
     }
 
     // 이미지 업로드

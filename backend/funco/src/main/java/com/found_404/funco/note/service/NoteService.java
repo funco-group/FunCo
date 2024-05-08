@@ -14,6 +14,7 @@ import com.found_404.funco.badge.domain.HoldingBadge;
 import com.found_404.funco.badge.domain.repository.HoldingBadgeRepository;
 import com.found_404.funco.member.domain.Member;
 
+import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.exception.MemberException;
 import com.found_404.funco.note.domain.Note;
 import com.found_404.funco.note.domain.NoteComment;
@@ -60,6 +61,7 @@ public class NoteService {
     private final NoteCommentRepository noteCommentRepository;
     private final NoteLikeRepository noteLikeRepository;
     private final HoldingBadgeRepository holdingBadgeRepository;
+    private final MemberRepository memberRepository;
 
     private final AmazonS3 amazonS3;
 
@@ -112,10 +114,10 @@ public class NoteService {
     }
 
 
-    public AddNoteResponse addNote(Member member, NoteRequest request) {
-        if (Objects.isNull(member)) {
-            throw new MemberException(NOT_FOUND_MEMBER);
-        }
+    public AddNoteResponse addNote(Long memberId, NoteRequest request) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+
         Note note = noteRepository.save(Note.builder()
             .member(member)
             .title(request.title())
