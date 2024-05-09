@@ -49,6 +49,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,13 +76,13 @@ public class NoteService {
     private String bucketName;
 
 
-    public List<NotesResponse> getNotes(NotesFilterRequest notesFilterRequest) {
+    public List<NotesResponse> getNotes(NotesFilterRequest notesFilterRequest, Pageable pageable) {
         if ((notesFilterRequest.type() == PostType.MY || notesFilterRequest.type() == PostType.LIKE)
                 && Objects.isNull(notesFilterRequest.memberId())) {
             throw new NoteException(INVALID_FILTER);
         }
 
-        return noteRepository.getNotesWithFilter(notesFilterRequest)
+        return noteRepository.getNotesWithFilter(notesFilterRequest, pageable)
             .stream().map(note ->  NotesResponse.builder()
                 .noteId(note.getId())
                 .nickname(note.getMember().getNickname())

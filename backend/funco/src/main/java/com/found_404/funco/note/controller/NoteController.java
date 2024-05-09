@@ -13,6 +13,7 @@ import com.found_404.funco.note.service.NoteService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +37,9 @@ public class NoteController {
     // 게시글 목록 조회
     @GetMapping()
     public ResponseEntity<List<NotesResponse>> getNotes(
-        @ModelAttribute  NotesFilterRequest notesFilterRequest) {
-        return ResponseEntity.ok(noteService.getNotes(notesFilterRequest));
+        @ModelAttribute  NotesFilterRequest notesFilterRequest,
+        Pageable pageable) {
+        return ResponseEntity.ok(noteService.getNotes(notesFilterRequest, pageable));
     }
 
     // 게시글 상세 조회
