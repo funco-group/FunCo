@@ -26,32 +26,48 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest) {
-        return jpaQueryFactory
-            .selectFrom(note)
-            .where(postTypeFilter(notesFilterRequest.memberId(), notesFilterRequest.type()),
-                    coinFilter(notesFilterRequest.coin()),
-                    searchFilter(notesFilterRequest.search(), notesFilterRequest.keyword()))
+    public List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest, Pageable pageable) {
+        System.out.println(notesFilterRequest);
+
+        if (Objects.isNull(notesFilterRequest.type())) {
+            return jpaQueryFactory
+                .selectFrom(note)
+                .fetch();
+        }
+
+        JPAQuery<Note> query = switch (notesFilterRequest.type()) {
+            case ALL -> allPost();
+            case MY -> myPost(notesFilterRequest.memberId());
+            case LIKE -> likePost(notesFilterRequest.memberId());
+        };
+
+        return query.where(coinFilter(notesFilterRequest.coin()),
+                            searchFilter(notesFilterRequest.search(),
+                            notesFilterRequest.keyword()))
             .orderBy(sortedBy(notesFilterRequest.sorted()))
 //            .limit(pageable.getPageSize())
 //            .offset(pageable.getOffset())
             .fetch();
+
     }
 
-    private BooleanExpression postTypeFilter(Long memberId, PostType type){
-        if (Objects.isNull(type)) {
-            return null;
-        }
-        return switch (type) {
-            case ALL -> null;
-            case MY -> note.member.id.eq(memberId);
-            case LIKE -> JPAExpressions.selectOne()
-                .from(noteLike)
-                .where(noteLike.note.id.eq(note.id)
-                    .and(noteLike.member.id.eq(memberId)))
-                .exists();
-        };
+    private JPAQuery<Note> allPost() {
+        return jpaQueryFactory
+            .selectFrom(note);
+    }
 
+    private JPAQuery<Note> myPost(Long memberId) {
+        return jpaQueryFactory
+            .selectFrom(note)
+            .where(note.member.id.eq(memberId));
+    }
+
+    private JPAQuery<Note> likePost(Long memberId) {
+        return jpaQueryFactory
+            .selectFrom(note)
+            .from(noteLike)
+            .where(note.id.eq(noteLike.note.id)
+                .and(noteLike.member.id.eq(memberId)));
     }
 
     private BooleanExpression coinFilter(List<String> coin) {
