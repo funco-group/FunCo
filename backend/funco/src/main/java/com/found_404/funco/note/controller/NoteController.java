@@ -36,7 +36,7 @@ public class NoteController {
     // 게시글 목록 조회
     @GetMapping()
     public ResponseEntity<List<NotesResponse>> getNotes(
-        NotesFilterRequest notesFilterRequest,
+        @Valid NotesFilterRequest notesFilterRequest,
         Pageable pageable) {
         return ResponseEntity.ok(noteService.getNotes(notesFilterRequest, pageable));
     }

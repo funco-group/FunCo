@@ -7,7 +7,7 @@ import com.found_404.funco.note.domain.Note;
 
 import com.found_404.funco.note.domain.repository.QueryDslNoteRepository;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
-import com.found_404.funco.note.dto.type.PostType;
+
 import com.found_404.funco.note.dto.type.SearchType;
 import com.found_404.funco.note.dto.type.SortedType;
 import com.querydsl.core.types.Order;
@@ -29,12 +29,6 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
 
     @Override
     public List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest, Pageable pageable) {
-         if (Objects.isNull(notesFilterRequest.type())) {
-            return jpaQueryFactory
-                .selectFrom(note)
-                .fetch();
-        }
-
         JPAQuery<Note> query = switch (notesFilterRequest.type()) {
             case ALL -> allPost();
             case MY -> myPost(notesFilterRequest.memberId());
