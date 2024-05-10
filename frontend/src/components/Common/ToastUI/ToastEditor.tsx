@@ -55,7 +55,10 @@ function ToastEditor({ editorRef, imageList, setImageList }: ToastEditorProps) {
       )
     })
 
-    if (newImageList.filter((image) => image.thumbnail).length === 0) {
+    if (
+      newImageList.length > 0 &&
+      newImageList.filter((image) => image.thumbnail).length === 0
+    ) {
       newImageList[0].thumbnail = true
     }
 
