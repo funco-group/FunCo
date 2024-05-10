@@ -10,7 +10,7 @@ import { ThumbnailImageType } from '@/interfaces/note/ThumbnailImageType'
 import { Editor } from '@toast-ui/react-editor'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { ChangeEvent, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import DelSVG from '@/../public/icon/x-circle-trans.svg'
 import palette from '@/lib/palette'
 
@@ -26,6 +26,10 @@ function NotesWrite() {
   const editorRef = useRef<Editor>(null)
   const router = useRouter()
 
+  useEffect(() => {
+    console.log(imageList)
+  }, [imageList])
+
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTitleText(e.target.value)
   }
@@ -39,19 +43,17 @@ function NotesWrite() {
     console.log(htmlContent)
   }
 
-  const handleOnMouse = (idx: number, bool: boolean) => {
+  const handleOnMouse = (src: string, bool: boolean) => {
     setImageList((prev) =>
-      prev.map((prevImage, prevIdx) =>
-        idx === prevIdx ? { ...prevImage, onMouse: bool } : prevImage,
+      prev.map((prevImage) =>
+        src === prevImage.src ? { ...prevImage, onMouse: bool } : prevImage,
       ),
     )
   }
 
-  const handleDeleteImage = (idx: number) => {
-    let newImageList = [...imageList].filter(
-      (image, prevIdx) => idx !== prevIdx,
-    )
-    if (imageList[idx].thumbnail) {
+  const handleDeleteImage = (src: string, thumbnail: boolean) => {
+    let newImageList = [...imageList].filter((image) => src !== image.src)
+    if (thumbnail) {
       newImageList = newImageList.map((image, newIdx) =>
         newIdx === 0
           ? { ...image, thumbnail: true }
@@ -61,9 +63,9 @@ function NotesWrite() {
     setImageList(newImageList)
   }
 
-  const handleChangeThumbnail = (idx: number) => {
-    const newImageList = [...imageList].map((image, newIdx) =>
-      newIdx === idx
+  const handleChangeThumbnail = (src: string) => {
+    const newImageList = [...imageList].map((image) =>
+      src === image.src
         ? { ...image, thumbnail: true }
         : { ...image, thumbnail: false },
     )
@@ -84,36 +86,42 @@ function NotesWrite() {
         placeholder="제목을 입력해주세요."
         className={`mt-3 h-9 w-2/4 rounded border-solid outline-none focus:border-2 focus:border-brandColor ${filledTitleClasses}`}
       />
-      <ToastEditor editorRef={editorRef} setImageList={setImageList} />
-      {imageList.length > 0 ? null : (
-        <p className="ml-3 mt-1 text-xs text-brandRed">
-          · 최소 1개 이상의 이미지(차트)가 필요합니다.
-        </p>
-      )}
-      <div className="mt-3 flex justify-between">
-        <div className="flex gap-1">
-          {imageList.map((image, idx) => (
-            <div
-              className="relative"
-              key={idx}
-              onMouseEnter={() => handleOnMouse(idx, true)}
-              onMouseLeave={() => handleOnMouse(idx, false)}
-            >
-              <DelSVG
-                fill={palette.brandColor}
-                className={`absolute right-[-5px] top-[-5px] ${image.onMouse ? null : 'hidden'}`}
-                onClick={() => handleDeleteImage(idx)}
-              />
-              <img
-                src={image.src}
-                alt="thumbnail-list"
-                className={`h-11 rounded border-2 border-solid ${image.thumbnail ? 'border-brandColor' : 'border-transparent'}`}
-                onClick={() => handleChangeThumbnail(idx)}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-end gap-2">
+      <ToastEditor
+        editorRef={editorRef}
+        imageList={imageList}
+        setImageList={setImageList}
+      />
+
+      <div className="mt-3 flex h-[52px] justify-between">
+        {imageList.length > 0 ? (
+          <div className="flex gap-1">
+            {imageList.map((image) => (
+              <div
+                className="relative hover:cursor-pointer"
+                key={image.src}
+                onMouseEnter={() => handleOnMouse(image.src, true)}
+                onMouseLeave={() => handleOnMouse(image.src, false)}
+              >
+                <DelSVG
+                  fill={palette.brandColor}
+                  className={`absolute right-[-3px] top-[-3px] ${image.onMouse ? null : 'hidden'}`}
+                  onClick={() => handleDeleteImage(image.src, image.thumbnail)}
+                />
+                <img
+                  src={image.src}
+                  alt="thumbnail-list"
+                  className={`h-12 rounded border-4 border-solid ${image.thumbnail ? 'border-brandColor' : 'border-transparent'}`}
+                  onClick={() => handleChangeThumbnail(image.src)}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="ml-3 mt-1 text-xs text-brandRed">
+            · 최소 1개 이상의 이미지(차트)가 필요합니다.
+          </p>
+        )}
+        <div className="flex items-end justify-end gap-2">
           <BrandButtonComponent
             content="취소"
             color={null}
@@ -126,7 +134,7 @@ function NotesWrite() {
             color={null}
             onClick={handleSaveBtn}
             cancel={false}
-            disabled={!coinList || !titleText}
+            disabled={!coinList || !titleText || imageList.length === 0}
           />
         </div>
       </div>

@@ -10,7 +10,7 @@ interface TabButtonProps {
 
 const TabButton = styled.button<TabButtonProps>`
   box-sizing: border-box;
-  background-color: transparent;
+  background-color: ${palette.brandWhite};
   width: ${({ width }) => width || 'auto'};
   height: ${({ height }) => height};
   color: ${({ $active }) => ($active ? palette.brandColor : '#999999')};

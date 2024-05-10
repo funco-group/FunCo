@@ -13,21 +13,53 @@ const toolbarItems = [
 
 interface ToastEditorProps {
   editorRef: RefObject<Editor>
+  imageList: ThumbnailImageType[]
   setImageList: Dispatch<SetStateAction<ThumbnailImageType[]>>
 }
 
-function ToastEditor({ editorRef, setImageList }: ToastEditorProps) {
+function ToastEditor({ editorRef, imageList, setImageList }: ToastEditorProps) {
   const onUploadImage = (file: File, callback: typeof Function) => {
-    setImageList((prev) => {
-      if (prev.length > 0) {
-        return [
-          ...prev,
-          { src: '/image/chuu.gif', thumbnail: false, onMouse: false },
-        ]
-      }
-      return [{ src: '/image/chuu.gif', thumbnail: true, onMouse: false }]
+    const DummySrc = `https://dummyimage.com/600x400/000/fff&text=${new Date().getMilliseconds()}`
+    setImageList((prev) => [
+      ...prev,
+      {
+        src: DummySrc,
+        thumbnail: prev.length === 0,
+        onMouse: false,
+      },
+    ])
+    callback(DummySrc)
+  }
+
+  const handleChangeEditor = () => {
+    const currentMarkdown = editorRef.current?.getInstance().getMarkdown()
+
+    const urlsInEditor = Array.from(
+      currentMarkdown.matchAll(/!\[.*?\]\((.*?)\)/g),
+      (m: RegExpMatchArray) => m[1],
+    )
+
+    // 이미지 리스트 정렬 및 동기화
+    const existingImageMap = new Map(
+      imageList.map((image) => [image.src, image]),
+    )
+
+    const newImageList = urlsInEditor.map((url) => {
+      const existingImage = existingImageMap.get(url)
+      return (
+        existingImage ?? {
+          src: url,
+          thumbnail: false,
+          onMouse: false,
+        }
+      )
     })
-    callback('/image/chuu.gif')
+
+    if (newImageList.filter((image) => image.thumbnail).length === 0) {
+      newImageList[0].thumbnail = true
+    }
+
+    setImageList(newImageList)
   }
 
   return (
@@ -45,6 +77,7 @@ function ToastEditor({ editorRef, setImageList }: ToastEditorProps) {
           toolbarItems={toolbarItems}
           useCommandShortcut
           hooks={{ addImageBlobHook: onUploadImage }}
+          onChange={handleChangeEditor}
         />
       )}
     </div>
