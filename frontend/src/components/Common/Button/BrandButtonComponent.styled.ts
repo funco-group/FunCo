@@ -11,6 +11,7 @@ const BrandButton = styled.button<BrandButtonProps>`
   border: none;
   border-radius: 0.3125rem;
   min-width: 6.25rem;
+  max-height: 41.6px;
   color: ${({ $cancel }) => ($cancel ? '#999999' : palette.brandWhite)};
   background-color: ${({ color, $cancel, disabled }) => {
     if ($cancel) {
