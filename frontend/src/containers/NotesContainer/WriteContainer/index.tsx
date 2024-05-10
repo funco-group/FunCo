@@ -10,9 +10,7 @@ import { ThumbnailImageType } from '@/interfaces/note/ThumbnailImageType'
 import { Editor } from '@toast-ui/react-editor'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
-import DelSVG from '@/../public/icon/x-circle-trans.svg'
-import palette from '@/lib/palette'
+import { ChangeEvent, useRef, useState } from 'react'
 
 const ToastEditor = dynamic(
   () => import('@/components/Common/ToastUI/ToastEditor'),
@@ -26,10 +24,6 @@ function NotesWrite() {
   const editorRef = useRef<Editor>(null)
   const router = useRouter()
 
-  useEffect(() => {
-    console.log(imageList)
-  }, [imageList])
-
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTitleText(e.target.value)
   }
@@ -40,7 +34,13 @@ function NotesWrite() {
 
   const handleSaveBtn = () => {
     const htmlContent = editorRef.current?.getInstance().getHTML()
-    console.log(htmlContent)
+    console.log('title', titleText)
+    console.log('content', htmlContent)
+    console.log('ticker', coinList.join(','))
+    console.log(
+      'thumbnailImage',
+      imageList.find((image) => image.thumbnail)?.src,
+    )
   }
 
   const handleOnMouse = (src: string, bool: boolean) => {
@@ -51,24 +51,11 @@ function NotesWrite() {
     )
   }
 
-  const handleDeleteImage = (src: string, thumbnail: boolean) => {
-    let newImageList = [...imageList].filter((image) => src !== image.src)
-    if (thumbnail) {
-      newImageList = newImageList.map((image, newIdx) =>
-        newIdx === 0
-          ? { ...image, thumbnail: true }
-          : { ...image, thumbnail: false },
-      )
-    }
-    setImageList(newImageList)
-  }
-
   const handleChangeThumbnail = (src: string) => {
-    const newImageList = [...imageList].map((image) =>
-      src === image.src
-        ? { ...image, thumbnail: true }
-        : { ...image, thumbnail: false },
-    )
+    const newImageList = [...imageList].map((image) => ({
+      ...image,
+      thumbnail: src === image.src,
+    }))
     setImageList(newImageList)
   }
 
@@ -102,15 +89,10 @@ function NotesWrite() {
                 onMouseEnter={() => handleOnMouse(image.src, true)}
                 onMouseLeave={() => handleOnMouse(image.src, false)}
               >
-                <DelSVG
-                  fill={palette.brandColor}
-                  className={`absolute right-[-3px] top-[-3px] ${image.onMouse ? null : 'hidden'}`}
-                  onClick={() => handleDeleteImage(image.src, image.thumbnail)}
-                />
                 <img
                   src={image.src}
                   alt="thumbnail-list"
-                  className={`h-12 rounded border-4 border-solid ${image.thumbnail ? 'border-brandColor' : 'border-transparent'}`}
+                  className={`h-12 rounded border-4 border-solid ${image.thumbnail ? 'border-brandColor' : 'border-transparent'} ${image.onMouse ? 'scale-110 transform' : null}`}
                   onClick={() => handleChangeThumbnail(image.src)}
                 />
               </div>
