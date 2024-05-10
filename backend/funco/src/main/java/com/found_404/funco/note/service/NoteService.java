@@ -85,8 +85,13 @@ public class NoteService {
         return noteRepository.getNotesWithFilter(notesFilterRequest, pageable)
             .stream().map(note ->  NotesResponse.builder()
                 .noteId(note.getId())
-                .nickname(note.getMember().getNickname())
-                .profileImage(note.getMember().getProfileUrl())
+                .member(NoteMemberResponse.builder()
+                    .memberId(note.getMember().getId())
+                    .nickname(note.getMember().getNickname())
+                    .profileUrl(note.getMember().getProfileUrl())
+                    .badgeId(getHoldingBadge(note.getMember()))
+                    .build()
+                )
                 .thumbnailImage(note.getThumbnailImage())
                 .thumbnailContent(note.getThumbnailContent())
                 .title(note.getTitle())
@@ -102,7 +107,7 @@ public class NoteService {
 
 
     public NoteResponse getNote(Long noteId) {
-         Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+         Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
          Long likeCount = noteLikeRepository.countByNote(note);
          Long commentCount = noteCommentRepository.countByNote(note);
 
@@ -145,7 +150,7 @@ public class NoteService {
 
 
     public void removeNote(Long memberId, Long noteId) {
-        Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
         if (!note.getMember().getId().equals(memberId)) {
            throw new MemberException(INVALID_MEMBER);
         }
@@ -154,7 +159,7 @@ public class NoteService {
 
     @Transactional
     public void editNote(Long memberId, Long noteId, NoteRequest request) {
-        Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
         if (!note.getMember().getId().equals(memberId)) {
             throw new MemberException(INVALID_MEMBER);
         }

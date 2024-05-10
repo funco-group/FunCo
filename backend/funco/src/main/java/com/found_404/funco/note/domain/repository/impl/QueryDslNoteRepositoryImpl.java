@@ -1,5 +1,6 @@
 package com.found_404.funco.note.domain.repository.impl;
 
+import static com.found_404.funco.member.domain.QMember.member;
 import static com.found_404.funco.note.domain.QNote.note;
 import static com.found_404.funco.note.domain.QNoteLike.noteLike;
 
@@ -35,7 +36,9 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
             case LIKE -> likePost(notesFilterRequest.memberId());
         };
 
-        return query.where(coinFilter(notesFilterRequest.coin()),
+        return query
+            .leftJoin(note.member, member).fetchJoin()
+            .where(coinFilter(notesFilterRequest.coin()),
                             searchFilter(notesFilterRequest.search(),
                             notesFilterRequest.keyword()))
             .orderBy(sortedBy(notesFilterRequest.sorted()))

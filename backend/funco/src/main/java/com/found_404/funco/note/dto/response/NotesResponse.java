@@ -6,8 +6,7 @@ import lombok.Builder;
 @Builder
 public record NotesResponse (
     Long noteId,
-    String nickname,
-    String profileImage,
+    NoteMemberResponse member,
     String thumbnailImage,
     String thumbnailContent,
     String title,
