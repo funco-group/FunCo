@@ -108,7 +108,13 @@ public class NoteService {
 
         return NoteResponse.builder()
             .noteId(note.getId())
-            .nickname(note.getMember().getNickname())
+            .member(NoteMemberResponse.builder()
+                    .memberId(note.getMember().getId())
+                    .nickname(note.getMember().getNickname())
+                    .profileUrl(note.getMember().getProfileUrl())
+                    .badgeId(getHoldingBadge(note.getMember()))
+                    .build()
+                )
             .title(note.getTitle())
             .content(note.getContent())
             .coinName(note.getTicker())
@@ -183,7 +189,7 @@ public class NoteService {
                 .memberId(comment.getMember().getId())
                 .nickname(comment.getMember().getNickname())
                 .profileUrl(comment.getMember().getProfileUrl())
-                .badgeId(getHoldingBadge(comment))
+                .badgeId(getHoldingBadge(comment.getMember()))
                 .build())
             .content(comment.getContent())
             .date(comment.getCreatedAt())
@@ -193,8 +199,8 @@ public class NoteService {
             .build();
     }
 
-    public Long getHoldingBadge(NoteComment comment) {
-        Optional<HoldingBadge> optionalHoldingBadge = holdingBadgeRepository.findByMember(comment.getMember());
+    public Long getHoldingBadge(Member member) {
+        Optional<HoldingBadge> optionalHoldingBadge = holdingBadgeRepository.findByMember(member);
         return optionalHoldingBadge.isPresent() ? optionalHoldingBadge.get().getId() : -1L;
     }
 
