@@ -29,9 +29,7 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
 
     @Override
     public List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest, Pageable pageable) {
-        System.out.println(notesFilterRequest);
-
-        if (Objects.isNull(notesFilterRequest.type())) {
+         if (Objects.isNull(notesFilterRequest.type())) {
             return jpaQueryFactory
                 .selectFrom(note)
                 .fetch();

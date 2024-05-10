@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,7 +36,7 @@ public class NoteController {
     // 게시글 목록 조회
     @GetMapping()
     public ResponseEntity<List<NotesResponse>> getNotes(
-        @ModelAttribute  NotesFilterRequest notesFilterRequest,
+        NotesFilterRequest notesFilterRequest,
         Pageable pageable) {
         return ResponseEntity.ok(noteService.getNotes(notesFilterRequest, pageable));
     }
