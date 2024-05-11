@@ -23,11 +23,11 @@ public class NoteCommentController {
     // 댓글 수정
     @PutMapping("/{commentId}")
     public ResponseEntity<Void> editComment(
-        @AuthenticationPrincipal Member member,
+        @AuthMemberId Long memberId,
         @PathVariable Long commentId,
         EditNoteCommentRequest request
     ) {
-        noteCommentService.editComment(member, commentId, request);
+        noteCommentService.editComment(memberId, commentId, request);
         return ResponseEntity.ok().build();
     }
 

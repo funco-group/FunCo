@@ -6,8 +6,7 @@ import lombok.Builder;
 @Builder
 public record NoteResponse(
     Long noteId,
-    String nickname,
-    String profileImage,
+    NoteMemberResponse member,
     String title,
     String content,
     String coinName,

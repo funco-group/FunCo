@@ -6,11 +6,10 @@ import lombok.Builder;
 @Builder
 public record NotesResponse (
     Long noteId,
-    String nickname,
-    String profileImage,
-    String thumbnail,
+    NoteMemberResponse member,
+    String thumbnailImage,
+    String thumbnailContent,
     String title,
-    String content,
     String coinName,
     LocalDateTime writeDate,
     Long likeCount,

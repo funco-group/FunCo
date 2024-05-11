@@ -1,7 +1,6 @@
 package com.found_404.funco.note.controller;
 
 import com.found_404.funco.global.util.AuthMemberId;
-import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.note.dto.request.CommentRequest;
 import com.found_404.funco.note.dto.request.NoteRequest;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
@@ -12,15 +11,12 @@ import com.found_404.funco.note.dto.response.NoteResponse;
 import com.found_404.funco.note.dto.response.NotesResponse;
 import com.found_404.funco.note.service.NoteService;
 import jakarta.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,9 +36,9 @@ public class NoteController {
     // 게시글 목록 조회
     @GetMapping()
     public ResponseEntity<List<NotesResponse>> getNotes(
-        @AuthenticationPrincipal Member member,
-        @ModelAttribute  NotesFilterRequest notesFilterRequest) {
-        return ResponseEntity.ok(noteService.getNotes(member, notesFilterRequest));
+        @Valid NotesFilterRequest notesFilterRequest,
+        Pageable pageable) {
+        return ResponseEntity.ok(noteService.getNotes(notesFilterRequest, pageable));
     }
 
     // 게시글 상세 조회
@@ -70,10 +66,10 @@ public class NoteController {
     // 게시글 수정
     @PutMapping("/{noteId}")
     public ResponseEntity<Void> editNote(
-        @AuthenticationPrincipal Member member,
+        @AuthMemberId Long memberId,
         @PathVariable Long noteId,
         @RequestBody @Valid NoteRequest request) {
-        noteService.editNote(member, noteId, request);
+        noteService.editNote(memberId, noteId, request);
         return  ResponseEntity.ok().build();
     }
 
@@ -97,10 +93,10 @@ public class NoteController {
     // 댓글 작성
     @PostMapping("/{noteId}/comments")
     public ResponseEntity<Void> addComment(
-        @AuthenticationPrincipal Member member,
+        @AuthMemberId Long memberId,
         @PathVariable Long noteId,
         @RequestBody @Valid CommentRequest request) {
-        noteService.addComment(member, noteId, request);
+        noteService.addComment(memberId, noteId, request);
         return ResponseEntity.ok().build();
     }
 

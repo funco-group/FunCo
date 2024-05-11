@@ -1,14 +1,14 @@
 package com.found_404.funco.note.domain.repository.impl;
 
+import static com.found_404.funco.member.domain.QMember.member;
 import static com.found_404.funco.note.domain.QNote.note;
 import static com.found_404.funco.note.domain.QNoteLike.noteLike;
 
-import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.note.domain.Note;
 
 import com.found_404.funco.note.domain.repository.QueryDslNoteRepository;
 import com.found_404.funco.note.dto.request.NotesFilterRequest;
-import com.found_404.funco.note.dto.type.PostType;
+
 import com.found_404.funco.note.dto.type.SearchType;
 import com.found_404.funco.note.dto.type.SortedType;
 import com.querydsl.core.types.Order;
@@ -29,33 +29,42 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Note> getNotesWithFilter(Member member, NotesFilterRequest notesFilterRequest) {
-        return jpaQueryFactory
-            .selectFrom(note)
-            .where(postTypeFilter(member, notesFilterRequest.type()),
-                    coinFilter(notesFilterRequest.coin()),
-                    searchFilter(notesFilterRequest.search(), notesFilterRequest.keyword()))
-            .orderBy(sortedBy(notesFilterRequest.sorted()))
-//            .limit(pageable.getPageSize())
-//            .offset(pageable.getOffset())
-            .fetch();
-    }
-
-    private BooleanExpression postTypeFilter(Member member, PostType type){
-        if (Objects.isNull(member) || Objects.isNull(type)) {
-            return null;
-        }
-
-        return switch (type) {
-            case ALL -> null;
-            case MY ->  note.member.id.eq(member.getId());
-            case LIKE -> JPAExpressions.selectOne()
-                .from(noteLike)
-                .where(noteLike.note.id.eq(note.id)
-                    .and(noteLike.member.id.eq(member.getId())))
-                .exists();
+    public List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest, Pageable pageable) {
+        JPAQuery<Note> query = switch (notesFilterRequest.type()) {
+            case ALL -> allPost();
+            case MY -> myPost(notesFilterRequest.memberId());
+            case LIKE -> likePost(notesFilterRequest.memberId());
         };
 
+        return query
+            .leftJoin(note.member, member).fetchJoin()
+            .where(coinFilter(notesFilterRequest.coin()),
+                            searchFilter(notesFilterRequest.search(),
+                            notesFilterRequest.keyword()))
+            .orderBy(sortedBy(notesFilterRequest.sorted()))
+            .limit(pageable.getPageSize())
+            .offset(pageable.getOffset())
+            .fetch();
+
+    }
+
+    private JPAQuery<Note> allPost() {
+        return jpaQueryFactory
+            .selectFrom(note);
+    }
+
+    private JPAQuery<Note> myPost(Long memberId) {
+        return jpaQueryFactory
+            .selectFrom(note)
+            .where(note.member.id.eq(memberId));
+    }
+
+    private JPAQuery<Note> likePost(Long memberId) {
+        return jpaQueryFactory
+            .selectFrom(note)
+            .from(noteLike)
+            .where(note.id.eq(noteLike.note.id)
+                .and(noteLike.member.id.eq(memberId)));
     }
 
     private BooleanExpression coinFilter(List<String> coin) {
@@ -63,7 +72,7 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
     }
 
     private BooleanExpression searchFilter(SearchType search, String keyword) {
-        if (Objects.isNull(search)) {
+        if (Objects.isNull(search) || Objects.isNull(keyword)) {
             return null;
         }
 
@@ -77,7 +86,7 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
 
     public OrderSpecifier<?> sortedBy(SortedType sorted) {
         if (Objects.isNull(sorted)) {
-            return note.createdAt.desc();
+            return note.id.desc();
         }
 
         if (SortedType.RECOMMENDED.name().equals(sorted.name())) {
@@ -89,7 +98,7 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
             return new OrderSpecifier<>(Order.DESC, likeCount);
         }
 
-        return note.createdAt.desc();
+        return note.id.desc();
     }
 
 }

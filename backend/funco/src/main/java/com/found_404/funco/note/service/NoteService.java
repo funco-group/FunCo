@@ -2,6 +2,7 @@ package com.found_404.funco.note.service;
 
 import static com.found_404.funco.member.exception.MemberErrorCode.INVALID_MEMBER;
 import static com.found_404.funco.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
+import static com.found_404.funco.note.exception.NoteErrorCode.INVALID_FILTER;
 import static com.found_404.funco.note.exception.NoteErrorCode.NOT_FOUND_NOTE;
 import static com.found_404.funco.note.exception.S3ErrorCode.PUT_OBJECT_EXCEPTION;
 
@@ -48,14 +49,20 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class NoteService {
+
+    private final static int THUMBNAIL_CONTENT_LENGTH = 30;
 
     private final NoteRepository noteRepository;
     private final NoteCommentRepository noteCommentRepository;
@@ -69,23 +76,25 @@ public class NoteService {
     private String bucketName;
 
 
-    public List<NotesResponse> getNotes(Member member, NotesFilterRequest notesFilterRequest) {
-        if (Objects.isNull(member)) {
-            if (Objects.nonNull(notesFilterRequest.type())
-                && (PostType.MY.name().equals(notesFilterRequest.type().name())
-                || PostType.LIKE.name().equals(notesFilterRequest.type().name()))) {
-                throw new MemberException(NOT_FOUND_MEMBER);
-            }
+    public List<NotesResponse> getNotes(NotesFilterRequest notesFilterRequest, Pageable pageable) {
+        if ((notesFilterRequest.type() == PostType.MY || notesFilterRequest.type() == PostType.LIKE)
+                && Objects.isNull(notesFilterRequest.memberId())) {
+            throw new NoteException(INVALID_FILTER);
         }
 
-        return noteRepository.getNotesWithFilter(member, notesFilterRequest)
+        return noteRepository.getNotesWithFilter(notesFilterRequest, pageable)
             .stream().map(note ->  NotesResponse.builder()
                 .noteId(note.getId())
-                .nickname(note.getMember().getNickname())
-                .profileImage(note.getMember().getProfileUrl())
-                .thumbnail(null) // 수정!!
+                .member(NoteMemberResponse.builder()
+                    .memberId(note.getMember().getId())
+                    .nickname(note.getMember().getNickname())
+                    .profileUrl(note.getMember().getProfileUrl())
+                    .badgeId(getHoldingBadge(note.getMember()))
+                    .build()
+                )
+                .thumbnailImage(note.getThumbnailImage())
+                .thumbnailContent(note.getThumbnailContent())
                 .title(note.getTitle())
-                .content(note.getContent())
                 .coinName(note.getTicker())
                 .writeDate(note.getCreatedAt())
                 .likeCount(noteLikeRepository.countByNote(note))
@@ -96,14 +105,21 @@ public class NoteService {
 
     }
 
+
     public NoteResponse getNote(Long noteId) {
-         Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+         Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
          Long likeCount = noteLikeRepository.countByNote(note);
          Long commentCount = noteCommentRepository.countByNote(note);
 
         return NoteResponse.builder()
             .noteId(note.getId())
-            .nickname(note.getMember().getNickname())
+            .member(NoteMemberResponse.builder()
+                    .memberId(note.getMember().getId())
+                    .nickname(note.getMember().getNickname())
+                    .profileUrl(note.getMember().getProfileUrl())
+                    .badgeId(getHoldingBadge(note.getMember()))
+                    .build()
+                )
             .title(note.getTitle())
             .content(note.getContent())
             .coinName(note.getTicker())
@@ -123,7 +139,8 @@ public class NoteService {
             .title(request.title())
             .content(request.content())
             .ticker(request.ticker())
-            .thumbnail(request.thumbnail())
+            .thumbnailImage(request.thumbnailImage())
+            .thumbnailContent(getThumbnailContent(request.content(), THUMBNAIL_CONTENT_LENGTH))
             .build());
 
         return AddNoteResponse.builder()
@@ -131,8 +148,9 @@ public class NoteService {
             .build();
     }
 
+
     public void removeNote(Long memberId, Long noteId) {
-        Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
         if (!note.getMember().getId().equals(memberId)) {
            throw new MemberException(INVALID_MEMBER);
         }
@@ -140,12 +158,12 @@ public class NoteService {
     }
 
     @Transactional
-    public void editNote(Member member, Long noteId, NoteRequest request) {
-        Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
-        if (Objects.isNull(member) || !note.getMember().getId().equals(member.getId())) {
+    public void editNote(Long memberId, Long noteId, NoteRequest request) {
+        Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        if (!note.getMember().getId().equals(memberId)) {
             throw new MemberException(INVALID_MEMBER);
         }
-        note.editNote(request.title(), request.content(), request.ticker());
+        note.editNote(request.title(), request.content(), request.ticker(), request.thumbnailImage(), getThumbnailContent(request.content(), THUMBNAIL_CONTENT_LENGTH));
     }
 
     public List<CommentsResponse> getComments(Long noteId) {
@@ -158,7 +176,6 @@ public class NoteService {
             childComments.putIfAbsent(key, new ArrayList<>());
             childComments.get(key).add(comment);
         }
-
 
         for (NoteComment comment : childComments.getOrDefault(0L, Collections.emptyList())) {
             commentsResponses.add(
@@ -177,7 +194,7 @@ public class NoteService {
                 .memberId(comment.getMember().getId())
                 .nickname(comment.getMember().getNickname())
                 .profileUrl(comment.getMember().getProfileUrl())
-                .badgeId(getHoldingBadge(comment))
+                .badgeId(getHoldingBadge(comment.getMember()))
                 .build())
             .content(comment.getContent())
             .date(comment.getCreatedAt())
@@ -187,16 +204,14 @@ public class NoteService {
             .build();
     }
 
-    public Long getHoldingBadge(NoteComment comment) {
-        Optional<HoldingBadge> optionalHoldingBadge = holdingBadgeRepository.findByMember(comment.getMember());
+    public Long getHoldingBadge(Member member) {
+        Optional<HoldingBadge> optionalHoldingBadge = holdingBadgeRepository.findByMember(member);
         return optionalHoldingBadge.isPresent() ? optionalHoldingBadge.get().getId() : -1L;
     }
 
-    public void addComment(Member member, Long noteId, CommentRequest request) {
-        if (Objects.isNull(member)) {
-            throw new MemberException(NOT_FOUND_MEMBER);
-        }
-
+    public void addComment(Long memberId, Long noteId, CommentRequest request) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
         Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
 
         noteCommentRepository.save(NoteComment.builder()
@@ -232,5 +247,11 @@ public class NoteService {
         return ImageResponse.builder()
             .url(amazonS3.getUrl(bucketName, s3FileName).toString())
             .build();
+    }
+
+    public String getThumbnailContent(String content, int length) {
+        Document doc = Jsoup.parse(content);
+        doc.select("img").remove();
+        return doc.text().substring(length);
     }
 }
