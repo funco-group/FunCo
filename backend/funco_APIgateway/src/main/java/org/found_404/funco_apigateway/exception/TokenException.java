@@ -1,4 +1,4 @@
-package org.found_404.funco_apigateway.security.exception;
+package org.found_404.funco_apigateway.exception;
 
 import org.springframework.http.HttpStatus;
 

@@ -1,9 +1,9 @@
-package org.found_404.funco_apigateway.security.filter;
+package org.found_404.funco_apigateway.filter;
 
 import java.util.Arrays;
 
-import org.found_404.funco_apigateway.security.exception.TokenException;
-import org.found_404.funco_apigateway.security.service.TokenService;
+import org.found_404.funco_apigateway.exception.TokenException;
+import org.found_404.funco_apigateway.service.TokenService;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;
