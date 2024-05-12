@@ -1,8 +1,10 @@
 package com.found_404.funco.asset.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -14,16 +16,23 @@ import com.found_404.funco.asset.dto.response.CashResponse;
 import com.found_404.funco.asset.dto.response.CryptoResponse;
 import com.found_404.funco.asset.dto.response.HistoryResponse;
 import com.found_404.funco.asset.dto.response.TotalAssetResponse;
+import com.found_404.funco.asset.exception.AssetErrorCode;
+import com.found_404.funco.asset.exception.AssetException;
 import com.found_404.funco.follow.domain.Follow;
 import com.found_404.funco.follow.domain.repository.FollowRepository;
+import com.found_404.funco.follow.service.FollowService;
+import com.found_404.funco.follow.service.FollowTradeService;
 import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.exception.MemberErrorCode;
 import com.found_404.funco.member.exception.MemberException;
+import com.found_404.funco.trade.cryptoPrice.CryptoPrice;
 import com.found_404.funco.trade.domain.HoldingCoin;
 import com.found_404.funco.trade.domain.Trade;
 import com.found_404.funco.trade.domain.repository.HoldingCoinRepository;
 import com.found_404.funco.trade.domain.repository.TradeRepository;
+import com.found_404.funco.trade.domain.type.TradeType;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +44,9 @@ public class AssetService {
 	private final FollowRepository followRepository;
 	private final HoldingCoinRepository holdingCoinRepository;
 	private final TradeRepository tradeRepository;
+	private final CryptoPrice cryptoPrice;
+	private final FollowTradeService followTradeService;
+	private final FollowService followService;
 
 	public CashResponse getMemberCash(Member member) {
 		return new CashResponse(member.getCash());
@@ -132,6 +144,51 @@ public class AssetService {
 		return historyResponses.stream()
 			.sorted(Comparator.comparing(HistoryResponse::date).reversed())
 			.collect(Collectors.toList());
+	}
+
+	public void initializeMemberCash(Member member) {
+
+		// 개선안 : Member의 초기화 날짜를 받아서 비교해준다.
+		// 하루(24시간)전이라면 throws 날짜 에러
+		LocalDateTime memberInitCashDate = member.getInitCashDate();
+		LocalDateTime now = LocalDateTime.now();
+		if(Objects.nonNull(memberInitCashDate) && now.isBefore(memberInitCashDate.plusHours(24))){
+			throw new AssetException(AssetErrorCode.INIT_NOT_ALLOWED);
+		}
+
+		// 강제 정산
+		settleCoinAndFollow(member);
+
+		// 원 초기화 날짜 업데이트
+		member.updateInitCashDate(now);
+		member.updateInitCash();
+
+
+	}
+
+	private void settleCoinAndFollow(Member member) {
+		// 강제 정산 로직
+		// 보유 코인 : 불러와서 삭제하면서 팔로우 거래 처리
+		// 팔로우 : 나를 팔로우하는 사람들 정산
+		List<HoldingCoin> memberHoldingCoinList = holdingCoinRepository.findHoldingCoinByMember(member);
+		for(HoldingCoin coin : memberHoldingCoinList){
+			String ticker = coin.getTicker();
+			Double volume = coin.getVolume();
+			// 시세 가져오기
+			long currentPrice = cryptoPrice.getTickerPrice(ticker);
+			Trade trade = Trade.builder()
+				.ticker(ticker)
+				.tradeType(TradeType.SELL)
+				.member(member)
+				.price(currentPrice)
+				.volume(volume)
+				.build();
+			followTradeService.followTrade(trade);
+			holdingCoinRepository.delete(coin);
+		}
+
+		// 팔로잉 : 내가 팔로우하는 사람들 정산
+		followService.deleteFollow(member.getId());
 	}
 
 	private Member findByMemberId(Long memberId) {
