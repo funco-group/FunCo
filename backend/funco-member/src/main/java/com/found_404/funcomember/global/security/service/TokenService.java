@@ -4,20 +4,14 @@ import static com.found_404.funcomember.auth.type.OauthServerType.*;
 import static com.found_404.funcomember.global.security.exception.SecurityErrorCode.*;
 import static java.util.concurrent.TimeUnit.*;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.found_404.funcomember.auth.dto.OauthId;
@@ -88,17 +82,17 @@ public class TokenService {
 		return refreshToken;
 	}
 
-	public Authentication readAuthentication(String token) {
-		Long memberId = readMemberId(token);
-
-		Member member = memberRepository.findById(memberId)
-			.orElseThrow(() -> new SecurityException(MEMBER_NOT_FOUND, HttpStatus.UNAUTHORIZED));
-
-		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-		grantedAuthorities.add(new SimpleGrantedAuthority(member.getNickname()));
-
-		return new UsernamePasswordAuthenticationToken(member, "", grantedAuthorities);
-	}
+	// public Authentication readAuthentication(String token) {
+	// 	Long memberId = readMemberId(token);
+	//
+	// 	Member member = memberRepository.findById(memberId)
+	// 		.orElseThrow(() -> new SecurityException(MEMBER_NOT_FOUND, HttpStatus.UNAUTHORIZED));
+	//
+	// 	List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+	// 	grantedAuthorities.add(new SimpleGrantedAuthority(member.getNickname()));
+	//
+	// 	return new UsernamePasswordAuthenticationToken(member, "", grantedAuthorities);
+	// }
 
 	public String resolveToken(HttpServletRequest request) {
 		String accessToken = request.getHeader("Authorization");
