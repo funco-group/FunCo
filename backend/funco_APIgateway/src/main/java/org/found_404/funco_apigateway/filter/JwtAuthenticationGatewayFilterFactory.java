@@ -20,12 +20,17 @@ import reactor.core.publisher.Mono;
 @Component
 public class JwtAuthenticationGatewayFilterFactory extends
 	AbstractGatewayFilterFactory<JwtAuthenticationGatewayFilterFactory.Config> {
+	private static final String DEFAULT_HEADER = "Authorization", DEFAULT_GRANTED = "Bearer";
 
-	private TokenService tokenService;
+	private final TokenService tokenService;
 
 	public JwtAuthenticationGatewayFilterFactory(TokenService tokenService) {
 		super(Config.class);
 		this.tokenService = tokenService;
+	}
+
+	public GatewayFilter apply() {
+		return apply(new Config(DEFAULT_HEADER, DEFAULT_GRANTED));
 	}
 
 	@Override
