@@ -18,7 +18,7 @@ const ToastEditor = dynamic(
 )
 
 function NotesWrite() {
-  const [coinList, setCoinList] = useState<string[]>([])
+  const [coin, setCoin] = useState<string>('')
   const [titleText, setTitleText] = useState<string>('')
   const [imageList, setImageList] = useState<ThumbnailImageType[]>([])
   const editorRef = useRef<Editor>(null)
@@ -36,7 +36,7 @@ function NotesWrite() {
     const htmlContent = editorRef.current?.getInstance().getHTML()
     console.log('title', titleText)
     console.log('content', htmlContent)
-    console.log('ticker', coinList.join(','))
+    console.log('ticker', coin)
     console.log(
       'thumbnailImage',
       imageList.find((image) => image.thumbnail)?.src,
@@ -65,7 +65,7 @@ function NotesWrite() {
 
   return (
     <div className="rounded border border-solid border-deactivatedGray bg-brandWhite p-3">
-      <CoinSelect coinList={coinList} setCoinList={setCoinList} />
+      <CoinSelect coin={coin} setCoin={setCoin} />
       <input
         type="text"
         value={titleText}
@@ -116,7 +116,7 @@ function NotesWrite() {
             color={null}
             onClick={handleSaveBtn}
             cancel={false}
-            disabled={!coinList || !titleText || imageList.length === 0}
+            disabled={!coin || !titleText || imageList.length === 0}
           />
         </div>
       </div>

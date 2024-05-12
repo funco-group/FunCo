@@ -5,37 +5,40 @@ import {
   SettleModalTitleDiv,
 } from '@/components/TradeHistory/Follow/Following/SettleModal.styled'
 import { codeListState, codeNameMapState } from '@/recoils/crypto'
+import searchByChosung from '@/utils/searchByChosung'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import searchByChosung from '@/utils/searchByChosung'
 
-interface NoteCoinType {
-  ticker: string
-  name: string
-  selected: boolean
-}
+// interface CoinTickerKorType {
+//   ticker: string
+//   name: string
+// }
 
-interface CoinFilterModalProps {
-  setCoinList: Dispatch<SetStateAction<string[]>>
+interface CoinSelectModalProps {
+  coin: string
+  setCoin: Dispatch<SetStateAction<string>>
   setOpenModal: Dispatch<SetStateAction<boolean>>
-  coinList: string[]
 }
 
-function CoinFilterModal({
-  setCoinList,
+function CoinSelectModal({
+  coin,
+  setCoin,
   setOpenModal,
-  coinList,
-}: CoinFilterModalProps) {
+}: CoinSelectModalProps) {
   const AllCoinList = useRecoilValue(codeListState)
   const coinMap = useRecoilValue(codeNameMapState)
 
-  const [MappingCoinList, setMappingCoinList] = useState<NoteCoinType[]>(
-    AllCoinList.map((coin) => ({
-      ticker: coin,
-      name: coinMap.get(coin) || '',
-      selected: coinList.includes(coin),
-    })),
-  )
+  // const [MappingCoinList, setMappingCoinList] = useState<CoinTickerKorType[]>(
+  //   AllCoinList.map((ticker) => ({
+  //     ticker,
+  //     name: coinMap.get(ticker) || '',
+  //   })),
+  // )
+  const MappingCoinList = AllCoinList.map((ticker) => ({
+    ticker,
+    name: coinMap.get(ticker) || '',
+  }))
+
   const [isInputFocus, setIsInputFocus] = useState(false)
   const [searchText, setSearchText] = useState('')
 
@@ -47,24 +50,12 @@ function CoinFilterModal({
     setIsInputFocus((prev) => !prev)
   }
 
-  const handleCancelBtn = () => {
-    setOpenModal(false)
-  }
-
   const handleCheckBtn = () => {
-    const selectedCoins = MappingCoinList.filter((coin) => coin.selected).map(
-      (coin) => coin.ticker,
-    )
-    setCoinList(selectedCoins)
     setOpenModal(false)
   }
 
   const handleCoinBtn = (coinName: string) => {
-    setMappingCoinList((prevList) =>
-      prevList.map((coin) =>
-        coin.name === coinName ? { ...coin, selected: !coin.selected } : coin,
-      ),
-    )
+    setCoin(coinName)
   }
 
   const inputFocusClasses = isInputFocus
@@ -91,44 +82,38 @@ function CoinFilterModal({
               />
             </div>
             <div className="mt-3 min-h-[38px]">
-              {MappingCoinList.filter((coin) => coin.selected).map((coin) => (
+              {coin.length > 0 ? (
                 <button
-                  key={coin.name}
+                  key={coin}
                   type="button"
                   className="border-1 my-1 mr-1 rounded border-solid border-brandColor bg-brandWhite p-1 text-brandColor"
-                  onClick={() => handleCoinBtn(coin.name)}
+                  onClick={() => handleCoinBtn(coin)}
                 >
-                  {coin.name}
+                  {coin}
                 </button>
-              ))}
+              ) : null}
             </div>
           </div>
 
           <div className="no-scrollbar mb-3 h-80 overflow-auto border-b border-l-0 border-r-0 border-t-0 border-solid border-borderGray py-2">
             {MappingCoinList.filter(
-              (coin) =>
-                searchByChosung(searchText, coin.name) && !coin.selected,
-            ).map((coin) => (
+              (MappingCoin) =>
+                searchByChosung(searchText, MappingCoin.name) &&
+                MappingCoin.ticker !== coin,
+            ).map((MappingCoin) => (
               <button
-                key={coin.name}
+                key={MappingCoin.name}
                 type="button"
                 className="border-1 my-1 mr-1 rounded border-solid border-deactivatedGray bg-brandWhite p-1 text-brandDarkGray"
-                onClick={() => handleCoinBtn(coin.name)}
+                onClick={() => handleCoinBtn(MappingCoin.ticker)}
               >
-                {coin.name}
+                {MappingCoin.name}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="flex justify-end gap-3">
-          <BrandButtonComponent
-            color={null}
-            content="취소"
-            cancel
-            onClick={handleCancelBtn}
-            disabled={false}
-          />
+        <div className="flex justify-end">
           <BrandButtonComponent
             color={null}
             content="확인"
@@ -142,4 +127,4 @@ function CoinFilterModal({
   )
 }
 
-export default CoinFilterModal
+export default CoinSelectModal
