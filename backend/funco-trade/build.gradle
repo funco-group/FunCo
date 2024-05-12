@@ -21,7 +21,17 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2023.0.1")
+}
+
 dependencies {
+	/* erueka client가 됩니다. */
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	/* openfeign */
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
 	/*spring web*/
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -37,19 +47,26 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-    /*lombok*/
+	/*lombok*/
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	/*h2 db*/
-	runtimeOnly 'com.h2database:h2'
+//	runtimeOnly 'com.h2database:h2'
 
-	/*mariadb*//*
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'*/
+	/*mariadb*/
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
 	/*test*/
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
 
 tasks.named('test') {
 	useJUnitPlatform()
