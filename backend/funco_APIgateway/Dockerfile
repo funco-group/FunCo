@@ -9,6 +9,6 @@ ARG JAR_FILE=build/libs/funco_APIgateway-0.0.1-SNAPSHOT.jar
 
 ENV SPRING_PROFILES_ACTIVE=deploy
 
-ADD ${JAR_FILE} funco-springboot.jar
+ADD ${JAR_FILE} funco-apigateway.jar
 
 ENTRYPOINT ["java", "-jar", "/funco-apigateway.jar"]
