@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.found_404.funco.global.util.CommissionUtil;
+import com.found_404.funco.trade.client.MemberServiceClient;
+import feign.FeignException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +42,7 @@ public class TradeService {
 	private final TradeRepository tradeRepository;
 	private final HoldingCoinRepository holdingCoinRepository;
 	private final OpenTradeRepository openTradeRepository;
+	private final MemberServiceClient memberService;
 
 	private final CryptoPrice cryptoPrice;
 	//private final FollowTradeService followTradeService;
@@ -51,10 +55,6 @@ public class TradeService {
 	public MarketTradeResponse marketBuying(Long memberId, String ticker, long orderCash) {
 		// 시세 가져오기
 		long currentPrice = getPriceByTicker(ticker);
-
-		// orderCash <= 자산 check, member 원화 감소
-		// member.decreaseCash(orderCash);
-		// memberRepository.save(member);
 
 		// 구매 개수
 		double volume = divide(orderCash, currentPrice, VOLUME_SCALE);
@@ -87,6 +87,9 @@ public class TradeService {
 		// 팔로우 연동
 		//followTradeService.followTrade(trade);
 
+		// orderCash <= 자산 check, member 원화 감소
+		updateMemberCash(memberId, -orderCash);
+
 		return MarketTradeResponse.builder()
 			.ticker(trade.getTicker())
 			.price(trade.getPrice())
@@ -101,12 +104,10 @@ public class TradeService {
 
 		// 수수료 제외한 잔액 증가
 		long orderCash = (long)(multiple(currentPrice, volume, NORMAL_SCALE));
-		// member.increaseCash(orderCash);
-		// memberRepository.save(member);
 
 		// 코인 감소
 		HoldingCoin holdingCoin = holdingCoinRepository.findByMemberIdAndTicker(memberId, ticker)
-			.orElseThrow(() -> new TradeException(INSUFFICIENT_COINS));
+			.orElseThrow(() -> new TradeException(INSUFFICIENT_ASSET));
 
 		decreaseHoldingCoin(holdingCoin, volume);
 
@@ -124,6 +125,9 @@ public class TradeService {
 
 		// 팔로우 연동
 		//followTradeService.followTrade(trade);
+
+		// member 원화 증가
+		updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(orderCash));
 
 		return MarketTradeResponse.builder()
 			.ticker(trade.getTicker())
@@ -180,9 +184,7 @@ public class TradeService {
 
 		// 돈 또는 코인 회수
 		if (openTrade.getTradeType().equals(TradeType.BUY)) {
-			// member.recoverCash(openTrade.getOrderCash());
-			// memberRepository.save(member);
-			System.out.println("회수");
+			updateMemberCash(memberId, openTrade.getOrderCash());
 		} else {
 			Optional<HoldingCoin> optionalHoldingCoin = holdingCoinRepository.findByMemberIdAndTicker(
 				openTrade.getMemberId(), openTrade.getTicker());
@@ -200,12 +202,18 @@ public class TradeService {
 		}
 	}
 
+	private void updateMemberCash(Long memberId, Long cash) {
+		try {
+			memberService.updateCash(memberId, cash);
+		} catch (FeignException e) {
+			log.error("member client error : {}", e.getMessage());
+			throw new TradeException(INSUFFICIENT_ASSET);
+		}
+	}
+
 	@Transactional
 	public void limitBuying(Long memberId, String ticker, Long price, Double volume) {
-		// 돈 확인 및 감소
 		long orderCash = (long)(price * volume);
-		// member.decreaseCash(orderCash);
-		// memberRepository.save(member);
 
 		// 미체결 거래 등록
 		OpenTrade openTrade = openTradeRepository.save(OpenTrade.builder()
@@ -218,6 +226,9 @@ public class TradeService {
 			.build());
 
 		cryptoPrice.addTrade(openTrade.getTicker(), openTrade.getId(), openTrade.getTradeType(), openTrade.getPrice());
+
+		// 돈 확인 및 감소
+		updateMemberCash(memberId, -orderCash);
 	}
 
 	@Transactional
@@ -225,7 +236,7 @@ public class TradeService {
 		// 코인 확인 및 팔려고 등록한 만큼 빼기
 		Optional<HoldingCoin> optionalHoldingCoin = holdingCoinRepository.findByMemberIdAndTicker(memberId, ticker);
 		if (optionalHoldingCoin.isEmpty() || optionalHoldingCoin.get().getVolume() < volume) {
-			throw new TradeException(INSUFFICIENT_COINS);
+			throw new TradeException(INSUFFICIENT_ASSET);
 		} else {
 			decreaseHoldingCoin(optionalHoldingCoin.get(), volume);
 		}
