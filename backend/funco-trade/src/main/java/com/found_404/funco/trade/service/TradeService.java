@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.found_404.funco.global.util.CommissionUtil;
 import com.found_404.funco.trade.client.MemberServiceClient;
+import com.found_404.funco.trade.client.dto.RequestUpdateCash;
 import feign.FeignException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,6 @@ import com.found_404.funco.trade.domain.repository.TradeRepository;
 import com.found_404.funco.trade.domain.type.TradeType;
 import com.found_404.funco.trade.dto.OpenTradeDto;
 import com.found_404.funco.trade.dto.OtherTradeDto;
-import com.found_404.funco.trade.dto.Ticker;
 import com.found_404.funco.trade.dto.TradeDto;
 import com.found_404.funco.trade.dto.response.HoldingCoinsResponse;
 import com.found_404.funco.trade.dto.response.MarketTradeResponse;
@@ -141,7 +141,7 @@ public class TradeService {
 			.holdingCoins(holdingCoinRepository
 				.findByMemberId(memberId)
 				.stream()
-				.map(Ticker::getTicker)
+				.map(HoldingCoin::getTicker)
 				.collect(Collectors.toList()))
 			.build();
 	}
@@ -204,7 +204,7 @@ public class TradeService {
 
 	private void updateMemberCash(Long memberId, Long cash) {
 		try {
-			memberService.updateCash(memberId, cash);
+			memberService.updateCash(memberId, new RequestUpdateCash(cash));
 		} catch (FeignException e) {
 			log.error("member client error : {}", e.getMessage());
 			throw new TradeException(INSUFFICIENT_ASSET);
