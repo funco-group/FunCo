@@ -21,19 +21,17 @@ import com.found_404.funco.asset.exception.AssetException;
 import com.found_404.funco.follow.domain.Follow;
 import com.found_404.funco.follow.domain.repository.FollowRepository;
 import com.found_404.funco.follow.service.FollowService;
-import com.found_404.funco.follow.service.FollowTradeService;
 import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.exception.MemberErrorCode;
 import com.found_404.funco.member.exception.MemberException;
-import com.found_404.funco.trade.cryptoPrice.CryptoPrice;
 import com.found_404.funco.trade.domain.HoldingCoin;
 import com.found_404.funco.trade.domain.Trade;
 import com.found_404.funco.trade.domain.repository.HoldingCoinRepository;
 import com.found_404.funco.trade.domain.repository.TradeRepository;
-import com.found_404.funco.trade.domain.type.TradeType;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,8 +42,6 @@ public class AssetService {
 	private final FollowRepository followRepository;
 	private final HoldingCoinRepository holdingCoinRepository;
 	private final TradeRepository tradeRepository;
-	private final CryptoPrice cryptoPrice;
-	private final FollowTradeService followTradeService;
 	private final FollowService followService;
 
 	public CashResponse getMemberCash(Member member) {
@@ -146,6 +142,7 @@ public class AssetService {
 			.collect(Collectors.toList());
 	}
 
+	@Transactional
 	public void initializeMemberCash(Member member) {
 
 		// 개선안 : Member의 초기화 날짜를 받아서 비교해준다.
@@ -166,29 +163,28 @@ public class AssetService {
 
 	}
 
-	private void settleCoinAndFollow(Member member) {
+
+
+	@Transactional
+	protected void settleCoinAndFollow(Member member) {
 		// 강제 정산 로직
 		// 보유 코인 : 불러와서 삭제하면서 팔로우 거래 처리
 		// 팔로우 : 나를 팔로우하는 사람들 정산
 		List<HoldingCoin> memberHoldingCoinList = holdingCoinRepository.findHoldingCoinByMember(member);
-		for(HoldingCoin coin : memberHoldingCoinList){
-			String ticker = coin.getTicker();
-			Double volume = coin.getVolume();
-			// 시세 가져오기
-			long currentPrice = cryptoPrice.getTickerPrice(ticker);
-			Trade trade = Trade.builder()
-				.ticker(ticker)
-				.tradeType(TradeType.SELL)
-				.member(member)
-				.price(currentPrice)
-				.volume(volume)
-				.build();
-			followTradeService.followTrade(trade);
-			holdingCoinRepository.delete(coin);
-		}
+		holdingCoinRepository.deleteAll(memberHoldingCoinList);
 
 		// 팔로잉 : 내가 팔로우하는 사람들 정산
-		followService.deleteFollow(member.getId());
+		List<Follow> followingList = followRepository.findAllByFollowerAndSettledFalse(member);
+		for(Follow following : followingList){
+			followService.deleteFollow(following.getId());
+		}
+
+		// 팔로워 : 나를 팔로우하는 사람들 정산
+		List<Follow> followerList = followRepository.findAllByFollowingAndSettledFalse(member);
+		for(Follow follower : followerList){
+			followService.deleteFollow(follower.getId());
+		}
+
 	}
 
 	private Member findByMemberId(Long memberId) {
