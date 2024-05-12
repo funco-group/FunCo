@@ -10,9 +10,10 @@ public class CorsConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 			.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-			.allowedOrigins("*")
+			//.allowedOrigins("*")
 			.allowedHeaders("Content-Type", "X-Member-ID") // 헤더 허용
 			.allowCredentials(true)
+				.allowedOriginPatterns("*")
 			.maxAge(3600)
 			.exposedHeaders("*");
 	}
