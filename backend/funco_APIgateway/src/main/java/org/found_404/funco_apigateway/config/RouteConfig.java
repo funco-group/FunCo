@@ -1,7 +1,7 @@
 package org.found_404.funco_apigateway.config;
 
-import org.found_404.funco_apigateway.security.filter.JwtAuthenticationGatewayFilterFactory;
-import org.found_404.funco_apigateway.security.service.TokenService;
+import org.found_404.funco_apigateway.filter.JwtAuthenticationGatewayFilterFactory;
+import org.found_404.funco_apigateway.service.TokenService;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -18,17 +18,15 @@ public class RouteConfig {
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes()
-			.route(r -> r.path("/api/v1/hello/**")
+			// Member Service API
+			.route(r -> r.path("/api/v1/auth/**")
+				.uri("https://member.funco.co.kr"))
+			.route(r -> r.path("/api/v1/member/**")
 				.filters(f -> f.filter(new JwtAuthenticationGatewayFilterFactory(tokenService).apply(
 					new JwtAuthenticationGatewayFilterFactory.Config("Authorization", "Bearer"))))
-				.uri("https://main-api.funco.co.kr"))
-			.route(r -> r.path("/api/v1/asset/**")
-				.filters(f -> f.filter(new JwtAuthenticationGatewayFilterFactory(tokenService).apply(
-					new JwtAuthenticationGatewayFilterFactory.Config("Authorization", "Bearer"))))
-				.uri("https://main-api.funco.co.kr"))
-			.route(r -> r.path("/user/**")
-				.filters(f -> f.addRequestHeader("member-id","1"))
-				.uri("lb://MSA-USER-SERVICE")) // eureka를 사용하는 경우 lb(loadbalancing)://유레카에서뜨는서비스이름
+				.uri("https://member.funco.co.kr"))
+			.route(r -> r.path("/api/v1/hello")
+				.uri("https://member.funco.co.kr"))
 			.build();
 	}
 }
