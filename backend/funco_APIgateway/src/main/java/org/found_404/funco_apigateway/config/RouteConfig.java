@@ -1,7 +1,6 @@
 package org.found_404.funco_apigateway.config;
 
 import org.found_404.funco_apigateway.filter.JwtAuthenticationGatewayFilterFactory;
-import org.found_404.funco_apigateway.service.TokenService;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Configuration
 public class RouteConfig {
-
-	private final TokenService tokenService;
 	private final String EUREKA_MEMBER = "lb://MEMBER-SERVICE";
 	private final JwtAuthenticationGatewayFilterFactory jwtAuthentication;
 
