@@ -2,6 +2,7 @@ package org.found_404.funco_apigateway.filter;
 
 import static org.springframework.http.HttpHeaders.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,7 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class GlobalCORSFilter {
 
-	private static final List<String> ALLOWED_ORIGINS = List.of("https://www.funco.co.kr", "https://funco.co.kr");
+	private static final List<String> ALLOWED_ORIGINS = new ArrayList<>(List.of("https://www.funco.co.kr", "https://funco.co.kr"));
 	private static final String ALLOWED_HEADERS = "X-Requested-With, Authorization, Content-Type";
 	private static final String ALLOWED_METHODS = "GET, PUT, POST, DELETE, OPTIONS";
 	private static final String MAX_AGE = "3600";
