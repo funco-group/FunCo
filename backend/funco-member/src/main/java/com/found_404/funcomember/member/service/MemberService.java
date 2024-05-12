@@ -104,4 +104,9 @@ public class MemberService {
 		return memberRepository.findById(loginMemberId)
 			.orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 	}
+
+	public void updateCash(Long memberId, Long updateCash) {
+		Member member = getMember(memberId);
+		member.updateCash(updateCash);
+	}
 }

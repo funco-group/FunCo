@@ -1,10 +1,7 @@
 package com.found_404.funcomember.member.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.found_404.funcomember.member.dto.RequestIntroduction;
 import com.found_404.funcomember.member.dto.RequestNickName;
@@ -54,6 +51,12 @@ public class MemberController {
 	@PatchMapping("/withdraw")
 	public ResponseEntity<?> withdraw(Long loginMemberId) {
 		memberService.withdraw(loginMemberId);
+		return ResponseEntity.ok().build();
+	}
+
+	@PatchMapping("/{memberId}/cash")
+	public ResponseEntity<?> updateCash(@PathVariable Long memberId, @RequestBody Long updateCash) {
+		memberService.updateCash(memberId, updateCash);
 		return ResponseEntity.ok().build();
 	}
 }
