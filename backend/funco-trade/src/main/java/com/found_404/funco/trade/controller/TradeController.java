@@ -33,10 +33,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TradeController {
 	private final TradeService tradeService;
+	private final String MEMBER_ID_HEADER = "X-Member-ID";
 
 	// 시장가 매수
 	@PostMapping("/market-buying")
-	public ResponseEntity<MarketTradeResponse> marketBuying(@RequestHeader("member-id") Long memberId,
+	public ResponseEntity<MarketTradeResponse> marketBuying(@RequestHeader(MEMBER_ID_HEADER) Long memberId,
 		@RequestBody @Valid MarketBuyingRequest request) {
 
 		return ResponseEntity.ok(tradeService.marketBuying(memberId, request.ticker(), request.orderCash()));
@@ -44,7 +45,7 @@ public class TradeController {
 
 	// 시장가 매도
 	@PostMapping("/market-selling")
-	public ResponseEntity<MarketTradeResponse> marketSelling(@RequestHeader("member-id") Long memberId,
+	public ResponseEntity<MarketTradeResponse> marketSelling(@RequestHeader(MEMBER_ID_HEADER) Long memberId,
 		@RequestBody @Valid MarketSellingRequest request) {
 
 		return ResponseEntity.ok(tradeService.marketSelling(memberId, request.ticker(), request.volume()));
@@ -52,7 +53,7 @@ public class TradeController {
 
 	// 지정가 매수
 	@PostMapping("/limit-buying")
-	public ResponseEntity<?> limitBuying(@RequestHeader("member-id") Long memberId,
+	public ResponseEntity<?> limitBuying(@RequestHeader(MEMBER_ID_HEADER) Long memberId,
 		@RequestBody @Valid LimitBuyingRequest request) {
 
 		tradeService.limitBuying(memberId, request.ticker(), request.price(), request.volume());
@@ -61,7 +62,7 @@ public class TradeController {
 
 	// 지정가 매도
 	@PostMapping("/limit-selling")
-	public ResponseEntity<?> limitSelling(@RequestHeader("member-id") Long memberId,
+	public ResponseEntity<?> limitSelling(@RequestHeader(MEMBER_ID_HEADER) Long memberId,
 		@RequestBody @Valid LimitSellingRequest request) {
 
 		tradeService.limitSelling(memberId, request.ticker(), request.price(), request.volume());
@@ -70,13 +71,13 @@ public class TradeController {
 
 	// 보유 중인 코인 조회
 	@GetMapping("/holding")
-	public ResponseEntity<HoldingCoinsResponse> getHoldingCoin(@RequestHeader("member-id") Long memberId) {
+	public ResponseEntity<HoldingCoinsResponse> getHoldingCoin(@RequestHeader(MEMBER_ID_HEADER) Long memberId) {
 		return ResponseEntity.ok(tradeService.getHoldingCoins(memberId));
 	}
 
 	// 체결 코인 거래 내역, param ticker
 	@GetMapping("/orders")
-	public ResponseEntity<List<TradeDto>> getOrders(@RequestHeader("member-id") Long memberId,
+	public ResponseEntity<List<TradeDto>> getOrders(@RequestHeader(MEMBER_ID_HEADER) Long memberId,
 		Pageable pageable, TradeRequest tradeRequest) {
 
 		return ResponseEntity.ok(tradeService.getOrders(memberId, tradeRequest.ticker(), pageable));
@@ -92,7 +93,7 @@ public class TradeController {
 
 	// 미체결 거래 내역 보기
 	@GetMapping("/open-orders")
-	public ResponseEntity<List<OpenTradeDto>> getOpenOrders(@RequestHeader("member-id") Long memberId,
+	public ResponseEntity<List<OpenTradeDto>> getOpenOrders(@RequestHeader(MEMBER_ID_HEADER) Long memberId,
 		Pageable pageable, TradeRequest tradeRequest) {
 
 		return ResponseEntity.ok(tradeService.getOpenOrders(memberId, tradeRequest.ticker(), pageable));
@@ -100,7 +101,7 @@ public class TradeController {
 
 	// 미체결 거래 취소
 	@DeleteMapping("/open-orders/{id}")
-	public ResponseEntity<?> getOpenOrders(@RequestHeader("member-id") Long memberId,
+	public ResponseEntity<?> getOpenOrders(@RequestHeader(MEMBER_ID_HEADER) Long memberId,
 		@PathVariable Long id) {
 
 		tradeService.deleteOpenTrade(memberId, id);
