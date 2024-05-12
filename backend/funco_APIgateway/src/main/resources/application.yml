@@ -1,18 +1,6 @@
-server:
-  port: 8000
-
 spring:
+  profiles:
+    active: local
+
   application:
     name: gateway-service
-
-  jwt:
-    token:
-      secret-key: QTEwN2phbnNvcnJ5dGVhbWRuZmxya2RsZW1kZ2tmcmpkaWFrZmZsd2xha2RrcnBUc2kK
-      refresh-secret-key: QTEwN2phbnNvcnJ5dGVhbWZsdm1mcHRubHhoem1zZHBlb2drZ2tzcmtxdGRsc2xSa3Jqc2VtZndsYWsK
-
-#eureka:
-#  client:
-#    fetch-registry: true
-#    register-with-eureka: true
-#    service-url:
-#      defaultZone: http://127.0.0.1:8761/eureka # eureka end point
