@@ -10,9 +10,8 @@ public class CorsConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 			.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-			.allowedOrigins("http://localhost:8761", "http://localhost:8000", "https://funco.co.kr",
-				"**")
-			.allowedHeaders("Content-Type", "member-id") // 헤더 허용
+			.allowedOrigins("*")
+			.allowedHeaders("Content-Type", "X-Member-ID") // 헤더 허용
 			.allowCredentials(true)
 			.maxAge(3600)
 			.exposedHeaders("*");
