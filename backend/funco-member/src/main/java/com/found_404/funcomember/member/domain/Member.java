@@ -1,5 +1,7 @@
 package com.found_404.funcomember.member.domain;
 
+import com.found_404.funcomember.member.exception.MemberErrorCode;
+import com.found_404.funcomember.member.exception.MemberException;
 import org.hibernate.annotations.Comment;
 
 import com.found_404.funcomember.auth.dto.OauthId;
@@ -15,6 +17,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.found_404.funcomember.member.exception.MemberErrorCode.INSUFFICIENT_BALANCE;
 
 @Entity
 @Getter
@@ -70,24 +74,12 @@ public class Member extends BaseEntity {
 		this.portfolioPrice = portfolioPrice;
 	}
 
-	public void decreaseCash(long orderCash) {
-		if (this.cash < orderCash) {
-			throw new RuntimeException("잔액이 부족합니다.");  // member domain에서 custom exception 추가
+	public void updateCash(long updateCash) {
+		if (this.cash + updateCash < 0) {
+			throw new MemberException(INSUFFICIENT_BALANCE);
 		}
-		this.cash -= orderCash;
+		this.cash += updateCash;
 	}
-
-	// public void increaseCash(long orderCash) {
-	// 	this.cash += getCashWithCommission(orderCash);
-	// }
-
-	public void increaseCashWithoutCommission(long orderCash) {
-		this.cash += orderCash;
-	}
-
-	// public long getCashWithCommission(long orderCash) {
-	// 	return orderCash - (long)(DecimalCalculator.multiple(orderCash, COMMISSION, ScaleType.NORMAL_SCALE));
-	// }
 
 	public void settleCash(long settlement) {
 		this.cash += settlement;
