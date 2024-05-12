@@ -1,5 +1,7 @@
 package com.found_404.funco.member.domain;
 
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.Comment;
 
 import com.found_404.funco.auth.dto.OauthId;
@@ -60,12 +62,17 @@ public class Member extends BaseEntity {
 	@Column(nullable = false)
 	private Boolean badgeYn;
 
+	@Comment("마지막 원 초기화 날짜")
+	private LocalDateTime initCashDate;
+
 	private static final Double COMMISSION = 0.05;
+
+	private static final long RE_INIT_CASH = 5_000_000;
 
 	@Builder
 	public Member(OauthId oauthId, String nickname, String profileUrl, String introduction, Long cash,
 		MemberStatus status,
-		PortfolioStatusType portfolioStatus, Long portfolioPrice, Boolean badgeYn) {
+		PortfolioStatusType portfolioStatus, Long portfolioPrice, Boolean badgeYn, LocalDateTime initCashDate) {
 		this.oauthId = oauthId;
 		this.nickname = nickname;
 		this.profileUrl = profileUrl;
@@ -75,6 +82,7 @@ public class Member extends BaseEntity {
 		this.portfolioStatus = portfolioStatus;
 		this.portfolioPrice = portfolioPrice;
 		this.badgeYn = badgeYn;
+		this.initCashDate = initCashDate;
 	}
 
 	public void decreaseCash(long orderCash) {
@@ -119,6 +127,14 @@ public class Member extends BaseEntity {
 	public void updatePortfolioStatus(PortfolioStatusType portfolioStatus, Long portfolioPrice) {
 		this.portfolioStatus = portfolioStatus;
 		this.portfolioPrice = portfolioPrice;
+	}
+
+	public void updateInitCashDate(LocalDateTime initCashDate) {
+		this.initCashDate = initCashDate;
+	}
+
+	public void updateInitCash() {
+		this.cash = RE_INIT_CASH;
 	}
 
 	public void withdraw() {
