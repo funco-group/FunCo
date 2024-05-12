@@ -1,6 +1,6 @@
 import WideLayout from '@/components/layout/WideLayout'
 
-function NoteLayout({ children }: { children: React.ReactNode }) {
+function NotesLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <WideLayout>{children}</WideLayout>
@@ -8,4 +8,4 @@ function NoteLayout({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default NoteLayout
+export default NotesLayout
