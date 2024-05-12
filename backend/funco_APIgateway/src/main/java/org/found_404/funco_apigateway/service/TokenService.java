@@ -1,11 +1,11 @@
-package org.found_404.funco_apigateway.security.service;
+package org.found_404.funco_apigateway.service;
 
-import static org.found_404.funco_apigateway.security.exception.TokenErrorCode.*;
+import static org.found_404.funco_apigateway.exception.TokenErrorCode.*;
 
 import java.util.Base64;
 import java.util.Date;
 
-import org.found_404.funco_apigateway.security.exception.TokenException;
+import org.found_404.funco_apigateway.exception.TokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
