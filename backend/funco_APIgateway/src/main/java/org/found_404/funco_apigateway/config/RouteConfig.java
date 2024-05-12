@@ -14,19 +14,20 @@ import lombok.RequiredArgsConstructor;
 public class RouteConfig {
 
 	private final TokenService tokenService;
+	private final String EUREKA_MEMBER = "lb://MEMBER-SERVICE";
+	private final JwtAuthenticationGatewayFilterFactory jwtAuthentication;
 
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes()
 			// Member Service API
 			.route(r -> r.path("/api/v1/auth/**")
-				.uri("https://member.funco.co.kr"))
+				.uri(EUREKA_MEMBER))
 			.route(r -> r.path("/api/v1/member/**")
-				.filters(f -> f.filter(new JwtAuthenticationGatewayFilterFactory(tokenService).apply(
-					new JwtAuthenticationGatewayFilterFactory.Config("Authorization", "Bearer"))))
-				.uri("https://member.funco.co.kr"))
+				.filters(f -> f.filter(jwtAuthentication.apply()))
+				.uri(EUREKA_MEMBER))
 			.route(r -> r.path("/api/v1/hello")
-				.uri("https://member.funco.co.kr"))
+				.uri(EUREKA_MEMBER))
 			.build();
 	}
 }
