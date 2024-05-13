@@ -1,5 +1,6 @@
 package com.found_404.funcomember.member.controller;
 
+import com.found_404.funcomember.member.dto.request.UpdateCash;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,9 +60,8 @@ public class MemberController {
 	}
 
 	@PatchMapping("/{memberId}/cash")
-	public ResponseEntity<Void> updateCash(@PathVariable Long memberId, @RequestBody Long updateCash) {
-		log.info("update cash! mem id: {}", memberId);
-		memberService.updateCash(memberId, updateCash);
+	public ResponseEntity<?> updateCash(@PathVariable Long memberId, @RequestBody UpdateCash updateCash) {
+		memberService.updateCash(memberId, updateCash.cash());
 		return ResponseEntity.ok().build();
 	}
 
