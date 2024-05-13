@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import useUserState from '@/hooks/recoilHooks/useUserState'
 import { useRouter } from 'next/navigation'
+import { postLogout } from '@/apis/auth'
 import {
   ProfileDiv,
   ProfileDropdownButton,
@@ -29,10 +30,13 @@ function ProfileDropdown({
   }
 
   const handleLogout = () => {
-    logout()
-    setIsProfileOpen((prev) => !prev)
-    window.location.reload()
-    window.location.href = '/'
+    postLogout(() => {
+      logout()
+
+      setIsProfileOpen((prev) => !prev)
+      window.location.reload()
+      window.location.href = '/'
+    })
   }
 
   const [open, setOpen] = useState(false)
