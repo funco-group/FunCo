@@ -14,7 +14,7 @@ export async function postGoogleOAuth(
     .then(success)
 }
 
-export async function GetTokenReissue() {
+export async function getTokenReissue() {
   localAxios.post(`/${version}/${domain}/reissue`).then((res) => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem('userInfo')
@@ -25,4 +25,8 @@ export async function GetTokenReissue() {
       }
     }
   })
+}
+
+export async function postLogout(success: () => void) {
+  localAxios.post(`/${version}/${domain}/google/signout`).then(success)
 }
