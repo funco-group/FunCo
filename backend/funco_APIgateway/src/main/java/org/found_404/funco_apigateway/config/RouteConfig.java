@@ -1,6 +1,5 @@
 package org.found_404.funco_apigateway.config;
 
-import org.found_404.funco_apigateway.filter.CorsGatewayFilterFactory;
 import org.found_404.funco_apigateway.filter.JwtAuthenticationGatewayFilterFactory;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -15,7 +14,6 @@ public class RouteConfig {
 	private final String EUREKA_MEMBER = "lb://MEMBER-SERVICE";
 	private final String EUREKA_TRADE = "lb://TRADE-SERVICE";
 	private final JwtAuthenticationGatewayFilterFactory jwtAuthentication;
-	private final CorsGatewayFilterFactory corsGatewayFilterFactory;
 
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
@@ -24,14 +22,12 @@ public class RouteConfig {
 			.route(r -> r.path("/api/v1/auth/**")
 				.uri(EUREKA_MEMBER))
 			.route(r -> r.path("/api/v1/member/**")
-				.filters(f -> f.filter(corsGatewayFilterFactory.apply(new CorsGatewayFilterFactory.Config()))
-					.filter(jwtAuthentication.apply()))
+				.filters(f -> f.filter(jwtAuthentication.apply()))
 				.uri(EUREKA_MEMBER))
 			.route(r -> r.path("/api/v1/hello")
 				.uri(EUREKA_MEMBER))
 			.route(r -> r.path("/api/v1/trade/**")
-				.filters(f -> f.filter(corsGatewayFilterFactory.apply(new CorsGatewayFilterFactory.Config()))
-					.filter(jwtAuthentication.apply()))
+				.filters(f -> f.filter(jwtAuthentication.apply()))
 				.uri(EUREKA_TRADE))
 			.route(r -> r.path("/api/health/trade")
 				.uri(EUREKA_TRADE))
