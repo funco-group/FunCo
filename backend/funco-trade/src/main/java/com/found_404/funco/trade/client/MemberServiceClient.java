@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name="member-service", configuration = FeignClientConfig.class)
+@FeignClient(name="member-service")
 public interface MemberServiceClient {
 
-    @PatchMapping(value = "/api/v1/members/{memberId}/cash", produces = "application/json")
+    @PatchMapping(value = "/api/v1/members/{memberId}/cash")
     void updateCash(@PathVariable("memberId") Long memberId, @RequestBody RequestUpdateCash updateCash);
     // 부족 시 bad request
 
