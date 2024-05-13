@@ -107,7 +107,7 @@ function FollowModal({ member, setMember }: FollowModalProps) {
           closeAlert={closeAlert}
         />
       )}
-      <SettleModalContainer width="30rem">
+      <SettleModalContainer width="32rem">
         <SettleModalTitleDiv>팔로우</SettleModalTitleDiv>
         <FollowModalContentDiv>
           <FollowModalTermsDiv>

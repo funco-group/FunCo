@@ -148,10 +148,6 @@ export const NavBarLoginButton = styled.button`
     margin: auto 0.3125rem auto 0.625rem;
   }
 
-  cursor: pointer;
-
-  /* box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3); */
-
   &:active {
     transform: translate(2px, 2px);
     box-shadow: none;
