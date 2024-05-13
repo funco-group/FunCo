@@ -106,6 +106,7 @@ public class MemberService {
 			.orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 	}
 
+	@Transactional
 	public void updateCash(Long memberId, Long updateCash) {
 		Member member = getMember(memberId);
 		member.updateCash(updateCash);
