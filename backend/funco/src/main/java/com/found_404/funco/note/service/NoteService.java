@@ -257,15 +257,22 @@ public class NoteService {
     }
 
     public void addNoteLike(Long memberId, Long noteId) {
-        Optional<NoteLike> noteLike = noteLikeRepository.findByMemberIdAndNoteId(memberId, noteId);
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+        Note note = noteRepository.findById(noteId)
+            .orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+
+        Optional<NoteLike> noteLike = noteLikeRepository.findByMemberAndNote(member, note);
+
         if (noteLike.isPresent()) {
             noteLikeRepository.delete(noteLike.get());
         }
         else {
             noteLikeRepository.save(NoteLike.builder()
-                    .member(memberRepository.findById(memberId).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER)))
-                    .note(noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE)))
+                    .member(member)
+                    .note(note)
                     .build());
         }
+
     }
 }
