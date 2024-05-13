@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name="member-service")
+@FeignClient(name="member-service", configuration = FeignClientConfig.class)
 public interface MemberServiceClient {
 
     @PatchMapping(value = "/api/v1/members/{memberId}/cash", produces = "application/json")
