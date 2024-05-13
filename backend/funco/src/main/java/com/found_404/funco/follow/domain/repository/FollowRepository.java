@@ -20,4 +20,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long>, QueryDslF
     List<Follow> findAllByFollowerAndSettledTrue(Member member);
 
 	List<Follow> findAllByFollowingAndSettledTrue(Member member);
+
+	List<Follow> findAllByFollowingAndSettledFalse(Member following);
 }
