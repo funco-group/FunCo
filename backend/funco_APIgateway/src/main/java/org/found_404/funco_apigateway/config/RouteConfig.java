@@ -21,7 +21,7 @@ public class RouteConfig {
 			// Member Service API
 			.route(r -> r.path("/api/v1/auth/**")
 				.uri(EUREKA_MEMBER))
-			.route(r -> r.path("/api/v1/member/**")
+			.route(r -> r.path("/api/v1/members/**")
 				.filters(f -> f.filter(jwtAuthentication.apply()))
 				.uri(EUREKA_MEMBER))
 			.route(r -> r.path("/api/v1/hello")
