@@ -7,7 +7,7 @@ interface NotesDetailProps {
 function NotesDetail({ noteId }: NotesDetailProps) {
   return (
     <div>
-      <NotesDetailArticle />
+      <NotesDetailArticle noteId={noteId} />
     </div>
   )
 }
