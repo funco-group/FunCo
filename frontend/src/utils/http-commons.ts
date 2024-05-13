@@ -11,9 +11,9 @@ const localAxios = axios.create({
 
 localAxios.interceptors.request.use(
   (config) => {
-    if (config.url?.includes('/v1/auth')) {
-      return config
-    }
+    // if (config.url?.includes('/v1/auth')) {
+    //   return config
+    // }
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem('userInfo')
       const userInfo = savedValue ? JSON.parse(savedValue) : null
