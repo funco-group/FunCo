@@ -19,7 +19,7 @@ import BrandButtonComponent from "@/components/common/Button/BrandButtonComponen
 import palette from "@/lib/palette";
 import BrandButton from "@/components/common/Button/BrandButtonComponent.styled";
 import { addFollow } from "@/apis/follow";
-import { getCash } from "@/apis/asset";
+import { getCash } from "@/apis/member";
 import AlertModal from "@/components/common/Modal/AlertModal";
 import MemberType from "@/interfaces/userPage/MemberType";
 
