@@ -1,9 +1,16 @@
 import { AxiosResponse } from "axios";
 import MemberType from "@/interfaces/userPage/MemberType";
 import localAxios from "@/utils/http-commons";
+import { CashType } from "@/interfaces/common/AssetType";
 
 const version = "v1";
 const domain = "members";
+
+export async function getCash(
+  success: (response: AxiosResponse<CashType>) => void,
+) {
+  await localAxios.get(`/${version}/${domain}/cash`).then(success);
+}
 
 export async function getMemberInfo(
   memberId: number,

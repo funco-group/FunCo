@@ -16,7 +16,8 @@ import {
   TradeInfo,
 } from "@/styles/Crypto.styled";
 import userState from "@/recoils/user";
-import { getCash, getCoinVolume } from "@/apis/asset";
+import { getCoinVolume } from "@/apis/asset";
+import { getCash } from "@/apis/member";
 import { CashType } from "@/interfaces/common/AssetType";
 import { buyMarket, sellMarket } from "@/apis/trade";
 import TradeConcludedModal from "./TradeConcludedModal";

@@ -17,7 +17,8 @@ import {
   GreenDiv,
   TradeInfo,
 } from "@/styles/Crypto.styled";
-import { getCash, getCoinVolume } from "@/apis/asset";
+import { getCoinVolume } from "@/apis/asset";
+import { getCash } from "@/apis/member";
 import { CashType } from "@/interfaces/common/AssetType";
 import inputDecimalFormat from "@/utils/inputDecimalFormat";
 import { buyLimit, sellLimit } from "@/apis/trade";
