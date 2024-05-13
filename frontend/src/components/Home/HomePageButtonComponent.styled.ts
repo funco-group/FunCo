@@ -19,7 +19,6 @@ export const HomePageButton = styled.button<{
   text-align: ${({ direction }) => direction};
   border: none;
   background-color: transparent;
-  cursor: pointer;
 `
 
 export const HomePageButtonFlexDiv = styled.div<{ direction: string }>`

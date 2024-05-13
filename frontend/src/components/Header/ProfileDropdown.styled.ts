@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import palette from "@/lib/palette";
-import { DropdownContainerProps, modalSettings } from "./NotiDropdown.styled";
+import styled from 'styled-components'
+import palette from '@/lib/palette'
+import { DropdownContainerProps, modalSettings } from './NotiDropdown.styled'
 
 export const ProfileDropdownContainer = styled.div<DropdownContainerProps>`
   width: 12.5rem;
@@ -18,17 +18,17 @@ export const ProfileDropdownContainer = styled.div<DropdownContainerProps>`
   right: 1.875rem;
 
   ${(props) => modalSettings(props.$visible)}
-`;
+`
 
 export const ProfileDiv = styled.div`
   padding: 0 10px;
   p {
-    font-family: "NanumSquareBold";
+    font-family: 'NanumSquareBold';
     color: ${palette.brandBlack};
   }
 
   border-bottom: 1px solid ${palette.borderGray};
-`;
+`
 
 export const ProfileDropdownButton = styled.button`
   display: block;
@@ -42,8 +42,7 @@ export const ProfileDropdownButton = styled.button`
 
   text-align: left;
 
-  cursor: pointer;
   &:hover {
     background-color: ${palette.brandColor2};
   }
-`;
+`
