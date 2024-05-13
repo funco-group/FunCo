@@ -3,8 +3,10 @@ package com.found_404.funcomember.member.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.found_404.funcomember.global.util.AuthMemberId;
 import com.found_404.funcomember.member.dto.RequestIntroduction;
 import com.found_404.funcomember.member.dto.RequestNickName;
+import com.found_404.funcomember.member.dto.response.CashResponse;
 import com.found_404.funcomember.member.service.MemberService;
 
 import jakarta.validation.Valid;
@@ -58,5 +60,10 @@ public class MemberController {
 	public ResponseEntity<?> updateCash(@PathVariable Long memberId, @RequestBody Long updateCash) {
 		memberService.updateCash(memberId, updateCash);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/cash")
+	public ResponseEntity<CashResponse> getCash(@AuthMemberId Long memberId) {
+		return ResponseEntity.ok(memberService.getCash(memberId));
 	}
 }
