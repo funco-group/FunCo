@@ -11,8 +11,10 @@ import com.found_404.funcomember.member.service.MemberService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/v1/members")
 public class MemberController {
@@ -57,7 +59,8 @@ public class MemberController {
 	}
 
 	@PatchMapping("/{memberId}/cash")
-	public ResponseEntity<?> updateCash(@PathVariable Long memberId, @RequestBody Long updateCash) {
+	public ResponseEntity<Void> updateCash(@PathVariable Long memberId, @RequestBody Long updateCash) {
+		log.info("update cash! mem id: {}", memberId);
 		memberService.updateCash(memberId, updateCash);
 		return ResponseEntity.ok().build();
 	}
