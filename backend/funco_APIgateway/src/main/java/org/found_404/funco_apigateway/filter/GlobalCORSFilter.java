@@ -5,7 +5,6 @@ import static org.springframework.http.HttpHeaders.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -32,23 +31,6 @@ public class GlobalCORSFilter {
 
 		return (ServerWebExchange ctx, WebFilterChain chain) -> {
 			log.info("cors : filter uri: {}",ctx.getRequest().getURI());
-			// ServerHttpRequest request = ctx.getRequest();
-			//
-			// if (CorsUtils.isPreFlightRequest(request)) {
-			// 	ServerHttpResponse response = ctx.getResponse();
-			// 	HttpHeaders headers = response.getHeaders();
-			// 	headers.add(ACCESS_CONTROL_ALLOW_ORIGIN, ALLOWED_ORIGIN);
-			// 	headers.add(ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHODS);
-			// 	headers.add(ACCESS_CONTROL_MAX_AGE, MAX_AGE);
-			// 	headers.add(ACCESS_CONTROL_ALLOW_HEADERS, ALLOWED_HEADERS);
-			// 	headers.add(ACCESS_CONTROL_ALLOW_CREDENTIALS, ALLOWED_CREDENTIALS);
-			//
-			// 	if (request.getMethod() == HttpMethod.OPTIONS) {
-			// 		response.setStatusCode(HttpStatus.OK);
-			// 		return Mono.empty();
-			// 	}
-			// }
-			// return chain.filter(ctx);
 
 			ServerHttpRequest request = ctx.getRequest();
 			ServerHttpResponse response = ctx.getResponse();
