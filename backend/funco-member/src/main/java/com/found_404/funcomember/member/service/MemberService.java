@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.found_404.funcomember.member.domain.Member;
 import com.found_404.funcomember.member.domain.repository.MemberRepository;
+import com.found_404.funcomember.member.dto.response.CashResponse;
 import com.found_404.funcomember.member.exception.MemberErrorCode;
 import com.found_404.funcomember.member.exception.MemberException;
 
@@ -108,5 +109,9 @@ public class MemberService {
 	public void updateCash(Long memberId, Long updateCash) {
 		Member member = getMember(memberId);
 		member.updateCash(updateCash);
+	}
+
+	public CashResponse getCash(Long memberId) {
+		return new CashResponse(getMember(memberId).getCash());
 	}
 }
