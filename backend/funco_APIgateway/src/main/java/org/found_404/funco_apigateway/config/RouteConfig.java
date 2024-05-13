@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 public class RouteConfig {
 	private final String EUREKA_MEMBER = "lb://MEMBER-SERVICE";
+	private final String EUREKA_TRADE = "lb://TRADE-SERVICE";
 	private final JwtAuthenticationGatewayFilterFactory jwtAuthentication;
 
 	@Bean
@@ -25,6 +26,11 @@ public class RouteConfig {
 				.uri(EUREKA_MEMBER))
 			.route(r -> r.path("/api/v1/hello")
 				.uri(EUREKA_MEMBER))
+			.route(r -> r.path("/api/v1/trade/**")
+				.filters(f -> f.filter(jwtAuthentication.apply()))
+				.uri(EUREKA_TRADE))
+			.route(r -> r.path("/api/health/trade")
+				.uri(EUREKA_TRADE))
 			.build();
 	}
 }
