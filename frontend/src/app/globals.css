@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square.css');
 @import '~react-toastify/dist/ReactToastify.css';
 
@@ -10,4 +13,28 @@ body,
   height: 100%;
   background-color: #fafafa;
   font-family: 'NanumSquare';
+
+  button {
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+  }
+}
+
+.toastui-editor-contents h1,
+.toastui-editor-contents h2,
+.toastui-editor-contents h3,
+.toastui-editor-contents h4,
+.toastui-editor-contents h5,
+.toastui-editor-contents h6 {
+  margin: 4px !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
