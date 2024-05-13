@@ -35,6 +35,9 @@ function AssetGraph({ member }: AssetGraphProps) {
 
   const getCurPrice = () => {
     const curPrice = new Map<string, number>()
+    if (!member.memberAssetInfo.coins.length) {
+      return
+    }
     getTickerPrice(
       member.memberAssetInfo.coins.map((coin) => coin.ticker).join(','),
       (response: AxiosResponse<ResTickerType[]>) => {
