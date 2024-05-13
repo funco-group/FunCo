@@ -100,4 +100,13 @@ public class NoteController {
         return ResponseEntity.ok().build();
     }
 
+    // 좋아요
+    @PostMapping("/{noteId}/like")
+    public ResponseEntity<Void> addNoteLike(
+        @AuthMemberId Long memberId,
+        @PathVariable Long noteId) {
+        noteService.addNoteLike(memberId, noteId);
+        return ResponseEntity.ok().build();
+    }
+
 }
