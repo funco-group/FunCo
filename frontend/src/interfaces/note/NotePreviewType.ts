@@ -1,11 +1,14 @@
 export interface NotePreviewType {
   noteId: number
-  nickname: string
-  profileImage: string
-  thumbnail: string
+  member: {
+    memberId: number
+    nickname: string
+    profileUrl: string
+  }
+  thumbnailImage: string
+  thumbnailContent: string
   title: string
-  content: string
-  coinName: string
+  ticker: string
   writeDate: string
   likeCount: number
   liked: boolean
