@@ -42,7 +42,7 @@ function AssetGraph({ member }: AssetGraphProps) {
       member.memberAssetInfo.coins.map((coin) => coin.ticker).join(','),
       (response: AxiosResponse<ResTickerType[]>) => {
         const { data } = response
-        data.map((coin) => {
+        data.forEach((coin) => {
           curPrice.set(coin.market, coin.trade_price)
         })
         setInvestmentListFunc(curPrice)
