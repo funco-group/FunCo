@@ -107,4 +107,10 @@ public class TradeController {
 		return ResponseEntity.ok().build();
 	}
 
+	/* 보유중인 코인 조회 */
+	@GetMapping("/holding/{ticker}")
+	public ResponseEntity<?> getHoldingCoin(@AuthMemberId Long memberId, @PathVariable String ticker) {
+		return ResponseEntity.ok(tradeService.getHoldingCoin(memberId, ticker));
+	}
+
 }
