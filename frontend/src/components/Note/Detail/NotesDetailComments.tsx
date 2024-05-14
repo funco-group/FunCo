@@ -35,10 +35,19 @@ function NotesDetailComments({ initialCommentList }: NotesDetailCommentsProps) {
   return (
     <div id="comments">
       <div className="rounded border border-solid border-deactivatedGray bg-brandWhite p-3">
-        <NotesDetailCommentInput />
+        <div className="mb-4 border-x-0 border-b border-t-0 border-solid pb-4">
+          <NotesDetailCommentInput
+            parentCommentId={null}
+            setCommentList={setCommentList}
+          />
+        </div>
         {commentList.length > 0 ? (
           commentList.map((comment) => (
-            <NotesDetailComment commentData={comment} key={comment.commentId} />
+            <NotesDetailComment
+              commentData={comment}
+              key={comment.commentId}
+              setCommentList={setCommentList}
+            />
           ))
         ) : (
           <h1>댓글이 아직 없습니다.</h1>
