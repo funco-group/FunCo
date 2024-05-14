@@ -37,7 +37,7 @@ public class AuthController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(authService.reissueToken(request, response));
 	}
 
-	@PostMapping("/signout")
+	@PostMapping("/{provider}/signout")
 	public ResponseEntity<Void> logout(HttpServletResponse response, @PathVariable OauthServerType provider,
 		@AuthenticationPrincipal Member member){
 		authService.logout(response, provider, member);
