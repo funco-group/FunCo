@@ -27,6 +27,7 @@ import com.found_404.funco.trade.domain.type.TradeType;
 import com.found_404.funco.trade.dto.OpenTradeDto;
 import com.found_404.funco.trade.dto.OtherTradeDto;
 import com.found_404.funco.trade.dto.TradeDto;
+import com.found_404.funco.trade.dto.response.HoldingCoinResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinsResponse;
 import com.found_404.funco.trade.dto.response.MarketTradeResponse;
 import com.found_404.funco.trade.exception.TradeException;
@@ -262,5 +263,14 @@ public class TradeService {
 		if (holdingCoin.getVolume() <= 0) {
 			holdingCoinRepository.delete(holdingCoin);
 		}
+	}
+
+	public HoldingCoinResponse getHoldingCoin(Long memberId, String ticker) {
+		Optional<HoldingCoin> holdingCoin = holdingCoinRepository.findByMemberIdAndTicker(memberId, ticker);
+
+		return HoldingCoinResponse.builder()
+			.ticker(ticker)
+			.volume(holdingCoin.isPresent() ? holdingCoin.get().getVolume() : 0D)
+			.build();
 	}
 }
