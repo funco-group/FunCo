@@ -1,8 +1,7 @@
-package com.found_404.funco.client;
+package com.found_404.funco.feignClient;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import org.springframework.stereotype.Component;
 
 //@Component
 public class MemberFeignErrorDecoder implements ErrorDecoder {
