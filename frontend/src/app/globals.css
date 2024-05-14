@@ -5,7 +5,21 @@
 @import '~react-toastify/dist/ReactToastify.css';
 
 html,
-body,
+body 
+/* {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fafafa;
+  font-family: 'NanumSquare';
+
+  button {
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+  }
+} */
 #root {
   margin: 0;
   padding: 0;
