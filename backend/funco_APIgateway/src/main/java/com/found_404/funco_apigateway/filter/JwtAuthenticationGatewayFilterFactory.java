@@ -1,15 +1,16 @@
-package org.found_404.funco_apigateway.filter;
+package com.found_404.funco_apigateway.filter;
 
 import java.util.Arrays;
 
-import org.found_404.funco_apigateway.exception.TokenException;
-import org.found_404.funco_apigateway.service.TokenService;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
+
+import com.found_404.funco_apigateway.exception.TokenException;
+import com.found_404.funco_apigateway.service.TokenService;
 
 import lombok.Getter;
 import lombok.Setter;

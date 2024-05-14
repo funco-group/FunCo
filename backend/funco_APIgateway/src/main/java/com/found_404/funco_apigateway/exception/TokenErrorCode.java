@@ -1,4 +1,4 @@
-package org.found_404.funco_apigateway.exception;
+package com.found_404.funco_apigateway.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
