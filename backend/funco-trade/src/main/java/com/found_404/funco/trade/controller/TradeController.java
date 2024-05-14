@@ -22,6 +22,7 @@ import com.found_404.funco.trade.dto.request.LimitSellingRequest;
 import com.found_404.funco.trade.dto.request.MarketBuyingRequest;
 import com.found_404.funco.trade.dto.request.MarketSellingRequest;
 import com.found_404.funco.trade.dto.request.TradeRequest;
+import com.found_404.funco.trade.dto.response.CoinValuationResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinsResponse;
 import com.found_404.funco.trade.dto.response.MarketTradeResponse;
 import com.found_404.funco.trade.service.TradeService;
@@ -116,9 +117,9 @@ public class TradeController {
 		return ResponseEntity.ok(tradeService.getHoldingCoin(memberId, ticker));
 	}
 
-	/* 보유한 코인 별 평가금액 */
+	/* 보유한 코인 별 평가금액, 미체결 금액 포함한 총 거래 자산 */
 	@GetMapping("/coinValuations")
-	public ResponseEntity<?> getCoinValuations(@RequestParam Long memberId) {
+	public ResponseEntity<CoinValuationResponse> getCoinValuations(@RequestParam Long memberId) {
 		return ResponseEntity.ok(tradeService.getCoinValuations(memberId));
 	}
 

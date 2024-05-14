@@ -1,8 +1,12 @@
 package com.found_404.funco.trade.dto.response;
 
-import java.util.Map;
+import java.util.List;
 
+import lombok.Builder;
+
+@Builder
 public record CoinValuationResponse(
-	Map<String, Double> coinValuation
+	List<CoinValuation> coinValuations,
+	Long totalTradeAsset
 ) {
 }
