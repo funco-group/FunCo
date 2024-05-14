@@ -9,7 +9,7 @@ public record NoteResponse(
     NoteMemberResponse member,
     String title,
     String content,
-    String coinName,
+    String ticker,
     LocalDateTime writeDate,
     Long likeCount,
     boolean liked,

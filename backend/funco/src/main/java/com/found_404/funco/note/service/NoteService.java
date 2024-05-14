@@ -63,7 +63,7 @@ import org.jsoup.nodes.Document;
 @RequiredArgsConstructor
 public class NoteService {
 
-    private final static int THUMBNAIL_CONTENT_LENGTH = 30;
+    private final static int THUMBNAIL_CONTENT_LENGTH = 120;
 
     private final NoteRepository noteRepository;
     private final NoteCommentRepository noteCommentRepository;
@@ -95,7 +95,7 @@ public class NoteService {
                 .thumbnailImage(note.getThumbnailImage())
                 .thumbnailContent(note.getThumbnailContent())
                 .title(note.getTitle())
-                .coinName(note.getTicker())
+                .ticker(note.getTicker())
                 .writeDate(note.getCreatedAt())
                 .likeCount(noteLikeRepository.countByNote(note))
                 .liked(false)  // 수정!!
@@ -121,7 +121,7 @@ public class NoteService {
                 )
             .title(note.getTitle())
             .content(note.getContent())
-            .coinName(note.getTicker())
+            .ticker(note.getTicker())
             .likeCount(likeCount)
             .liked(false) // 수정해야 됨!!!
             .commentCount(commentCount)

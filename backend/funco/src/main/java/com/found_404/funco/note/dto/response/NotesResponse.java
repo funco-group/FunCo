@@ -10,7 +10,7 @@ public record NotesResponse (
     String thumbnailImage,
     String thumbnailContent,
     String title,
-    String coinName,
+    String ticker,
     LocalDateTime writeDate,
     Long likeCount,
     boolean liked,
