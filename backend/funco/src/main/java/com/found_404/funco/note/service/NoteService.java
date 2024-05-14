@@ -20,6 +20,7 @@ import com.found_404.funco.member.exception.MemberException;
 import com.found_404.funco.note.domain.Note;
 import com.found_404.funco.note.domain.NoteComment;
 
+import com.found_404.funco.note.domain.NoteLike;
 import com.found_404.funco.note.domain.repository.NoteCommentRepository;
 import com.found_404.funco.note.domain.repository.NoteLikeRepository;
 import com.found_404.funco.note.domain.repository.NoteRepository;
@@ -253,5 +254,25 @@ public class NoteService {
         Document doc = Jsoup.parse(content);
         doc.select("img").remove();
         return doc.text().substring(length);
+    }
+
+    public void addNoteLike(Long memberId, Long noteId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+        Note note = noteRepository.findById(noteId)
+            .orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+
+        Optional<NoteLike> noteLike = noteLikeRepository.findByMemberAndNote(member, note);
+
+        if (noteLike.isPresent()) {
+            noteLikeRepository.delete(noteLike.get());
+        }
+        else {
+            noteLikeRepository.save(NoteLike.builder()
+                    .member(member)
+                    .note(note)
+                    .build());
+        }
+
     }
 }
