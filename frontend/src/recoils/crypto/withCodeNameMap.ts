@@ -1,18 +1,18 @@
-import { selector } from "recoil";
-import { priceListState } from ".";
+import { selector } from 'recoil'
+import priceListState from './atoms'
 
 // 코드-이름 매핑 selector
 const codeNameMapState = selector({
-  key: "codeNameMapState",
+  key: 'codeNameMapState',
   get: ({ get }) => {
-    const priceList = get(priceListState);
+    const priceList = get(priceListState)
     const codeNameMap = priceList.reduce((acc, coin) => {
-      acc.set(coin.code, coin.koreanName);
-      return acc;
-    }, new Map());
+      acc.set(coin.code, coin.koreanName)
+      return acc
+    }, new Map())
 
-    return codeNameMap;
+    return codeNameMap
   },
-});
+})
 
-export default codeNameMapState;
+export default codeNameMapState

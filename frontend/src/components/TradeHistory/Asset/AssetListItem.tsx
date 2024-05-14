@@ -1,9 +1,9 @@
 import { ListItemDiv, ColumnGrid } from '@/styles/CommonStyled'
 import { ListItemContainer } from '@/styles/ListItemContainer'
-import { ListItemContainerDiv } from './AssetListItem.styled'
 import { AssetType } from '@/interfaces/AssetType'
 import { useRecoilValue } from 'recoil'
 import { codeNameMapState } from '@/recoils/crypto'
+import { ListItemContainerDiv } from './AssetListItem.styled'
 
 function AssetListItem({
   imgSrc,
@@ -16,6 +16,12 @@ function AssetListItem({
 }: AssetType) {
   const nameMap = useRecoilValue(codeNameMapState)
 
+  // 색상을 결정하는 함수
+  const determineColor = (profit: number | null) => {
+    if (profit === null || profit === 0) return 'black'
+    return profit.toString().startsWith('-') ? 'blue' : 'red'
+  }
+
   return (
     <ListItemContainer>
       <ListItemContainerDiv>
@@ -25,7 +31,7 @@ function AssetListItem({
             {name !== '현금' && name !== '팔로우' ? nameMap.get(name) : name}
           </ListItemDiv>
           <ListItemDiv $align={volume ? 'right' : ''} color="black">
-            {volume ? volume : '-'}
+            {volume || '-'}
             <span> {volume && name.split('-')[1]}</span>
           </ListItemDiv>
           <ListItemDiv $align={averagePrice ? 'right' : ''} color="black">
@@ -42,13 +48,7 @@ function AssetListItem({
           </ListItemDiv>
           <ListItemDiv
             $align={evaluationProfit ? '' : ''}
-            color={
-              evaluationProfit && evaluationProfit !== 0
-                ? evaluationProfit.toString().startsWith('-')
-                  ? 'blue'
-                  : 'red'
-                : 'black'
-            }
+            color={determineColor(evaluationProfit)}
           >
             {evaluationProfit === null ? '-' : evaluationProfit}
             {evaluationProfit !== null && <span>%</span>}
