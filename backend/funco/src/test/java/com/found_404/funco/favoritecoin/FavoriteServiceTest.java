@@ -1,8 +1,11 @@
 package com.found_404.funco.favoritecoin;
 
+import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.found_404.funco.favoritecoin.dto.FavoriteCoinInfo;
 import com.found_404.funco.favoritecoin.dto.request.FavoriteCoinRequest;
+import com.found_404.funco.favoritecoin.dto.response.FavoriteCoinResponse;
 import com.found_404.funco.favoritecoin.service.FavoriteCoinService;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,6 +56,26 @@ public class FavoriteServiceTest {
 
 		// then
 		verify(valueOperations, times(1)).set(eq(memberId.toString()), any(FavoriteCoinInfo.class));
+	}
+
+	@Test
+	@Transactional(readOnly = true)
+	@DisplayName("관심코인 조회 성공")
+	void readFavoriteCoinSuccess() {
+		// given
+		Long memberId = 1L;
+		FavoriteCoinInfo info = FavoriteCoinInfo.builder().build();
+		info.createFavorite("KRW-BTC");
+		info.createFavorite("KRW-ETH");
+
+		given(favoriteCoinRedisTemplate.opsForValue()).willReturn(valueOperations);
+		given(valueOperations.get(memberId.toString())).willReturn(info);
+
+		// when
+		FavoriteCoinResponse response = favoriteCoinService.readFavoriteCoin(memberId);
+
+		// then
+		assertEquals(new HashSet<>(Arrays.asList("KRW-BTC", "KRW-ETH")), new HashSet<>(response.tickers()));
 	}
 
 }
