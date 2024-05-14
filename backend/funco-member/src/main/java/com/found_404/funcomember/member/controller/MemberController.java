@@ -69,4 +69,10 @@ public class MemberController {
 	public ResponseEntity<CashResponse> getCash(@AuthMemberId Long memberId) {
 		return ResponseEntity.ok(memberService.getCash(memberId));
 	}
+
+	@GetMapping("/{memberId}/cash")
+	public ResponseEntity<CashResponse> getMemberCash(@PathVariable Long memberId) {
+		return ResponseEntity.ok(memberService.getCash(memberId));
+	}
+
 }
