@@ -69,13 +69,14 @@ function NotesDetailCommentInput({
       ])
       console.log(commentText)
     }
+    setCommentText('')
   }
 
   return (
     <div className="rounded-lg border border-solid p-2">
       {user ? (
         <div>
-          <div className="text-sm">{user.nickname}</div>
+          <div className="mb-1 text-sm">{user.nickname}</div>
           <input
             type="text"
             value={commentText}

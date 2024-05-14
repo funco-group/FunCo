@@ -45,7 +45,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
     <div>
       <div className="rounded border border-solid border-deactivatedGray bg-brandWhite p-3">
         <div
-          className="w-fit cursor-pointer rounded bg-brandColor p-1 text-brandWhite"
+          className="w-fit cursor-pointer rounded bg-brandColor p-1 text-sm text-brandWhite"
           onClick={handleClickCoinBtn}
         >
           {coinMap.get(detail.ticker)}
