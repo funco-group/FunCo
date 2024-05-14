@@ -1,6 +1,9 @@
 package com.found_404.funco.global.config;
 
+import static com.found_404.funco.global.exception.RedisErrorCode.*;
 import static com.found_404.funco.global.type.RedisDatabaseType.*;
+
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +22,12 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.found_404.funco.favoritecoin.dto.FavoriteCoinInfo;
+import com.found_404.funco.global.exception.RedisException;
 import com.found_404.funco.rank.dto.response.RankResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 @EnableTransactionManagement
 public class RedisConfig {
@@ -47,6 +54,17 @@ public class RedisConfig {
 		return lettuceConnectionFactory;
 	}
 
+	// redis 서버 꺼졌는지 확인
+	public void isRedisAlive(RedisTemplate<String, Object> redisTemplate) {
+		try {
+			// Redis 서버에 ping 요청을 보내고 응답을 확인
+			String pong = Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection().ping();
+			log.info("===================== Redis Sever Operates well =====================", pong);
+		} catch (Exception e) {
+			throw new RedisException(REDIS_SEVER_OFF);
+		}
+	}
+
 	// 토큰 템플릿
 	@Bean
 	public RedisTemplate<String, Object> tokenRedisTemplate() {
@@ -57,6 +75,8 @@ public class RedisConfig {
 		// Hash Key, Value String 타입 직렬화
 		redisTemplate.setHashKeySerializer(new StringRedisSerializer());
 		redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+
+		isRedisAlive(redisTemplate);
 		return redisTemplate;
 	}
 
@@ -75,6 +95,8 @@ public class RedisConfig {
 		Jackson2JsonRedisSerializer<FavoriteCoinInfo> jackson2JsonRedisSerializer =
 			new Jackson2JsonRedisSerializer<>(objectMapper, FavoriteCoinInfo.class);
 		redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+
+		isRedisAlive(redisTemplate);
 		return redisTemplate;
 	}
 
@@ -103,6 +125,8 @@ public class RedisConfig {
 		Jackson2JsonRedisSerializer<RankResponse> jackson2JsonRedisSerializer =
 			new Jackson2JsonRedisSerializer<>(objectMapper, RankResponse.class);
 		redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+
+		isRedisAlive(redisTemplate);
 		return redisTemplate;
 	}
 
