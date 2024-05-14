@@ -1,4 +1,4 @@
-package org.found_404.funco_apigateway;
+package com.found_404.funco_apigateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

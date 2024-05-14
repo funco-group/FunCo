@@ -1,4 +1,4 @@
-package org.found_404.funco_apigateway.filter;
+package com.found_404.funco_apigateway.filter;
 
 import static org.springframework.http.HttpHeaders.*;
 
@@ -30,7 +30,7 @@ public class GlobalCORSFilter {
 	public WebFilter corsFilter() {
 
 		return (ServerWebExchange ctx, WebFilterChain chain) -> {
-			log.info("cors : filter uri: {}",ctx.getRequest().getURI());
+			log.info("cors : filter uri: {}", ctx.getRequest().getURI());
 
 			ServerHttpRequest request = ctx.getRequest();
 			ServerHttpResponse response = ctx.getResponse();

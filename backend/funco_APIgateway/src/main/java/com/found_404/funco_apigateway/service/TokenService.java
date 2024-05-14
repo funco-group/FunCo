@@ -1,14 +1,15 @@
-package org.found_404.funco_apigateway.service;
+package com.found_404.funco_apigateway.service;
 
-import static org.found_404.funco_apigateway.exception.TokenErrorCode.*;
+import static com.found_404.funco_apigateway.exception.TokenErrorCode.*;
 
 import java.util.Base64;
 import java.util.Date;
 
-import org.found_404.funco_apigateway.exception.TokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+
+import com.found_404.funco_apigateway.exception.TokenException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

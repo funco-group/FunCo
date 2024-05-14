@@ -1,4 +1,4 @@
-package org.found_404.funco_apigateway.filter;
+package com.found_404.funco_apigateway.filter;
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
