@@ -4,6 +4,7 @@ import com.found_404.funco.global.util.AuthMemberId;
 import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.note.dto.request.EditNoteCommentRequest;
 import com.found_404.funco.note.service.NoteCommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +26,7 @@ public class NoteCommentController {
     public ResponseEntity<Void> editComment(
         @AuthMemberId Long memberId,
         @PathVariable Long commentId,
-        EditNoteCommentRequest request
+        @Valid EditNoteCommentRequest request
     ) {
         noteCommentService.editComment(memberId, commentId, request);
         return ResponseEntity.ok().build();
