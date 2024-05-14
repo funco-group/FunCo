@@ -1,10 +1,10 @@
 import { ListItemDiv, ColumnGrid } from '@/styles/CommonStyled'
 import { ListItemContainer } from '@/styles/ListItemContainer'
 import { AssetHistoryType } from '@/interfaces/AssetType'
-import { AssetChangeListItemContainer } from './AssetChangeListItem.styled'
 import { useRecoilValue } from 'recoil'
 import { codeNameMapState } from '@/recoils/crypto'
 import parseDate from '@/utils/parseDate'
+import { AssetChangeListItemContainer } from './AssetChangeListItem.styled'
 
 interface AssetChangeListItemProps {
   history: AssetHistoryType
@@ -19,6 +19,16 @@ function AssetChangeListItem({ history }: AssetChangeListItemProps) {
   ])
   const nameMap = useRecoilValue(codeNameMapState)
 
+  const getColorForTradeType = (tradeType: string) => {
+    switch (tradeType) {
+      case 'BUY':
+        return 'red'
+      case 'SELL':
+        return 'blue'
+      default:
+        return 'black'
+    }
+  }
   return (
     <ListItemContainer>
       <AssetChangeListItemContainer>
@@ -38,20 +48,14 @@ function AssetChangeListItem({ history }: AssetChangeListItemProps) {
               </>
             ) : (
               <>
-                <img src="/icon/follow-icon.png" alt={'팔로우'} width={13} />
-                {'팔로우'}
+                <img src="/icon/follow-icon.png" alt="팔로우" width={13} />
+                팔로우
               </>
             )}
           </ListItemDiv>
           <ListItemDiv
             $align=""
-            color={
-              history.tradeType === 'BUY'
-                ? 'red'
-                : history.tradeType === 'SELL'
-                  ? 'blue'
-                  : 'black'
-            }
+            color={getColorForTradeType(history.tradeType)}
           >
             {tradeTypeMap.get(history.tradeType)}
           </ListItemDiv>
