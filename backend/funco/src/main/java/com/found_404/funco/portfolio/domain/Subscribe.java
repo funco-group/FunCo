@@ -40,14 +40,19 @@ public class Subscribe extends BaseEntity {
 	@JoinColumn(name = "to_member_id", nullable = false)
 	private Member toMember;
 
+	@Comment("주문금액")
+	@Column(nullable = false)
+	private Long orderCash;
+
 	@Comment("구독 만료 일자")
 	@Column(nullable = false)
 	private LocalDateTime expiredAt;
 
 	@Builder
-	public Subscribe(Member fromMember, Member toMember, LocalDateTime expiredAt) {
+	public Subscribe(Member fromMember, Member toMember, Long orderCash, LocalDateTime expiredAt) {
 		this.fromMember = fromMember;
 		this.toMember = toMember;
+		this.orderCash = orderCash;
 		this.expiredAt = expiredAt;
 	}
 }

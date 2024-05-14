@@ -49,4 +49,8 @@ public class NoteComment extends BaseEntity {
 		this.content = content;
 		this.deleted = deleted;
 	}
+
+	public void editNoteComment(String content) {
+		this.content = content;
+	}
 }
