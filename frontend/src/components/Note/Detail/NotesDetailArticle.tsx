@@ -70,14 +70,13 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
                 {noteParseDate(detail.writeDate)}
               </div>
               {user?.memberId === detail.member.memberId ? (
-                <div className="text-brandDarkGray">
+                <div className="flex gap-1 text-brandDarkGray">
                   <span
                     className="cursor-pointer"
                     onClick={handleModifyArticle}
                   >
                     수정
                   </span>
-                  <span>{' | '}</span>
                   <span
                     className="cursor-pointer"
                     onClick={handleDeleteArticle}
