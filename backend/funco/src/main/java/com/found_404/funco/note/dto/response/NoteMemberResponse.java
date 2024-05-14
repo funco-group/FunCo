@@ -6,7 +6,6 @@ import lombok.Builder;
 public record NoteMemberResponse(
     Long memberId,
     String nickname,
-    String profileUrl,
-    Long badgeId
+    String profileUrl
 ) {
 }
