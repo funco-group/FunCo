@@ -64,7 +64,8 @@ function Navbar() {
             <LogoSVG />
           </Link>
           <NavBarLeftLinkDiv>
-            <NavLinkComponent path="/trade" name="거래소" />
+            <NavLinkComponent path="/trade/spot" name="거래소" />
+            <NavLinkComponent path="/trade/futures" name="선물거래소" />
             <AssetHistoryNav path="/history" name="투자내역" />
             <NavLinkComponent path="/rank" name="랭킹" />
             <NavLinkComponent path="/notes" name="투자노트" />
