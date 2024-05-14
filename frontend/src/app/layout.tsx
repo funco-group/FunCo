@@ -6,6 +6,7 @@ import RecoilRootProvider from './RecoilProvider'
 import ToastProvider from './ToastProvider'
 import RecoilSetter from './RecoilSetter'
 import ScrollToTop from '@/styles/ScrollToTop'
+import GlobalStyle from './_global'
 
 export const metadata: Metadata = {
   title: 'FUNCO',
@@ -22,6 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <header>
+        <link
+          rel="stylesheet"
+          href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square.css"
+        />
+      </header>
       <body>
         <RecoilRootProvider>
           <RecoilSetter>
@@ -29,6 +36,7 @@ export default function RootLayout({
               <StyledComponentsRegistry>
                 <Navbar />
                 <ScrollToTop />
+                <GlobalStyle />
                 <div style={{ padding: '6.5rem 0' }}>{children}</div>
               </StyledComponentsRegistry>
             </ToastProvider>
