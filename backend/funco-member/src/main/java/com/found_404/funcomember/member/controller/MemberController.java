@@ -1,13 +1,21 @@
 package com.found_404.funcomember.member.controller;
 
-import com.found_404.funcomember.member.dto.request.UpdateCash;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.found_404.funcomember.global.util.AuthMemberId;
 import com.found_404.funcomember.member.dto.RequestIntroduction;
 import com.found_404.funcomember.member.dto.RequestNickName;
+import com.found_404.funcomember.member.dto.request.OAuthMemberRequest;
+import com.found_404.funcomember.member.dto.request.UpdateCash;
 import com.found_404.funcomember.member.dto.response.CashResponse;
+import com.found_404.funcomember.member.dto.response.OAuthMemberResponse;
 import com.found_404.funcomember.member.service.MemberService;
 
 import jakarta.validation.Valid;
@@ -68,5 +76,16 @@ public class MemberController {
 	@GetMapping("/cash")
 	public ResponseEntity<CashResponse> getCash(@AuthMemberId Long memberId) {
 		return ResponseEntity.ok(memberService.getCash(memberId));
+	}
+
+	@GetMapping("/auth/{provider}/{oauthId}")
+	public ResponseEntity<OAuthMemberResponse> getAuthMember(@PathVariable String provider,
+		@PathVariable String oauthId) {
+		return ResponseEntity.ok(memberService.readAuthMember(provider, oauthId));
+	}
+
+	@PostMapping
+	public ResponseEntity<OAuthMemberResponse> addAuthMember(@RequestBody OAuthMemberRequest OAuthMemberRequest) {
+		return ResponseEntity.ok(memberService.createAuthMember(OAuthMemberRequest));
 	}
 }

@@ -1,12 +1,19 @@
 package com.found_404.funcomember.member.service;
 
+import static com.found_404.funcomember.member.exception.MemberErrorCode.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.found_404.funcomember.member.domain.Member;
+import com.found_404.funcomember.member.domain.OauthId;
 import com.found_404.funcomember.member.domain.repository.MemberRepository;
+import com.found_404.funcomember.member.domain.type.MemberStatus;
+import com.found_404.funcomember.member.domain.type.OauthServerType;
+import com.found_404.funcomember.member.domain.type.PortfolioStatusType;
+import com.found_404.funcomember.member.dto.request.OAuthMemberRequest;
 import com.found_404.funcomember.member.dto.response.CashResponse;
-import com.found_404.funcomember.member.exception.MemberErrorCode;
+import com.found_404.funcomember.member.dto.response.OAuthMemberResponse;
 import com.found_404.funcomember.member.exception.MemberException;
 
 import lombok.RequiredArgsConstructor;
@@ -14,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+	private final Long INIT_CASH = 10_000_000L;
 	private final MemberRepository memberRepository;
 	// private final RedisTemplate<String, Object> rankZSetRedisTemplate;
 	//
@@ -103,7 +111,7 @@ public class MemberService {
 
 	private Member getMember(Long loginMemberId) {
 		return memberRepository.findById(loginMemberId)
-			.orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
+			.orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
 	}
 
 	@Transactional
@@ -114,5 +122,23 @@ public class MemberService {
 
 	public CashResponse getCash(Long memberId) {
 		return new CashResponse(getMember(memberId).getCash());
+	}
+
+	public OAuthMemberResponse readAuthMember(String provider, String oauthId) {
+		return OAuthMemberResponse.from(
+			memberRepository.findByOauthId(new OauthId(oauthId, OauthServerType.fromName(provider)))
+				.orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER)));
+	}
+
+	public OAuthMemberResponse createAuthMember(OAuthMemberRequest oauthMemberRequest) {
+		Member member = memberRepository.save(Member.builder()
+			.oauthId(oauthMemberRequest.oauthId())
+			.nickname(oauthMemberRequest.nickname())
+			.profileUrl(oauthMemberRequest.profileUrl())
+			.cash(INIT_CASH)
+			.status(MemberStatus.NORMAL)
+			.portfolioStatus(PortfolioStatusType.PUBLIC)
+			.build());
+		return OAuthMemberResponse.from(member);
 	}
 }

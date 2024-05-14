@@ -8,10 +8,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.found_404.funcomember.member.dto.RankDto;
 
 @Configuration
 @EnableTransactionManagement
@@ -39,16 +46,21 @@ public class RedisConfig {
 		return lettuceConnectionFactory;
 	}
 
-	// 토큰 템플릿
+	// 랭킹 zset 템플릿
 	@Bean
-	public RedisTemplate<String, Object> tokenRedisTemplate() {
+	public RedisTemplate<String, Object> rankZSetRedisTemplate() {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-		redisTemplate.setConnectionFactory(createLettuceConnectionFactory(TOKEN.ordinal()));
+		redisTemplate.setConnectionFactory(createLettuceConnectionFactory(RANKING.ordinal()));
 		redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-		// Hash Key, Value String 타입 직렬화
-		redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-		redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+		// Value 직렬화를 위한 ObjectMapper 설정
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.registerModule(new Jdk8Module());
+		objectMapper.registerModule(new ParameterNamesModule());
+		// Value 직렬화 설정
+		Jackson2JsonRedisSerializer<RankDto> jackson2JsonRedisSerializer =
+			new Jackson2JsonRedisSerializer<>(objectMapper, RankDto.class);
+		redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
 		return redisTemplate;
 	}
 
