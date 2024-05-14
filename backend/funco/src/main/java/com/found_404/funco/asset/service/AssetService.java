@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.found_404.funco.asset.domain.type.AssetType;
+import com.found_404.funco.asset.dto.ActiveFutureInfo;
 import com.found_404.funco.asset.dto.HoldingCoinInfo;
 import com.found_404.funco.asset.dto.response.CashResponse;
 import com.found_404.funco.asset.dto.response.CryptoResponse;
@@ -25,8 +26,10 @@ import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.member.exception.MemberErrorCode;
 import com.found_404.funco.member.exception.MemberException;
+import com.found_404.funco.trade.domain.ActiveFuture;
 import com.found_404.funco.trade.domain.HoldingCoin;
 import com.found_404.funco.trade.domain.Trade;
+import com.found_404.funco.trade.domain.repository.ActiveFutureRepository;
 import com.found_404.funco.trade.domain.repository.HoldingCoinRepository;
 import com.found_404.funco.trade.domain.repository.TradeRepository;
 
@@ -42,12 +45,19 @@ public class AssetService {
 	private final FollowRepository followRepository;
 	private final HoldingCoinRepository holdingCoinRepository;
 	private final TradeRepository tradeRepository;
+	private final ActiveFutureRepository activeFutureRepository;
 	private final FollowService followService;
 
 	public CashResponse getMemberCash(Member member) {
 		return new CashResponse(member.getCash());
 	}
 
+
+	/*
+	* v1 대비 v2 추가 사항
+	* 선물 거래 내역 추가
+	* 이외는 동일
+	* */
 	public TotalAssetResponse getMemberTotalAsset(Long memberId) {
 
 		Member member = findByMemberId(memberId);
@@ -72,10 +82,23 @@ public class AssetService {
 			))
 			.toList();
 
+		// 해당 멤버가 보유 중인 선물 거래
+		List<ActiveFuture> activeFutures = activeFutureRepository.findActiveFutureByMember(member);
+		List<ActiveFutureInfo> memberActiveFutureInfos = activeFutures.stream()
+			.map(activeFuture -> new ActiveFutureInfo(
+				activeFuture.getTicker(),
+				activeFuture.getTradeType(),
+				activeFuture.getOrderCash(),
+				activeFuture.getPrice(),
+				activeFuture.getLeverage()
+			))
+			.toList();
+
 		return TotalAssetResponse.builder()
 			.cash(memberCash)
 			.followingInvestment(memberFollwingInvestment)
 			.holdingCoinInfos(memberHoldingCoinInfos)
+			.activeFutureInfos(memberActiveFutureInfos)
 			.build();
 	}
 
