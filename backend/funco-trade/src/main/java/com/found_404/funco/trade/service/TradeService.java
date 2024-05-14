@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.found_404.funco.client.service.MemberService;
+import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.global.util.CommissionUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
