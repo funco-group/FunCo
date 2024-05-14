@@ -1,6 +1,7 @@
 import { ThumbnailImageType } from '@/interfaces/note/ThumbnailImageType'
 import { Editor } from '@toast-ui/react-editor'
 import { Dispatch, RefObject, SetStateAction } from 'react'
+import '@toast-ui/editor/dist/toastui-editor.css'
 
 const toolbarItems = [
   ['heading', 'bold', 'italic', 'strike'],
