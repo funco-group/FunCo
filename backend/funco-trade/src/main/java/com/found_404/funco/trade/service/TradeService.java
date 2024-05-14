@@ -9,14 +9,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.found_404.funco.global.util.CommissionUtil;
-import com.found_404.funco.trade.client.MemberServiceClient;
-import com.found_404.funco.trade.client.dto.UpdateCash;
+import com.found_404.funco.client.MemberServiceClient;
+import com.found_404.funco.client.dto.UpdateCash;
 import feign.FeignException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.found_404.funco.trade.cryptoPrice.CryptoPrice;
+import com.found_404.funco.crypto.cryptoPrice.CryptoPrice;
 import com.found_404.funco.trade.domain.HoldingCoin;
 import com.found_404.funco.trade.domain.OpenTrade;
 import com.found_404.funco.trade.domain.Trade;

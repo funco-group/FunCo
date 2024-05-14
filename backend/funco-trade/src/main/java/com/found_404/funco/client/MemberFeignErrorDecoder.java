@@ -1,4 +1,4 @@
-package com.found_404.funco.trade.client;
+package com.found_404.funco.client;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;

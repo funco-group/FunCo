@@ -1,4 +1,4 @@
-package com.found_404.funco.trade.controller;
+package com.found_404.funco.crypto.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.found_404.funco.trade.cryptoPrice.CryptoPrice;
+import com.found_404.funco.crypto.cryptoPrice.CryptoPrice;
 
 import lombok.RequiredArgsConstructor;
 

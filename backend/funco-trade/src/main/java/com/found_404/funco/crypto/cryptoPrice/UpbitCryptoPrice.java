@@ -1,4 +1,4 @@
-package com.found_404.funco.trade.cryptoPrice;
+package com.found_404.funco.crypto.cryptoPrice;
 
 import static com.found_404.funco.trade.exception.TradeErrorCode.*;
 
@@ -14,11 +14,11 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.found_404.funco.crypto.cryptoPrice.jsonObject.CryptoJson;
 import com.found_404.funco.global.util.HttpClientUtil;
-import com.found_404.funco.trade.cryptoPrice.jsonObject.CryptoJson;
-import com.found_404.funco.trade.cryptoPrice.jsonObject.Format;
-import com.found_404.funco.trade.cryptoPrice.jsonObject.Ticket;
-import com.found_404.funco.trade.cryptoPrice.jsonObject.TypeCodes;
+import com.found_404.funco.crypto.cryptoPrice.jsonObject.Format;
+import com.found_404.funco.crypto.cryptoPrice.jsonObject.Ticket;
+import com.found_404.funco.crypto.cryptoPrice.jsonObject.TypeCodes;
 import com.found_404.funco.trade.domain.type.TradeType;
 import com.found_404.funco.trade.exception.TradeException;
 

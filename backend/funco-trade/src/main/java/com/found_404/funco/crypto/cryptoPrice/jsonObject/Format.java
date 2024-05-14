@@ -1,4 +1,4 @@
-package com.found_404.funco.trade.cryptoPrice.jsonObject;
+package com.found_404.funco.crypto.cryptoPrice.jsonObject;
 
 import lombok.Getter;
 
