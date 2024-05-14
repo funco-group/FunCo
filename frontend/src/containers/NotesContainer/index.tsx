@@ -116,7 +116,10 @@ function Notes() {
           글 작성
         </button>
       </div>
-      <NotePreviewList notePreviewList={notePreviewList} />
+      <NotePreviewList
+        notePreviewList={notePreviewList}
+        setCoinList={setCoinList}
+      />
     </>
   )
 }
