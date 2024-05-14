@@ -3,8 +3,8 @@ package com.found_404.funco.auth.service;
 import java.util.Objects;
 
 import com.found_404.funco.auth.dto.response.TokenResponse;
+import com.found_404.funco.member.domain.type.PortfolioStatusType;
 import com.found_404.funco.notification.service.NotificationService;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +44,8 @@ public class AuthService {
 				.profileUrl(dto.member().getProfileUrl())
 				.cash(INIT_CASH)
 				.status(MemberStatus.NORMAL)
+				.portfolioStatus(PortfolioStatusType.PUBLIC)
+				.badgeYn(Boolean.FALSE)
 				.build());
 		if (Objects.isNull(member.getOauthId())) {
 			member.updateOauthId(dto.member().getOauthId());
@@ -77,7 +79,6 @@ public class AuthService {
 	}
 
 	public TokenResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
-
 		return tokenService.reissueAccessToken(request, response);
 	}
 
