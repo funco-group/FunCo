@@ -86,6 +86,7 @@ public class PortfolioService {
 		subscribeRepository.save(Subscribe.builder()
 			.fromMember(subscriber)
 			.toMember(seller)
+			.orderCash(seller.getPortfolioPrice())
 			.expiredAt(LocalDateTime.now().plusWeeks(2))
 			.build());
 	}
