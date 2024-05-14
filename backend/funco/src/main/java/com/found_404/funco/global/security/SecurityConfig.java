@@ -30,13 +30,12 @@ public class SecurityConfig {
 			.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.formLogin(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(auth -> auth.requestMatchers(CorsUtils::isPreFlightRequest).permitAll())
-			.authorizeHttpRequests(
-				auth -> auth.requestMatchers("/v1/auth/*/signin", "/v1/rank/**", "/v1/hello")
-					.permitAll()
-					// .requestMatchers("/**")
-					// .permitAll()
-					.anyRequest()
-					.authenticated())
+			.authorizeHttpRequests(auth -> auth.requestMatchers("/v1/auth/*/signin", "/v1/rank/**", "/v1/notes/**", "/v1/hello")
+				.permitAll()
+				// .requestMatchers("/**")
+				// .permitAll()
+				.anyRequest()
+				.authenticated())
 
 		;
 
