@@ -3,7 +3,6 @@ package com.found_404.funco.global.security.service;
 import static com.found_404.funco.global.security.exception.SecurityErrorCode.*;
 import static java.util.concurrent.TimeUnit.*;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -185,7 +184,8 @@ public class TokenService {
 
 		// 로그아웃 시 refresh token 제거
 		try{
-			tokenRedisTemplate.opsForValue().getAndDelete(member.getOauthId().getOauthServerId());
+			HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
+			hashOperations.delete(member.getOauthId().getOauthServerId(), REDIS_REFRESH_TOKEN_KEY);
 		}
 		catch(NullPointerException e){
 			throw new SecurityException(EMPTY_TOKEN, HttpStatus.UNAUTHORIZED);
