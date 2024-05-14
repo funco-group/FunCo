@@ -1,16 +1,15 @@
 const content =
   'Pre-rendering?\n- 프리렌더링이 뭔데?테스트용 테스트용 테스트용 테스테스텟터세트세트스fsdfsfdsfdsfsd\n ### 글쎄? \n 이것은 테스트\n 이것은 테스트\n 이것은 테스트\n 이것은 테스트\n 이것은 테스트\n 이것은 테스트\n 이것은 테스트 ## Pre-rendering?\n## Pre-rendering?\n## Pre-rendering?\n## Pre-rendering?\n'
-const DummyNotes = [
+const DummyNotesDetail = [
   {
     noteId: 1,
     member: {
-      memberId: 1,
+      memberId: 6,
       nickname: '지구를 지켜야 하니?',
       profileUrl: '/image/chuu.gif',
     },
-    thumbnailImage: '/image/hanni-hat.gif',
-    thumbnailContent: content.slice(0, 120),
     title: '지구는 어떻게 지킬까?',
+    content,
     ticker: 'KRW-BTC',
     writeDate: '2024-01-20T15:00:00',
     likeCount: 4,
@@ -24,13 +23,12 @@ const DummyNotes = [
       nickname: '지구를 지켜야 하니?',
       profileUrl: '/image/chuu.gif',
     },
-    thumbnailImage: '/image/hanni-hat.gif',
-    thumbnailContent: content.slice(0, 120),
     title: '지구는 어떻게 지킬까?',
+    content,
     ticker: 'KRW-BTC',
     writeDate: '2024-01-20T15:00:00',
     likeCount: 4,
-    liked: false,
+    liked: true,
     commentCount: 5,
   },
   {
@@ -40,9 +38,8 @@ const DummyNotes = [
       nickname: '지구를 지켜야 하니?',
       profileUrl: '/image/chuu.gif',
     },
-    thumbnailImage: '/image/hanni-hat.gif',
-    thumbnailContent: content.slice(0, 120),
     title: '지구는 어떻게 지킬까?',
+    content,
     ticker: 'KRW-BTC',
     writeDate: '2024-01-20T15:00:00',
     likeCount: 4,
@@ -56,13 +53,12 @@ const DummyNotes = [
       nickname: '지구를 지켜야 하니?',
       profileUrl: '/image/chuu.gif',
     },
-    thumbnailImage: '/image/hanni-hat.gif',
-    thumbnailContent: content.slice(0, 120),
     title: '지구는 어떻게 지킬까?',
+    content,
     ticker: 'KRW-BTC',
     writeDate: '2024-01-20T15:00:00',
     likeCount: 4,
-    liked: false,
+    liked: true,
     commentCount: 5,
   },
   {
@@ -72,9 +68,8 @@ const DummyNotes = [
       nickname: '지구를 지켜야 하니?',
       profileUrl: '/image/chuu.gif',
     },
-    thumbnailImage: '/image/hanni-hat.gif',
-    thumbnailContent: content.slice(0, 120),
     title: '지구는 어떻게 지킬까?',
+    content,
     ticker: 'KRW-BTC',
     writeDate: '2024-01-20T15:00:00',
     likeCount: 4,
@@ -83,4 +78,4 @@ const DummyNotes = [
   },
 ]
 
-export default DummyNotes
+export default DummyNotesDetail
