@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.found_404.funcomember.global.util.AuthMemberId;
 import com.found_404.funcomember.member.dto.RequestIntroduction;
 import com.found_404.funcomember.member.dto.RequestNickName;
 import com.found_404.funcomember.member.dto.request.OAuthMemberRequest;
@@ -74,7 +73,7 @@ public class MemberController {
 	}
 
 	@GetMapping("/cash")
-	public ResponseEntity<CashResponse> getCash(@AuthMemberId Long memberId) {
+	public ResponseEntity<CashResponse> getCash(Long memberId) {
 		return ResponseEntity.ok(memberService.getCash(memberId));
 	}
 
@@ -82,7 +81,6 @@ public class MemberController {
 	public ResponseEntity<CashResponse> getMemberCash(@PathVariable Long memberId) {
 		return ResponseEntity.ok(memberService.getCash(memberId));
 	}
-
 
 	@GetMapping("/auth/{provider}/{oauthId}")
 	public ResponseEntity<OAuthMemberResponse> getAuthMember(@PathVariable String provider,

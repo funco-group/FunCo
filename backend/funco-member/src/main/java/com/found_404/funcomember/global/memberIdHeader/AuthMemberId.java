@@ -1,4 +1,4 @@
-package com.found_404.funcomember.global.util;
+package com.found_404.funcomember.global.memberIdHeader;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
