@@ -52,7 +52,7 @@ public class FavoriteCoinService {
 	}
 
 	// ZSet에 관심코인 업데이트 정보를 추가하는 메서드
-	private void updateFavoriteCoinZSet(Long memberId, LocalDateTime updatedAt) {
+	public void updateFavoriteCoinZSet(Long memberId, LocalDateTime updatedAt) {
 		double score = updatedAt.toEpochSecond(ZoneOffset.UTC);
 		favoriteCoinZSetRedisTemplate.opsForZSet().add(FAVORITE_COIN_ZSET.toString(), memberId.toString(), score);
 	}

@@ -21,6 +21,7 @@ public class FavoriteCoinCustomRepositoryImpl implements FavoriteCoinCustomRepos
 		return jpaQueryFactory
 			.select(favoriteCoin.ticker)
 			.from(favoriteCoin)
+			.where(favoriteCoin.member.id.eq(memberId))
 			.fetch();
 	}
 }
