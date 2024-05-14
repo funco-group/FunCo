@@ -1,32 +1,18 @@
-FROM node:18-alpine AS base
+# 위에서 도커 허브 node 이미지를 기반으로 로컬로 다운로드 및 캐싱 되었기 때문에 이미지를 가져올 수 있다.
+FROM node:20.10.0-alpine
 
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
-RUN npm i -g npm
+WORKDIR /app
 
-EXPOSE 3000
+COPY package.json /app
 
-ENV PORT 3000
-ENV NODE_ENV production
+RUN npm install --force
 
-WORKDIR /home/nextjs/app
+COPY . /app
 
-COPY package.json .
-COPY package-lock.json .
-
-RUN npm install --omit=optional
-RUN npx browserslist@latest --update-db
-RUN npx next telemetry disable
-
-RUN npm install -D @swc/cli @swc/core
-
-COPY . .
+ENV NODE_ENV=production
 
 RUN npm run build
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+EXPOSE 3000
 
-USER nextjs
-
-CMD [ "npm", "start" ]
+CMD ["npm","start"]
