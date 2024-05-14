@@ -24,10 +24,13 @@ function NotesDetailComments({ initialCommentList }: NotesDetailCommentsProps) {
 
     if (scroll) {
       if (typeof window !== 'undefined') {
-        window.scroll({
-          top: document.getElementById(`${scroll}`)?.offsetTop,
-          behavior: 'smooth',
-        })
+        const scrollPoint = document.getElementById(`${scroll}`)?.offsetTop
+        if (scrollPoint !== undefined) {
+          window.scroll({
+            top: scrollPoint - 140,
+            behavior: 'smooth',
+          })
+        }
       }
     }
   }, [])
@@ -47,6 +50,7 @@ function NotesDetailComments({ initialCommentList }: NotesDetailCommentsProps) {
               commentData={comment}
               key={comment.commentId}
               setCommentList={setCommentList}
+              isParent
             />
           ))
         ) : (

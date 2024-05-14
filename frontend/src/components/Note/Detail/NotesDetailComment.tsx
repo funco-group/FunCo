@@ -12,11 +12,13 @@ import NotesDetailCommentInput from './NotesDetailCommentInput'
 interface NotesDetailCommentProps {
   commentData: NoteCommentType
   setCommentList: Dispatch<SetStateAction<NoteCommentType[]>>
+  isParent: boolean
 }
 
 function NotesDetailComment({
   commentData,
   setCommentList,
+  isParent,
 }: NotesDetailCommentProps) {
   const [openReply, setOpenReply] = useState(false)
   const router = useRouter()
@@ -40,14 +42,14 @@ function NotesDetailComment({
   }
   return (
     <div>
-      <div className="mt-3 box-border flex gap-3">
+      <div className="mt-3 box-border flex gap-3 ">
         <img
           src={commentData.member.profileUrl}
           className="block h-12 w-12 cursor-pointer rounded-full"
           alt="profile"
           onClick={handleClickProfile}
         />
-        <div className="flex flex-grow flex-col justify-center text-xs">
+        <div className="flex w-[calc(100%-3.75rem)] flex-col justify-center  text-xs">
           <div className="mb-3">
             <div
               className="w-fit cursor-pointer font-NSB text-sm"
@@ -59,33 +61,29 @@ function NotesDetailComment({
               <div className="text-brandDarkGray">
                 {noteParseDate(commentData.date)}
               </div>
-              <div className="flex gap-1 text-brandDarkGray">
-                {user?.memberId === commentData.member.memberId ? (
-                  <div className="flex gap-1">
-                    <span
-                      className="cursor-pointer"
-                      onClick={handleModifyComment}
-                    >
-                      수정
-                    </span>
-                    <span
-                      className="cursor-pointer"
-                      onClick={handleDeleteComment}
-                    >
-                      삭제
-                    </span>
-                  </div>
-                ) : null}
-                <span className="cursor-pointer" onClick={handleReplyComment}>
-                  답글
-                </span>
-              </div>
             </div>
           </div>
-          <div
-            className={`rounded border-none bg-brandColor2 p-4 ${openReply ? 'mb-3' : null}`}
-          >
+          <div className="w-fit rounded border-none bg-brandColor2 p-4">
             {commentData.content}
+          </div>
+          <div
+            className={`mt-1 flex select-none gap-1 text-brandDarkGray ${openReply && 'mb-1'}`}
+          >
+            {user?.memberId === commentData.member.memberId ? (
+              <div className="flex gap-1">
+                <span className="cursor-pointer" onClick={handleModifyComment}>
+                  수정
+                </span>
+                <span className="cursor-pointer" onClick={handleDeleteComment}>
+                  삭제
+                </span>
+              </div>
+            ) : null}
+            {isParent && (
+              <span className="cursor-pointer" onClick={handleReplyComment}>
+                {openReply ? '닫기' : '답글'}
+              </span>
+            )}
           </div>
           {openReply ? (
             <NotesDetailCommentInput
@@ -98,6 +96,7 @@ function NotesDetailComment({
                 <NotesDetailComment
                   commentData={childComment}
                   setCommentList={setCommentList}
+                  isParent={false}
                 />
               ))
             : null}
