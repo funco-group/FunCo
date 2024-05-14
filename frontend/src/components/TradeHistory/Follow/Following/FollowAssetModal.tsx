@@ -36,15 +36,15 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
   const [assets, setAssets] = useState<AssetType[]>([])
   const [totalAsset, setTotalAsset] = useState<TotalAssetType>()
 
-  const getCurPrice = async (assets: AssetResponseType) => {
+  const getCurPrice = async (asset: AssetResponseType) => {
     const curPrice = new Map<string, number>()
-    if (assets.holdingCoinInfos.length !== 0) {
-      const codes = assets.holdingCoinInfos.map((coin) => coin.ticker).join(',')
+    if (asset.holdingCoinInfos.length !== 0) {
+      const codes = asset.holdingCoinInfos.map((coin) => coin.ticker).join(',')
       await getTickerPrice(
         codes,
         (response: AxiosResponse<ResTickerType[]>) => {
           const { data } = response
-          data.map((coin) => {
+          data.forEach((coin) => {
             curPrice.set(coin.market, coin.trade_price)
           })
         },
@@ -77,7 +77,7 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
         evaluationProfit: null,
       },
     ])
-    assetsRes.holdingCoinInfos.map((coin) => {
+    assetsRes.holdingCoinInfos.forEach((coin) => {
       const price = Math.floor(coin.volume * coin.averagePrice)
       const evaluationAmount = Math.floor(
         coin.volume * curPrice.get(coin.ticker)!,
