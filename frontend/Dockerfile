@@ -1,18 +1,23 @@
-# 위에서 도커 허브 node 이미지를 기반으로 로컬로 다운로드 및 캐싱 되었기 때문에 이미지를 가져올 수 있다.
+# 빌드를 위한 이미지
 FROM node:20.10.0-alpine
+
+# root에 /app 폴더 생성
+RUN mkdir /app
 
 WORKDIR /app
 
-COPY package.json /app
-
-RUN npm install --force
-
-COPY . /app
-
+# 환경 변수 설정
 ENV NODE_ENV=production
 
-RUN npm run build
+# 필요한 파일 복사
+COPY --from=builder /app/next.config.js .
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
+# 포트 열기
 EXPOSE 3000
 
-CMD ["npm","start"]
+# 서버 실행
+CMD ["npm", "start"]
