@@ -32,8 +32,12 @@ function NotePreview({ notePreviewData, setCoinList }: NotePreviewProps) {
     setCoinList([ticker])
   }
 
-  const handleClickMemberDiv = (memberId: number) => {
-    router.push(`/member/${memberId}`)
+  const handleClickMemberDiv = () => {
+    router.push(`/member/${notePreviewData.member.memberId}`)
+  }
+
+  const handleClickMsgDiv = () => {
+    router.push(`/notes/${notePreviewData.noteId}?scroll=comments`)
   }
 
   return (
@@ -59,7 +63,7 @@ function NotePreview({ notePreviewData, setCoinList }: NotePreviewProps) {
         </h2>
         <div
           className="mb-4 flex cursor-pointer"
-          onClick={() => handleClickMemberDiv(notePreviewData.member.memberId)}
+          onClick={handleClickMemberDiv}
         >
           <img
             src={notePreviewData.member.profileUrl}
@@ -92,7 +96,7 @@ function NotePreview({ notePreviewData, setCoinList }: NotePreviewProps) {
           </div>
           <div>{notePreviewData.likeCount}</div>
         </div>
-        <div className={`${buttonDivClasses}`}>
+        <div className={`${buttonDivClasses}`} onClick={handleClickMsgDiv}>
           <div className="mt-1.5">
             <MsgSVG />
           </div>

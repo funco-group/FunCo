@@ -9,7 +9,7 @@ const DummyNotesDetail = [
       profileUrl: '/image/chuu.gif',
     },
     title: '지구는 어떻게 지킬까?',
-    content,
+    content: `${content}# 테스트 테스트 테스트\n# 테스트 테스트 테스트\n# 테스트 테스트 테스트\n# 테스트 테스트 테스트\n# 테스트 테스트 테스트\n# 테스트 테스트 테스트\n`,
     ticker: 'KRW-BTC',
     writeDate: '2024-01-20T15:00:00',
     likeCount: 4,
