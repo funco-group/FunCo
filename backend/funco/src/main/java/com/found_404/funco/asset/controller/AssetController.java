@@ -21,41 +21,47 @@ import com.found_404.funco.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/v1/asset")
 @RequiredArgsConstructor
 public class AssetController {
 
 	private final AssetService assetService;
 
-	@GetMapping()
+	/*
+	@GetMapping("/v1/asset")
+	public ResponseEntity<TotalAssetResponse> getMemberTotalAsset(@AuthMemberId Long memberId) {
+		return ResponseEntity.ok(assetService.getMemberTotalAsset(memberId));
+	}*/
+
+	@GetMapping("/v2/asset")
 	public ResponseEntity<TotalAssetResponse> getMemberTotalAsset(@AuthMemberId Long memberId) {
 		return ResponseEntity.ok(assetService.getMemberTotalAsset(memberId));
 	}
 
+
 	// 남의 보유자산 확인하기
-	@GetMapping("/{memberId}")
+	@GetMapping("/v1/asset/{memberId}")
 	public ResponseEntity<TotalAssetResponse> getOtherMemberTotalAsset(@PathVariable Long memberId) {
 		return ResponseEntity.ok(assetService.getMemberTotalAsset(memberId));
 	}
 
-	@GetMapping("/cash")
+	@GetMapping("/v1/asset/cash")
 	public ResponseEntity<CashResponse> getMemberCash(@AuthenticationPrincipal Member member) {
 		return ResponseEntity.ok(assetService.getMemberCash(member));
 	}
 
-	@GetMapping("/crypto/{ticker}")
+	@GetMapping("/v1/asset/crypto/{ticker}")
 	public ResponseEntity<CryptoResponse> getCrypto(@AuthenticationPrincipal Member member,
 		@PathVariable String ticker) {
 		return ResponseEntity.ok(assetService.getCrypto(member, ticker));
 	}
 
-	@GetMapping("/history")
+	@GetMapping("/v1/asset/history")
 	public ResponseEntity<List<HistoryResponse>> getMemberHistory(@AuthenticationPrincipal Member member) {
 
 		return ResponseEntity.ok(assetService.getMemberHistory(member));
 	}
 
-	@PatchMapping("/init-cash")
+	@PatchMapping("/v1/asset/init-cash")
 	public ResponseEntity<Void> initializeMemberCash(@AuthenticationPrincipal Member member){
 		assetService.initializeMemberCash(member);
 		return ResponseEntity.ok().build();
