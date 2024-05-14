@@ -12,6 +12,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.found_404.funco.client.dto.CoinValuation;
+import com.found_404.funco.client.dto.CoinValuationResponse;
+import com.found_404.funco.client.service.MemberService;
+import com.found_404.funco.client.service.TradeService;
 import com.found_404.funco.follow.domain.Follow;
 import com.found_404.funco.follow.domain.FollowTrade;
 import com.found_404.funco.follow.domain.FollowingCoin;
@@ -41,6 +45,9 @@ public class FollowService {
 	private final FollowRepository followRepository;
 	private final FollowingCoinRepository followingCoinRepository;
 	private final FollowTradeRepository followTradeRepository;
+
+	private final MemberService memberService;
+	private final TradeService tradeService;
 
 	private static final double FOLLOW_FEE = 0.03;
 	private static final int PAGE_SIZE = Integer.MAX_VALUE - 1; // 임시
@@ -74,45 +81,26 @@ public class FollowService {
 		// 초기 투자금
 		Long investment = request.investment();
 
-		// 팔로워 초기 투자금 차감
-		// followerMember.decreaseCash(investment);
 		// 부모 팔로워 가용 현금
-		//Long followingCash = followingMember.getCash();
-		Long followingCash = 0L;
+		Long followingCash = memberService.getMemberCash(followingMemberId);
 
-		// 부모의 보유 코인들
-		// List<HoldingCoin> holdingCoins = holdingCoinRepository.findHoldingCoinByMemberId(followingMemberId);
-		// for (HoldingCoin holdingCoin : holdingCoins) {
-		// 	log.info("부모 보유 코인들 : {}", holdingCoin.getTicker());
-		// }
+		CoinValuationResponse coinValuationResponse = tradeService.getCoinValuations(memberId);
 
-		// 부모의 보유 코인 별 현재 시세 가격
-		// Map<String, Long> followingCryptoPriceMap = cryptoPrice.getTickerPriceMap(holdingCoins.stream()
-		// 	.map(HoldingCoin::getTicker)
-		// 	.collect(Collectors.toList()));
-		Map<String, Long> followingCryptoPriceMap = new HashMap<>(); // 삭
+		Long followingFollowSum = followRepository.findAllByFollowerMemberId(followingMemberId)
+			.stream().map(Follow::getInvestment)
+			.reduce(0L, Long::sum);
 
-		// 부모의 코인 별 보유한 코인 별 가격
-		// Map<String, Long> followingCryptoToAssetMap = holdingCoins.stream()
-		// 	.collect(
-		// 		Collectors.toMap(
-		// 			HoldingCoin::getTicker,
-		// 			holdingCoin -> (long)multiple(
-		// 				followingCryptoPriceMap.get(holdingCoin.getTicker()), holdingCoin.getVolume(), CASH_SCALE)));
-		Map<String, Long> followingCryptoToAssetMap = new HashMap<>();//삭
+		// 부모 총 보유 자산 = 부모의 거래자산 총합 + 부모의 가용 현금 + 부모 팔로우 총 합
+		long followingAsset = coinValuationResponse.totalTradeAsset() + followingCash + followingFollowSum;
 
-		// 총 보유 자산 = 부모의 보유 코인들 + 부모의 가용 현금
-		long asset = followingCryptoToAssetMap.values().stream()
-			.mapToLong(Long::longValue)
-			.sum() + followingCash;
+		// 부모의 보유 자산의 비율
+		Map<String, Double> followingAssetRatio = coinValuationResponse.coinValuations()
+			.stream()
+			.collect(Collectors.toMap(CoinValuation::ticker,
+				coinValuation -> divide(coinValuation.valuation(), followingAsset, NORMAL_SCALE)));
 
-		// 부모의 보유 자산의 비율 =
-		Map<String, Double> assetRatioMap = followingCryptoToAssetMap.entrySet().stream()
-			.collect(Collectors.toMap(Map.Entry::getKey,
-				entry -> divide(entry.getValue(), asset, NORMAL_SCALE)));
-
-		// 팔로우의 가용 현금
-		Long followerCash = (long)multiple(investment, divide(followingCash, asset, NORMAL_SCALE), CASH_SCALE);
+		// 팔로우의 가용 현금 = 투자금 - 산 금액
+		//Long followerCash = (long)multiple(investment, divide(followingCash, followingAsset, NORMAL_SCALE), CASH_SCALE);
 
 		// 팔로우 생성
 		Follow follow = Follow.builder()
@@ -128,7 +116,7 @@ public class FollowService {
 		 * 팔로잉 코인 갯수 = (초기 투자금 * 부모의 전체 자산에 대해 해당 코인이 차지하는 비율) / 해당 코인의 현재 시세
 		 * 주문 가격 = 초기 투자금 * 부모의 해당 코인의 전체 자산에 대한 비율 => 부모의 코인 비율만큼 사는 것이기 때문
 		 * */
-		Map<FollowingCoin, FollowTrade> followingCoinFollowTradeMap = assetRatioMap.entrySet().stream()
+		Map<FollowingCoin, FollowTrade> followingCoinFollowTradeMap = followingAssetRatio.entrySet().stream()
 			.collect(Collectors.toMap(entry -> FollowingCoin.builder()
 					.follow(follow)
 					.ticker(entry.getKey())
@@ -151,6 +139,10 @@ public class FollowService {
 		followRepository.save(follow);
 		followingCoinRepository.saveAll(followingCoinFollowTradeMap.keySet());
 		followTradeRepository.saveAll(followingCoinFollowTradeMap.values());
+
+
+		// 팔로워 초기 투자금 차감
+		memberService.updateMemberCash(followerMemberId, -investment);
 
 		// 알림
 		// StringBuilder message = new StringBuilder();
