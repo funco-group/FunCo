@@ -18,6 +18,6 @@ spring:
 # feign client 상세 로그 출력 하도록 설정
 logging:
   level:
-    com.found_404.funco.client: DEBUG # open feign client 모아논 패키지
+    com.found_404.funco.feignClient: DEBUG # open feign client 모아논 패키지
 
 # open feign 설정 end ------------------------------

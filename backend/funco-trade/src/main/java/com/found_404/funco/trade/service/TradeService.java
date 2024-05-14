@@ -26,6 +26,7 @@ import com.found_404.funco.trade.domain.type.TradeType;
 import com.found_404.funco.trade.dto.OpenTradeDto;
 import com.found_404.funco.trade.dto.OtherTradeDto;
 import com.found_404.funco.trade.dto.TradeDto;
+import com.found_404.funco.trade.dto.response.CoinValuation;
 import com.found_404.funco.trade.dto.response.CoinValuationResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinsResponse;
@@ -43,6 +44,7 @@ public class TradeService {
 	private final TradeRepository tradeRepository;
 	private final HoldingCoinRepository holdingCoinRepository;
 	private final OpenTradeRepository openTradeRepository;
+
 	private final MemberService memberService;
 
 	private final CryptoPrice cryptoPrice;
@@ -265,6 +267,8 @@ public class TradeService {
 			.build();
 	}
 
+
+	// 미체결 + 코인총합
 	public CoinValuationResponse getCoinValuations(Long memberId) {
 		List<HoldingCoin> holdingCoins = holdingCoinRepository.findByMemberId(memberId);
 
@@ -272,11 +276,29 @@ public class TradeService {
 			.map(HoldingCoin::getTicker)
 			.collect(Collectors.toList()));
 
-		return new CoinValuationResponse(
-			holdingCoins.stream()
-			.collect(Collectors.toMap(
-				HoldingCoin::getTicker,
-				holdingCoin -> holdingCoin.getVolume() * tickerPriceMap.get(holdingCoin.getTicker())
-			)));
+		List<CoinValuation> coinValuations = holdingCoins.stream()
+			.map(holdingCoin -> CoinValuation.builder()
+				.valuation((long)multiple(tickerPriceMap.get(holdingCoin.getTicker()), holdingCoin.getVolume(),
+				CASH_SCALE))
+				.ticker(holdingCoin.getTicker())
+				.price(tickerPriceMap.get(holdingCoin.getTicker()))
+				.build())
+			.toList();
+
+
+		long totalCoinValues = coinValuations
+			.stream()
+			.map(CoinValuation::valuation)
+			.reduce(0L, Long::sum);
+
+		long totalOpenTradeCash = openTradeRepository.findAllByMemberId(memberId)
+			.stream()
+			.map(OpenTrade::getOrderCash)
+			.reduce(0L, Long::sum);
+
+		return CoinValuationResponse.builder()
+			.coinValuations(coinValuations)
+			.totalTradeAsset(totalCoinValues + totalOpenTradeCash)
+			.build();
 	}
 }
