@@ -1,5 +1,6 @@
 package com.found_404.funco.follow.domain.repository;
 
+import com.found_404.funco.follow.dto.SliceFollowingInfo;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +21,5 @@ public interface FollowRepository extends JpaRepository<Follow, Long>, QueryDslF
     List<Follow> findAllByFollowerAndSettledTrue(Member member);
 
 	List<Follow> findAllByFollowingAndSettledTrue(Member member);
+
 }
