@@ -5,6 +5,7 @@ import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.*;
 import static com.found_404.funco.trade.exception.TradeErrorCode.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ import com.found_404.funco.trade.domain.type.TradeType;
 import com.found_404.funco.trade.dto.OpenTradeDto;
 import com.found_404.funco.trade.dto.OtherTradeDto;
 import com.found_404.funco.trade.dto.TradeDto;
+import com.found_404.funco.trade.dto.response.CoinValuationResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinsResponse;
 import com.found_404.funco.trade.dto.response.MarketTradeResponse;
@@ -261,5 +263,20 @@ public class TradeService {
 			.ticker(ticker)
 			.volume(holdingCoin.isPresent() ? holdingCoin.get().getVolume() : 0D)
 			.build();
+	}
+
+	public CoinValuationResponse getCoinValuations(Long memberId) {
+		List<HoldingCoin> holdingCoins = holdingCoinRepository.findByMemberId(memberId);
+
+		Map<String, Long> tickerPriceMap = cryptoPrice.getTickerPriceMap(holdingCoins.stream()
+			.map(HoldingCoin::getTicker)
+			.collect(Collectors.toList()));
+
+		return new CoinValuationResponse(
+			holdingCoins.stream()
+			.collect(Collectors.toMap(
+				HoldingCoin::getTicker,
+				holdingCoin -> holdingCoin.getVolume() * tickerPriceMap.get(holdingCoin.getTicker())
+			)));
 	}
 }

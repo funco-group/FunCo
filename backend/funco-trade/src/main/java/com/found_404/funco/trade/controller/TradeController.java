@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.found_404.funco.global.memberIdHeader.AuthMemberId;
@@ -107,10 +108,18 @@ public class TradeController {
 		return ResponseEntity.ok().build();
 	}
 
+	// MSA server 용 API
+
 	/* 보유중인 코인 조회 */
 	@GetMapping("/holding/{ticker}")
 	public ResponseEntity<?> getHoldingCoin(@AuthMemberId Long memberId, @PathVariable String ticker) {
 		return ResponseEntity.ok(tradeService.getHoldingCoin(memberId, ticker));
+	}
+
+	/* 보유한 코인 별 평가금액 */
+	@GetMapping("/coinValuations")
+	public ResponseEntity<?> getCoinValuations(@RequestParam Long memberId) {
+		return ResponseEntity.ok(tradeService.getCoinValuations(memberId));
 	}
 
 }
