@@ -1,13 +1,13 @@
 package com.found_404.funcomember.member.domain;
 
-import com.found_404.funcomember.member.exception.MemberErrorCode;
-import com.found_404.funcomember.member.exception.MemberException;
+import static com.found_404.funcomember.member.exception.MemberErrorCode.*;
+
 import org.hibernate.annotations.Comment;
 
-import com.found_404.funcomember.auth.dto.OauthId;
 import com.found_404.funcomember.global.entity.BaseEntity;
 import com.found_404.funcomember.member.domain.type.MemberStatus;
 import com.found_404.funcomember.member.domain.type.PortfolioStatusType;
+import com.found_404.funcomember.member.exception.MemberException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,8 +17,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static com.found_404.funcomember.member.exception.MemberErrorCode.INSUFFICIENT_BALANCE;
 
 @Entity
 @Getter

@@ -1,4 +1,4 @@
-package com.found_404.funcomember.auth.type;
+package com.found_404.funcomember.member.domain.type;
 
 import static java.util.Locale.*;
 

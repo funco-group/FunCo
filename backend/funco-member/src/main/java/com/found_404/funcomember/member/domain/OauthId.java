@@ -1,6 +1,6 @@
-package com.found_404.funcomember.auth.dto;
+package com.found_404.funcomember.member.domain;
 
-import com.found_404.funcomember.auth.type.OauthServerType;
+import com.found_404.funcomember.member.domain.type.OauthServerType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
