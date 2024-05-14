@@ -1,6 +1,6 @@
-package com.found_404.funco.trade.client;
+package com.found_404.funco.client;
 
-import com.found_404.funco.trade.client.dto.UpdateCash;
+import com.found_404.funco.client.dto.UpdateCash;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;

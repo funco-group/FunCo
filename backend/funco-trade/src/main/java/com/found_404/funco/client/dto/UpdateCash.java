@@ -1,4 +1,4 @@
-package com.found_404.funco.trade.client.dto;
+package com.found_404.funco.client.dto;
 
 public record UpdateCash(
         Long cash

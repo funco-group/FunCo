@@ -1,4 +1,4 @@
-package com.found_404.funco.trade.cryptoPrice;
+package com.found_404.funco.crypto.cryptoPrice;
 
 import java.util.List;
 import java.util.Map;
