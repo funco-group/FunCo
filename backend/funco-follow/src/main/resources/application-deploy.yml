@@ -1,0 +1,23 @@
+# 배포 환경 테스트용. 실제 파일은 배포 단계에서 직접 넣어준다.
+
+spring:
+  config:
+    activate:
+      on-profile: deploy
+
+  mvc:
+    servlet:
+      path: /api
+
+  # open feign 설정 start \ ------------------------------
+  cloud:
+    openfeign:
+      okhttp:
+        enabled: true
+
+# feign client 상세 로그 출력 하도록 설정
+logging:
+  level:
+    com.found_404.funco.client: DEBUG # open feign client 모아논 패키지
+
+# open feign 설정 end ------------------------------
