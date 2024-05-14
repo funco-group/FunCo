@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.found_404.funco.client.service.MemberService;
 import com.found_404.funco.global.util.CommissionUtil;
-import com.found_404.funco.client.MemberServiceClient;
-import com.found_404.funco.client.dto.UpdateCash;
-import feign.FeignException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +41,7 @@ public class TradeService {
 	private final TradeRepository tradeRepository;
 	private final HoldingCoinRepository holdingCoinRepository;
 	private final OpenTradeRepository openTradeRepository;
-	private final MemberServiceClient memberService;
+	private final MemberService memberService;
 
 	private final CryptoPrice cryptoPrice;
 	//private final FollowTradeService followTradeService;
@@ -89,7 +87,7 @@ public class TradeService {
 		//followTradeService.followTrade(trade);
 
 		// orderCash <= 자산 check, member 원화 감소
-		updateMemberCash(memberId, -orderCash);
+		memberService.updateMemberCash(memberId, -orderCash);
 
 		return MarketTradeResponse.builder()
 			.ticker(trade.getTicker())
@@ -128,7 +126,7 @@ public class TradeService {
 		//followTradeService.followTrade(trade);
 
 		// member 원화 증가
-		updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(orderCash));
+		memberService.updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(orderCash));
 
 		return MarketTradeResponse.builder()
 			.ticker(trade.getTicker())
@@ -185,7 +183,7 @@ public class TradeService {
 
 		// 돈 또는 코인 회수
 		if (openTrade.getTradeType().equals(TradeType.BUY)) {
-			updateMemberCash(memberId, openTrade.getOrderCash());
+			memberService.updateMemberCash(memberId, openTrade.getOrderCash());
 		} else {
 			Optional<HoldingCoin> optionalHoldingCoin = holdingCoinRepository.findByMemberIdAndTicker(
 				openTrade.getMemberId(), openTrade.getTicker());
@@ -200,15 +198,6 @@ public class TradeService {
 			} else {
 				optionalHoldingCoin.get().recoverVolume(openTrade.getVolume(), openTrade.getBuyPrice());
 			}
-		}
-	}
-
-	private void updateMemberCash(Long memberId, Long cash) {
-		try {
-			memberService.updateCash(memberId, new UpdateCash(cash));
-		} catch (FeignException e) {
-			log.error("member client error : {}", e.getMessage());
-			throw new TradeException(INSUFFICIENT_ASSET);
 		}
 	}
 
@@ -229,7 +218,7 @@ public class TradeService {
 		cryptoPrice.addTrade(openTrade.getTicker(), openTrade.getId(), openTrade.getTradeType(), openTrade.getPrice());
 
 		// 돈 확인 및 감소
-		updateMemberCash(memberId, -orderCash);
+		memberService.updateMemberCash(memberId, -orderCash);
 	}
 
 	@Transactional
