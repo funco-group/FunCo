@@ -5,6 +5,7 @@ import Navbar from '@/containers/HeaderContainer'
 import RecoilRootProvider from './RecoilProvider'
 import ToastProvider from './ToastProvider'
 import RecoilSetter from './RecoilSetter'
+import ScrollToTop from '@/styles/ScrollToTop'
 
 export const metadata: Metadata = {
   title: 'FUNCO',
@@ -27,6 +28,7 @@ export default function RootLayout({
             <ToastProvider>
               <StyledComponentsRegistry>
                 <Navbar />
+                <ScrollToTop />
                 <div style={{ padding: '6.5rem 0' }}>{children}</div>
               </StyledComponentsRegistry>
             </ToastProvider>
