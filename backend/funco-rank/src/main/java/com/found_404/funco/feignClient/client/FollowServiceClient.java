@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "follow-service")
 public interface FollowServiceClient {
 
-	@GetMapping(value = "/api/v1/follows/investment")
+	@GetMapping(value = "/api/v1/batch/follows/investment")
 	Map<Long, Long> getFollowerInvestmentList();
 
-	@GetMapping("/following/investment")
+	@GetMapping("/api/v1/batch/following/investment")
 	Map<Long, Long> getFollowingInvestmentList();
 }
