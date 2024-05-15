@@ -2,6 +2,9 @@ package com.found_404.funcomember.member.service;
 
 import static com.found_404.funcomember.member.exception.MemberErrorCode.*;
 
+import com.found_404.funcomember.feignClient.service.FollowService;
+import com.found_404.funcomember.feignClient.service.TradeService;
+import com.found_404.funcomember.member.dto.response.AssetResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,9 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 	private final Long INIT_CASH = 10_000_000L;
 	private final MemberRepository memberRepository;
+	private final TradeService tradeService;
+	private final FollowService followService;
+
 	// private final RedisTemplate<String, Object> rankZSetRedisTemplate;
 	//
 	// @Transactional(readOnly = true)
@@ -109,8 +115,8 @@ public class MemberService {
 		getMember(loginMemberId).withdraw();
 	}
 
-	private Member getMember(Long loginMemberId) {
-		return memberRepository.findById(loginMemberId)
+	private Member getMember(Long memberId) {
+		return memberRepository.findById(memberId)
 			.orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
 	}
 
@@ -140,5 +146,20 @@ public class MemberService {
 			.portfolioStatus(PortfolioStatusType.PUBLIC)
 			.build());
 		return OAuthMemberResponse.from(member);
+	}
+
+	/*
+	* 	총자산 : 현금 + 코인 + 미체결 금액 + 팔로우 투자금 + ?(선물투자금)
+	* */
+	public AssetResponse getTotalAsset(Long memberId) {
+		long totalAsset = getMember(memberId).getCash();
+
+		// [API SELECT]
+		totalAsset += tradeService.getCoinValuations(memberId).totalTradeAsset();
+
+		// [API SELECT]
+		totalAsset += followService.getInvestments(memberId);
+
+		return new AssetResponse(totalAsset);
 	}
 }
