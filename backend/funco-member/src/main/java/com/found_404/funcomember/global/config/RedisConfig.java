@@ -54,6 +54,17 @@ public class RedisConfig {
 		return lettuceConnectionFactory;
 	}
 
+	// redis 서버 꺼졌는지 확인
+	public void isRedisAlive(RedisTemplate<String, Object> redisTemplate) {
+		try {
+			// Redis 서버에 ping 요청을 보내고 응답을 확인
+			String pong = Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection().ping();
+			log.info("===================== Redis Sever Operates well =====================", pong);
+		} catch (Exception e) {
+			throw new RedisException(REDIS_SEVER_OFF);
+		}
+	}
+
 	// 관심있는 코인 템플릿
 	@Bean
 	public RedisTemplate<String, Object> favoriteCoinRedisTemplate() {
@@ -70,6 +81,8 @@ public class RedisConfig {
 			new Jackson2JsonRedisSerializer<>(objectMapper, FavoriteCoinInfo.class);
 		redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
 
+		isRedisAlive(redisTemplate);
+
 		return redisTemplate;
 	}
 
@@ -80,6 +93,9 @@ public class RedisConfig {
 		redisTemplate.setConnectionFactory(createLettuceConnectionFactory(FAVORITE_COIN.ordinal()));
 		redisTemplate.setKeySerializer(new StringRedisSerializer());
 		redisTemplate.setValueSerializer(new StringRedisSerializer()); // ZSet 값에 대한 직렬화
+
+		isRedisAlive(redisTemplate);
+
 		return redisTemplate;
 	}
 
@@ -98,6 +114,8 @@ public class RedisConfig {
 		Jackson2JsonRedisSerializer<RankDto> jackson2JsonRedisSerializer =
 			new Jackson2JsonRedisSerializer<>(objectMapper, RankDto.class);
 		redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+
+		isRedisAlive(redisTemplate);
 
 		return redisTemplate;
 	}
