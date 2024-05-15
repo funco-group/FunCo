@@ -17,7 +17,7 @@ const nextConfig = {
     return [
       {
         source: '/history',
-        destination: '/history/follow',
+        destination: '/history/asset',
         permanent: false,
       },
       {
