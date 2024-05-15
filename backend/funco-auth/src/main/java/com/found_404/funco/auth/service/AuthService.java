@@ -1,7 +1,5 @@
 package com.found_404.funco.auth.service;
 
-import java.util.Optional;
-
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -15,9 +13,12 @@ import com.found_404.funco.feignClient.dto.request.OAuthMemberRequest;
 import com.found_404.funco.feignClient.dto.response.OAuthMemberResponse;
 import com.found_404.funco.global.token.service.TokenService;
 
+import feign.FeignException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AuthService {
@@ -34,39 +35,81 @@ public class AuthService {
 	// 가입되어 있지 않다면 저장(회원가입)
 	public LoginResponse login(HttpServletResponse response, OauthServerType oauthServerType, String authCode) {
 		OauthDto dto = oauthMemberClientComposite.fetch(oauthServerType, authCode);
-		OAuthMemberResponse oAuthMemberResponse = Optional.of(memberServiceClient.getAuthMember(
-			dto.memberDto().oauthId().getOauthServerType().name(),
-			dto.memberDto().oauthId().getOauthServerId())).orElseGet(() -> {
+
+		try {
+			OAuthMemberResponse oAuthMemberResponse = memberServiceClient.getAuthMember(
+				dto.memberDto().oauthId().getOauthServerType().name(),
+				dto.memberDto().oauthId().getOauthServerId());
+			return LoginResponse.builder()
+				.profileUrl(oAuthMemberResponse.profileUrl())
+				.nickname(oAuthMemberResponse.nickname())
+				.memberId(oAuthMemberResponse.memberId())
+				.accessToken(tokenService.createToken(oAuthMemberResponse.memberId()))
+				// .unReadCount(notificationService.getUnReadCount(member.getId()))
+				.build();
+		} catch (FeignException e) {
+			log.info("없는 회원입니다. 회원 가입을 진행합니다.");
 			OAuthMemberRequest oAuthMemberRequest = OAuthMemberRequest.builder()
 				.oauthId(dto.memberDto().oauthId())
 				.nickname(dto.memberDto().nickname())
 				.profileUrl(dto.memberDto().profileUrl())
 				.build();
-			// Member 엔티티 만들라고 보내는 요청 로직 구현
-			// 구현해야됨!!
-			return memberServiceClient.addAuthMember(oAuthMemberRequest);
-		});
+			OAuthMemberResponse oAuthMemberResponse = memberServiceClient.addAuthMember(oAuthMemberRequest);
+			return LoginResponse.builder()
+				.profileUrl(oAuthMemberResponse.profileUrl())
+				.nickname(oAuthMemberResponse.nickname())
+				.memberId(oAuthMemberResponse.memberId())
+				.accessToken(tokenService.createToken(oAuthMemberResponse.memberId()))
+				// .unReadCount(notificationService.getUnReadCount(member.getId()))
+				.build();
+		} finally {
+			// redis oauthAccessToken 저장
+			// 추후 로그아웃 구현 시 필요할 수 있음
+			HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
+			hashOperations.put(dto.memberDto().oauthId().getOauthServerId(), "oauthAccessToken", dto.accessToken());
 
-		// redis oauthAccessToken 저장
-		// 추후 로그아웃 구현 시 필요할 수 있음
-		HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
-		hashOperations.put(dto.memberDto().oauthId().getOauthServerId(), "oauthAccessToken", dto.accessToken());
+			String refreshToken = tokenService.createRefreshToken(dto.memberDto());
+			// 기존의 쿠키 설정을 문자열로 변환
+			String cookieValue = "refreshToken=" + refreshToken +
+				"; HttpOnly; Secure; Path=/; SameSite=None";
 
-		String refreshToken = tokenService.createRefreshToken(dto.memberDto());
-		// 기존의 쿠키 설정을 문자열로 변환
-		String cookieValue = "refreshToken=" + refreshToken +
-			"; HttpOnly; Secure; Path=/; SameSite=None";
+			// 응답 헤더에 쿠키 추가
+			response.addHeader("Set-Cookie", cookieValue);
+		}
 
-		// 응답 헤더에 쿠키 추가
-		response.addHeader("Set-Cookie", cookieValue);
-
-		return LoginResponse.builder()
-			.profileUrl(oAuthMemberResponse.profileUrl())
-			.nickname(oAuthMemberResponse.nickname())
-			.memberId(oAuthMemberResponse.memberId())
-			.accessToken(tokenService.createToken(oAuthMemberResponse.memberId()))
-			// .unReadCount(notificationService.getUnReadCount(member.getId()))
-			.build();
+		// OAuthMemberResponse oAuthMemberResponse = Optional.of(memberServiceClient.getAuthMember(
+		// 	dto.memberDto().oauthId().getOauthServerType().name(),
+		// 	dto.memberDto().oauthId().getOauthServerId())).orElseGet(() -> {
+		// 	OAuthMemberRequest oAuthMemberRequest = OAuthMemberRequest.builder()
+		// 		.oauthId(dto.memberDto().oauthId())
+		// 		.nickname(dto.memberDto().nickname())
+		// 		.profileUrl(dto.memberDto().profileUrl())
+		// 		.build();
+		// 	// Member 엔티티 만들라고 보내는 요청 로직 구현
+		// 	// 구현해야됨!!
+		// 	return memberServiceClient.addAuthMember(oAuthMemberRequest);
+		// });
+		//
+		// // redis oauthAccessToken 저장
+		// // 추후 로그아웃 구현 시 필요할 수 있음
+		// HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
+		// hashOperations.put(dto.memberDto().oauthId().getOauthServerId(), "oauthAccessToken", dto.accessToken());
+		//
+		// String refreshToken = tokenService.createRefreshToken(dto.memberDto());
+		// // 기존의 쿠키 설정을 문자열로 변환
+		// String cookieValue = "refreshToken=" + refreshToken +
+		// 	"; HttpOnly; Secure; Path=/; SameSite=None";
+		//
+		// // 응답 헤더에 쿠키 추가
+		// response.addHeader("Set-Cookie", cookieValue);
+		//
+		// return LoginResponse.builder()
+		// 	.profileUrl(oAuthMemberResponse.profileUrl())
+		// 	.nickname(oAuthMemberResponse.nickname())
+		// 	.memberId(oAuthMemberResponse.memberId())
+		// 	.accessToken(tokenService.createToken(oAuthMemberResponse.memberId()))
+		// 	// .unReadCount(notificationService.getUnReadCount(member.getId()))
+		// 	.build();
 	}
 
 	// public TokenResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
