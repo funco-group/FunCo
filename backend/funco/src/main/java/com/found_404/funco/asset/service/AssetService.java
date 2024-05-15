@@ -1,5 +1,6 @@
 package com.found_404.funco.asset.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,10 +11,15 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.found_404.funco.asset.domain.AssetHistory;
+import com.found_404.funco.asset.domain.repository.QueryDslAssetHistoryRepository;
+import com.found_404.funco.asset.domain.type.AssetTradeType;
 import com.found_404.funco.asset.domain.type.AssetType;
 import com.found_404.funco.asset.dto.ActiveFutureInfo;
 import com.found_404.funco.asset.dto.HoldingCoinInfo;
+import com.found_404.funco.asset.dto.response.AssetHistoryResponse;
 import com.found_404.funco.asset.dto.response.CashResponse;
+import com.found_404.funco.asset.dto.response.CoinHistoryResponse;
 import com.found_404.funco.asset.dto.response.CryptoResponse;
 import com.found_404.funco.asset.dto.response.HistoryResponse;
 import com.found_404.funco.asset.dto.response.TotalAssetResponse;
@@ -47,6 +53,7 @@ public class AssetService {
 	private final TradeRepository tradeRepository;
 	private final ActiveFutureRepository activeFutureRepository;
 	private final FollowService followService;
+	private final QueryDslAssetHistoryRepository queryDslAssetHistoryRepository;
 
 	public CashResponse getMemberCash(Member member) {
 		return new CashResponse(member.getCash());
@@ -164,6 +171,52 @@ public class AssetService {
 			.sorted(Comparator.comparing(HistoryResponse::date).reversed())
 			.collect(Collectors.toList());
 	}
+
+	/*
+	* 자산변동내역 V2
+	* 필터링 조건을 줘서, 조건에 맞는 데이터들을 담아서 보내주기
+	*/
+
+	// 다음 타입들을 AssetHistoryResponse로 추상화하여 넘겨줌
+		// CoinHistoryResponse, FollowHistoryResponse, PorfolioHistoryResponse
+	public List<? extends AssetHistoryResponse> getMemberHistoryV2(Long memberId, String period, String asset, String tradeType) {
+
+
+		// 기간, 자산, 거래 타입
+		// 자산 -> 거래 타입 -> 기간
+			// 자산 : 임의로 COIN, FOLLOWER, FOLLOWING, PORTFOLIO
+			// 거래 타입 : 같이 보내줌
+			// 기간 : 자산에 상관 없이 동일
+
+		// 기간은 지금으로부터 정해져 있는 만큼으로 설정
+		// switch-case 문으로 between에 들어갈 날짜 설정
+		LocalDateTime endDateTime = LocalDateTime.now();
+		LocalDate endDate = LocalDate.now();
+		LocalDateTime startDateTime = null;
+		switch(period){
+			case "DAY" -> startDateTime = endDate.atStartOfDay();
+			case "WEEK" -> startDateTime = endDate.minusWeeks(1).atStartOfDay();
+			case "ONEMONTH" -> startDateTime = endDate.minusMonths(1).atStartOfDay();
+			case "THREEMONTH" -> startDateTime = endDate.minusMonths(3).atStartOfDay();
+			case "SIXMONTH" -> startDateTime = endDate.minusMonths(6).atStartOfDay();
+		}
+
+		// asset별 값 전달하기
+		switch(asset){
+			case "COIN" -> {
+				return queryDslAssetHistoryRepository.findCoinHistory(memberId, startDateTime, endDateTime, tradeType);
+			}
+			case "FOLLOW" -> {
+				return queryDslAssetHistoryRepository.findFollowHistory(memberId, startDateTime, endDateTime, tradeType);
+			}
+			case "PORTFOLIO" -> {
+				return queryDslAssetHistoryRepository.findPortfolioHistory(memberId, startDateTime, endDateTime, tradeType);
+			}
+		}
+
+		return new ArrayList<>();
+	}
+
 
 	@Transactional
 	public void initializeMemberCash(Member member) {
