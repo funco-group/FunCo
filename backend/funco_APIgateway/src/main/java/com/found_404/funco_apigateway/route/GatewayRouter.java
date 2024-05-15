@@ -20,13 +20,15 @@ public class GatewayRouter {
 	private final String EUREKA_TRADE = "lb://TRADE-SERVICE";
 	private final String EUREKA_STATISTICS = "lb://STATISTICS-SERVICE";
 	private final String EUREKA_FOLLOW = "lb://FOLLOW-SERVICE";
+	private final String EUREKA_RANK = "lb://RANK-SERVICE";
 
 	private final JwtAuthenticationGatewayFilterFactory jwtAuthentication;
 
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes()
-			.route(r -> r.path("/api/v1/auth/**").uri(EUREKA_AUTH))
+			.route(r -> r.path("/api/v1/auth/*/signin").uri(EUREKA_AUTH))
+			.route(r -> r.path("/api/v1/rank/**").uri(EUREKA_RANK))
 			.route(r -> getJwtFilterRoute(r, "/api/v1/members/**", EUREKA_MEMBER))
 			.route(r -> getJwtFilterRoute(r, "/api/v1/trade/**", EUREKA_TRADE))
 			.route(r -> getJwtFilterRoute(r, "/api/v1/follows/**", EUREKA_FOLLOW))
