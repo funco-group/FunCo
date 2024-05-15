@@ -2,6 +2,7 @@ package com.found_404.funco.trade.controller;
 
 import java.util.List;
 
+import com.found_404.funco.trade.dto.response.HoldingCoinResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -109,18 +110,10 @@ public class TradeController {
 		return ResponseEntity.ok().build();
 	}
 
-	// MSA server 용 API
-
 	/* 보유중인 코인 조회 */
 	@GetMapping("/holding/{ticker}")
-	public ResponseEntity<?> getHoldingCoin(@AuthMemberId Long memberId, @PathVariable String ticker) {
+	public ResponseEntity<HoldingCoinResponse> getMemberHoldingCoin(@AuthMemberId Long memberId, @PathVariable String ticker) {
 		return ResponseEntity.ok(tradeService.getHoldingCoin(memberId, ticker));
-	}
-
-	/* 보유한 코인 별 평가금액, 미체결 금액 포함한 총 거래 자산 */
-	@GetMapping("/coinValuations")
-	public ResponseEntity<CoinValuationResponse> getCoinValuations(@RequestParam Long memberId) {
-		return ResponseEntity.ok(tradeService.getCoinValuations(memberId));
 	}
 
 }

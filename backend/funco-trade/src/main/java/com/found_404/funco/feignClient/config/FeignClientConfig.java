@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import feign.Logger;
 
 @Configuration
-@EnableFeignClients(basePackages = "com.found_404.funco") // main 패키지
+@EnableFeignClients(basePackages = "com.found_404.funco.feignClient.client") // main 패키지
 public class FeignClientConfig {
 
 	@Bean
