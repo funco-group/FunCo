@@ -1,10 +1,17 @@
 package com.found_404.funcomember.feignClient.client;
 
+import java.util.List;
+
+import com.found_404.funcomember.feignClient.dto.FollowerInfoResponse;
+import com.found_404.funcomember.feignClient.dto.InvestmentsResponse;
+import com.found_404.funcomember.portfolio.dto.request.FollowerProfitRequest;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.found_404.funcomember.feignClient.dto.InvestmentsResponse;
 
 @FeignClient(name = "follow-service")
 public interface FollowServiceClient {
@@ -14,4 +21,10 @@ public interface FollowServiceClient {
 
 	@GetMapping("/api/v1/hello")
 	String hello();
+
+    @GetMapping("/api/v1/follows/{followingId}/followers")
+    List<FollowerInfoResponse> getFollowerInfos(@PathVariable Long followingId);
+
+    @PatchMapping("/api/v1/follows/{followingId}/followers")
+    void modifyFollower(@PathVariable Long followingId, @RequestBody FollowerProfitRequest followerProfitRequest);
 }
