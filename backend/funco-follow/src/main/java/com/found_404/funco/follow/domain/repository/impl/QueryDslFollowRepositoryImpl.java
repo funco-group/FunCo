@@ -16,7 +16,9 @@ import com.found_404.funco.follow.dto.CoinInfo;
 import com.found_404.funco.follow.dto.FollowingInfo;
 import com.found_404.funco.follow.dto.QueryFollowingInfoResult;
 import com.found_404.funco.follow.dto.SliceFollowingInfo;
+import com.found_404.funco.follow.dto.response.FollowerInfoResponse;
 import com.found_404.funco.follow.dto.response.FollowerListResponse;
+import com.found_404.funco.follow.dto.response.QFollowerInfoResponse;
 import com.found_404.funco.follow.dto.response.QFollowerListResponse_FollowerInfo;
 import com.found_404.funco.follow.exception.FollowException;
 import com.querydsl.core.types.Projections;
@@ -110,6 +112,23 @@ public class QueryDslFollowRepositoryImpl implements QueryDslFollowRepository {
 			.where(follow.settled.isFalse())
 			.groupBy(follow.followerMemberId)
 			.transform(groupBy(follow.followerMemberId).as(follow.investment.sum().coalesce(0L)));
+	}
+
+	@Override
+	public List<FollowerInfoResponse> findFollowerInfosByFollowingId(Long followingId) {
+		return jpaQueryFactory
+			.select(new QFollowerInfoResponse(follow.followerMemberId, follow.cash))
+			.from(follow)
+			.where(follow.followingMemberId.eq(followingId))
+			.fetch();
+	}
+
+	@Override
+	public void updateFollower(Long followingId, Long followerId, Long cash) {
+		jpaQueryFactory.update(follow).set(follow.cash, cash)
+			.where(follow.followingMemberId.eq(followingId),
+				follow.followerMemberId.eq(followerId))
+			.execute();
 	}
 
 	private BooleanExpression ltFollowId(Long followId) {

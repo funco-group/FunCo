@@ -1,8 +1,10 @@
 package com.found_404.funco.follow.domain.repository;
 
+import java.util.List;
 import java.util.Map;
 
 import com.found_404.funco.follow.dto.SliceFollowingInfo;
+import com.found_404.funco.follow.dto.response.FollowerInfoResponse;
 import com.found_404.funco.follow.dto.response.FollowerListResponse;
 
 public interface QueryDslFollowRepository {
@@ -16,4 +18,8 @@ public interface QueryDslFollowRepository {
 	Map<Long, Long> findFollowerInvestmentList();
 
 	Map<Long, Long> findFollowingInvestmentList();
+
+	List<FollowerInfoResponse> findFollowerInfosByFollowingId(Long followingId);
+
+	void updateFollower(Long followingId, Long followerId, Long cash);
 }

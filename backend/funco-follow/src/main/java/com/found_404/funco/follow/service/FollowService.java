@@ -23,7 +23,9 @@ import com.found_404.funco.follow.domain.type.TradeType;
 import com.found_404.funco.follow.dto.FollowTradeDto;
 import com.found_404.funco.follow.dto.RatioPrice;
 import com.found_404.funco.follow.dto.SliceFollowingInfo;
+import com.found_404.funco.follow.dto.request.FollowerProfitRequest;
 import com.found_404.funco.follow.dto.request.FollowingRequest;
+import com.found_404.funco.follow.dto.response.FollowerInfoResponse;
 import com.found_404.funco.follow.dto.response.FollowerListResponse;
 import com.found_404.funco.follow.dto.response.FollowingListResponse;
 import com.found_404.funco.follow.dto.response.InvestmentsResponse;
@@ -271,5 +273,14 @@ public class FollowService {
 
 	public InvestmentsResponse getInvestments(Long memberId) {
 		return new InvestmentsResponse(getTotalFollowInvestment(memberId));
+	}
+
+	public List<FollowerInfoResponse> getFollowerInfos(Long followingId) {
+		return followRepository.findFollowerInfosByFollowingId(followingId);
+	}
+
+	@Transactional
+	public void updateFollower(Long followingId, FollowerProfitRequest followerProfitRequest) {
+		followRepository.updateFollower(followingId, followerProfitRequest.followerId(), followerProfitRequest.cash());
 	}
 }
