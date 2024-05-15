@@ -256,31 +256,11 @@ public class FollowService {
 	}
 
 	public FollowingListResponse readFollowingList(Long memberId, Long lastFollowId) {
-
-		// 유저의 보유 코인 목록
-		//List<HoldingCoinsDto> holdingCoins = followRepository.findHoldingCoin(memberId);
-		List<HoldingCoinsDto> holdingCoins = new ArrayList<>();
-
-		// 유저의 보유 코인 목록별 현재 시세
-		// Map<String, Long> tickerPriceMap = cryptoPrice.getTickerPriceMap(
-		// 	holdingCoins.stream()
-		// 		.map(HoldingCoinsDto::ticker)
-		// 		.collect(Collectors.toList()));
-		//Map<String, Long> tickerPriceMap = new HashMap<>(); // ㅅ
-
-		// 유저의 보유 코인들의 현재 총 가격
-		// Long totalAsset = holdingCoins.stream()
-		// 	.mapToLong(holdingCoin -> (long)multiple(tickerPriceMap.get(holdingCoin.ticker()), holdingCoin.volume(),
-		// 		CASH_SCALE))
-		// 	.sum() + memberId.getCash();
-		Long totalAsset = 0L;
-
 		// 유저의 팔로우 자산 목록들
 		SliceFollowingInfo sliceFollowingInfo = followRepository.findFollowingInfoListByMemberId(memberId,
 			lastFollowId, PAGE_SIZE);
 
 		return FollowingListResponse.builder()
-			.totalAsset(totalAsset)
 			.followings(sliceFollowingInfo.followingInfoList())
 			.last(sliceFollowingInfo.last())
 			.build();
