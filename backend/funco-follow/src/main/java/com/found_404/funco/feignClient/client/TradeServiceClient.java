@@ -1,10 +1,10 @@
-package com.found_404.funco.client;
+package com.found_404.funco.feignClient.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.found_404.funco.client.dto.CoinValuationResponse;
+import com.found_404.funco.feignClient.dto.CoinValuationResponse;
 
 import java.util.List;
 import java.util.Map;

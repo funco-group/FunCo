@@ -1,4 +1,4 @@
-package com.found_404.funco.client.dto;
+package com.found_404.funco.feignClient.dto;
 
 import java.util.List;
 

@@ -7,10 +7,10 @@ import static com.found_404.funco.global.util.DecimalCalculator.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.found_404.funco.client.dto.CoinValuation;
-import com.found_404.funco.client.dto.CoinValuationResponse;
-import com.found_404.funco.client.service.MemberService;
-import com.found_404.funco.client.service.TradeService;
+import com.found_404.funco.feignClient.dto.CoinValuation;
+import com.found_404.funco.feignClient.dto.CoinValuationResponse;
+import com.found_404.funco.feignClient.service.MemberService;
+import com.found_404.funco.feignClient.service.TradeService;
 import com.found_404.funco.follow.domain.Follow;
 import com.found_404.funco.follow.domain.FollowTrade;
 import com.found_404.funco.follow.domain.FollowingCoin;

@@ -1,11 +1,11 @@
-package com.found_404.funco.client.service;
+package com.found_404.funco.feignClient.service;
 
 import static com.found_404.funco.follow.exception.FollowErrorCode.*;
 
 import org.springframework.stereotype.Service;
 
-import com.found_404.funco.client.MemberServiceClient;
-import com.found_404.funco.client.dto.UpdateCash;
+import com.found_404.funco.feignClient.client.MemberServiceClient;
+import com.found_404.funco.feignClient.dto.UpdateCash;
 import com.found_404.funco.follow.exception.FollowException;
 
 import feign.FeignException;

@@ -1,4 +1,4 @@
-package com.found_404.funco.client.config;
+package com.found_404.funco.feignClient.config;
 
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
