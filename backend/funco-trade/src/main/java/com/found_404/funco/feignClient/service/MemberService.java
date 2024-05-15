@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class MemberService {
 	private final MemberServiceClient memberServiceClient;
+	private final String SERVER_NAME = "[follow-service]";
 
 	public void updateMemberCash(Long memberId, Long cash) {
 		try {
