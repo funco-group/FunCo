@@ -47,7 +47,7 @@ dependencies {
     implementation 'io.github.openfeign:feign-okhttp:13.2.1'
 
     /* aws s3 */
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
 
     /* html 파싱 */
     implementation 'org.jsoup:jsoup:1.17.2'
