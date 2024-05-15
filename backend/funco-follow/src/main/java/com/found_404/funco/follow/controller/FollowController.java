@@ -1,5 +1,6 @@
 package com.found_404.funco.follow.controller;
 
+import com.found_404.funco.follow.dto.FollowTradeDto;
 import java.util.List;
 
 import com.found_404.funco.follow.dto.request.FollowerProfitRequest;
@@ -25,6 +26,7 @@ import com.found_404.funco.global.memberIdHeader.AuthMemberId;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 
 @RequestMapping("/v1/follows")
 @RequiredArgsConstructor
@@ -60,7 +62,7 @@ public class FollowController {
 	}
 
 	@GetMapping("/{followId}/trades")
-	public ResponseEntity<?> getFollowTrades(@PathVariable Long followId, Pageable pageable) {
+	public ResponseEntity<List<FollowTradeDto>> getFollowTrades(@PathVariable Long followId, Pageable pageable) {
 
 		return ResponseEntity.ok(followService.getFollowTrades(pageable, followId));
 	}

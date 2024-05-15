@@ -2,13 +2,11 @@ package com.found_404.funco.follow.dto.response;
 
 import java.util.List;
 
-import com.found_404.funco.follow.dto.FollowingInfo;
-
 import lombok.Builder;
 
 @Builder
 public record FollowingListResponse(
-	List<FollowingInfo> followings,
+	List<FollowingResponse> followings,
 	Boolean last
 ) {
 

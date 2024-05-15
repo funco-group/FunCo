@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.found_404.funco.follow.domain.Follow;
 import com.found_404.funco.follow.domain.repository.QueryDslFollowRepository;
 import com.found_404.funco.follow.domain.type.SettleType;
+import com.found_404.funco.follow.dto.*;
 import com.found_404.funco.follow.dto.CoinInfo;
 import com.found_404.funco.follow.dto.FollowingInfo;
 import com.found_404.funco.follow.dto.QueryFollowingInfoResult;
@@ -37,7 +39,6 @@ public class QueryDslFollowRepositoryImpl implements QueryDslFollowRepository {
 			.select(Projections.constructor(
 				QueryFollowingInfoResult.class, follow.id, follow.followingMemberId,
 				follow.investment, follow.createdAt, follow.cash))
-
 			.from(follow)
 			.where(follow.followerMemberId.eq(memberId), follow.settled.eq(false), ltFollowId(lastFollowId))
 			.orderBy(follow.id.desc())
@@ -75,25 +76,18 @@ public class QueryDslFollowRepositoryImpl implements QueryDslFollowRepository {
 	}
 
 	@Override
-	public FollowerListResponse findFollowerListByMemberIdAndSettleType(Long memberId,
+	public FollowerList findFollowerListByMemberIdAndSettleType(Long memberId,
 		String settleType, Long lastFollowId, int pageSize) {
 
-		List<FollowerListResponse.FollowerInfo> followerInfoList = jpaQueryFactory.select(
-				new QFollowerListResponse_FollowerInfo(follow.id, follow.createdAt,
-					follow.investment, follow.settlement,
-					follow.returnRate, follow.commission, follow.settleDate))
-			.from(follow)
-			.where(follow.followingMemberId.eq(memberId), checkSettleType(settleType), ltFollowId(lastFollowId))
-			.orderBy(follow.id.desc())
-			.limit(pageSize + 1)
-			.fetch();
+		List<Follow> followList = jpaQueryFactory.selectFrom(follow)
+				.where(follow.followingMemberId.eq(memberId), checkSettleType(settleType), ltFollowId(lastFollowId))
+				.orderBy(follow.id.desc())
+				.limit(pageSize + 1)
+				.fetch();
 
-		boolean last = checkLastPage(followerInfoList, pageSize);
+		boolean last = checkLastPage(followList, pageSize);
 
-		return FollowerListResponse.builder()
-			.last(last)
-			.followers(followerInfoList)
-			.build();
+		return new FollowerList(followList, last);
 	}
 
 	@Override

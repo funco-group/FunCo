@@ -2,6 +2,7 @@ package com.found_404.funco.feignClient.service;
 
 import static com.found_404.funco.follow.exception.FollowErrorCode.*;
 
+import com.found_404.funco.feignClient.dto.SimpleMember;
 import org.springframework.stereotype.Service;
 
 import com.found_404.funco.feignClient.client.MemberServiceClient;
@@ -11,6 +12,10 @@ import com.found_404.funco.follow.exception.FollowException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,5 +42,20 @@ public class MemberService {
 		}
 	}
 
+	public Map<Long, SimpleMember> getSimpleMember(Long id) {
+		return getSimpleMember(List.of(id));
+	}
 
+	public Map<Long, SimpleMember> getSimpleMember(List<Long> ids) {
+		try {
+			Map<Long, SimpleMember> map = new HashMap<>();
+			memberServiceClient.getMembers(ids)
+					.forEach(simpleMember -> map.put(simpleMember.id(), simpleMember));
+
+			return map;
+		} catch (FeignException e) {
+			log.error("{} get member info : {}", SERVER_NAME, e.getMessage());
+			throw new FollowException(MEMBER_SERVER_ERROR);
+		}
+	}
 }
