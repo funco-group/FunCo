@@ -4,7 +4,6 @@ import static com.found_404.funco.follow.exception.FollowErrorCode.*;
 import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.*;
 import static com.found_404.funco.global.util.DecimalCalculator.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,7 +19,6 @@ import com.found_404.funco.follow.domain.repository.FollowTradeRepository;
 import com.found_404.funco.follow.domain.repository.FollowingCoinRepository;
 import com.found_404.funco.follow.domain.type.TradeType;
 import com.found_404.funco.follow.dto.FollowTradeDto;
-import com.found_404.funco.follow.dto.HoldingCoinsDto;
 import com.found_404.funco.follow.dto.RatioPrice;
 import com.found_404.funco.follow.dto.SliceFollowingInfo;
 import com.found_404.funco.follow.dto.request.FollowingRequest;
@@ -180,12 +178,6 @@ public class FollowService {
 		// 팔로우
 		Follow follow = getFollow(followId);
 
-		// 부모 팔로우 멤버
-		Long followingMemberId = follow.getFollowingMemberId();
-
-		// 자식 팔로우 멤버
-		Long followerMemberId = follow.getFollowerMemberId();
-
 		// 팔로잉 코인
 		List<FollowingCoin> followingCoins = followingCoinRepository.findFollowingCoinsByFollow(follow);
 
@@ -236,7 +228,7 @@ public class FollowService {
 		// [API update] 자산 반영
 		memberService.updateMemberCash(follow.getFollowerMemberId(), settlement);
 		if (commission > 0) {
-			memberService.updateMemberCash(followingMemberId, commission);
+			memberService.updateMemberCash(follow.getFollowingMemberId(), commission);
 		}
 
 		notification();
