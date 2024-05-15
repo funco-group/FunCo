@@ -99,6 +99,7 @@ public class QueryDslFollowRepositoryImpl implements QueryDslFollowRepository {
 		return jpaQueryFactory
 			.from(follow)
 			.where(follow.settled.isFalse())
+			.groupBy(follow.followingMemberId)
 			.transform(groupBy(follow.followingMemberId).as(follow.investment.sum().coalesce(0L)));
 	}
 
@@ -107,6 +108,7 @@ public class QueryDslFollowRepositoryImpl implements QueryDslFollowRepository {
 		return jpaQueryFactory
 			.from(follow)
 			.where(follow.settled.isFalse())
+			.groupBy(follow.followerMemberId)
 			.transform(groupBy(follow.followerMemberId).as(follow.investment.sum().coalesce(0L)));
 	}
 

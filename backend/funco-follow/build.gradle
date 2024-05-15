@@ -51,7 +51,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     /*h2 db*/
-//	runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.h2database:h2'
 
     /*mariadb*/
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
