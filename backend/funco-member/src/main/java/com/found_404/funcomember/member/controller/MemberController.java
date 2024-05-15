@@ -1,5 +1,6 @@
 package com.found_404.funcomember.member.controller;
 
+import com.found_404.funcomember.member.dto.response.AssetResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -73,17 +74,32 @@ public class MemberController {
 		return ResponseEntity.ok().build();
 	}
 
-	// MSA server 용 API
-
 	@GetMapping("/cash")
-	public ResponseEntity<CashResponse> getCash(@AuthMemberId Long memberId) {
+	public ResponseEntity<CashResponse> getMemberCash(@AuthMemberId Long memberId) {
 		return ResponseEntity.ok(memberService.getCash(memberId));
 	}
 
+	@GetMapping("/asset")
+	public ResponseEntity<AssetResponse> getMemberAsset(@AuthMemberId Long memberId) {
+		return ResponseEntity.ok(memberService.getTotalAsset(memberId));
+	}
+
+	/*
+	*	MSA server 용 API [로그인 header X]
+	*/
 	@GetMapping("/{memberId}/cash")
-	public ResponseEntity<CashResponse> getMemberCash(@PathVariable Long memberId) {
+	public ResponseEntity<CashResponse> getCash(@PathVariable Long memberId) {
 		return ResponseEntity.ok(memberService.getCash(memberId));
 	}
+
+	@GetMapping("/{memberId}/asset")
+	public ResponseEntity<AssetResponse> getAsset(@PathVariable Long memberId) {
+		return ResponseEntity.ok(memberService.getTotalAsset(memberId));
+	}
+
+
+
+	/* auth */
 
 	@GetMapping("/auth/{provider}/{oauthId}")
 	public ResponseEntity<OAuthMemberResponse> getAuthMember(@PathVariable String provider,
