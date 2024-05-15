@@ -16,4 +16,8 @@ public class BatchAllService {
 	public Map<Long, Long> readFollowerInvestmentList() {
 		return followRepository.findFollowerInvestmentList();
 	}
+
+	public Map<Long, Long> readFollowingInvestmentList() {
+		return followRepository.findFollowingInvestmentList();
+	}
 }
