@@ -17,9 +17,9 @@ public interface TradeServiceClient {
 	@GetMapping("/api/v1/batch/holdings")
 	List<HoldingCoinInfo> getHoldingCoinInfoList();
 
-	@GetMapping(value = "/api/v1/holdings/ticker")
+	@GetMapping(value = "/api/v1/batch/holdings/ticker")
 	List<String> getHoldingCoinList();
 
-	@GetMapping("/api/v1/opentrades")
+	@GetMapping("/api/v1/batch/opentrades")
 	Map<Long, Long> getOpenTradeOrderCashList();
 }
