@@ -49,12 +49,9 @@ public class FollowService {
 	private final MemberService memberService;
 	private final TradeService tradeService;
 
-	private static final double FOLLOW_FEE = 0.03;
+	private static final double FOLLOW_FEE = 0.03, PERCENT = 100L;
 	private static final int PAGE_SIZE = Integer.MAX_VALUE - 1; // 임시
-	private static final long PERCENT = 100L;
 
-	// private final HoldingCoinRepository holdingCoinRepository;
-	// private final CryptoPrice cryptoPrice;
 	// private final NotificationService notificationService;
 
 	@Transactional
