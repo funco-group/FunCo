@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.found_404.funco.trade.domain.HoldingCoin;
 
-public interface HoldingCoinRepository extends JpaRepository<HoldingCoin, Long> {
+public interface HoldingCoinRepository extends JpaRepository<HoldingCoin, Long>, QueryDslHoldingCoinRepository {
 	Optional<HoldingCoin> findByMemberIdAndTicker(Long memberId, String ticker);
 
 	List<HoldingCoin> findByMemberId(Long memberId);
