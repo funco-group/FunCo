@@ -1,4 +1,4 @@
-package com.found_404.funco.global.util;
+package com.found_404.funco.global.memberIdHeader;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

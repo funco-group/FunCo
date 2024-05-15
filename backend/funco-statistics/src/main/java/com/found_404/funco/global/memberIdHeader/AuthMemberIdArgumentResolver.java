@@ -1,4 +1,4 @@
-package com.found_404.funco.global.util;
+package com.found_404.funco.global.memberIdHeader;
 
 import java.util.Objects;
 
@@ -11,6 +11,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class AuthMemberIdArgumentResolver implements HandlerMethodArgumentResolver {
+	private final String HEADER = "X-Member-ID";
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
@@ -20,7 +21,7 @@ public class AuthMemberIdArgumentResolver implements HandlerMethodArgumentResolv
 
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		return Long.valueOf(Objects.requireNonNull(webRequest.getHeader("X-Member-ID")));
+		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+		return Long.valueOf(Objects.requireNonNull(webRequest.getHeader(HEADER)));
 	}
 }
