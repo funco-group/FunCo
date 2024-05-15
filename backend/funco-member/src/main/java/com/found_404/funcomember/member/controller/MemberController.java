@@ -1,14 +1,9 @@
 package com.found_404.funcomember.member.controller;
 
 import com.found_404.funcomember.member.dto.response.AssetResponse;
+import com.found_404.funcomember.member.dto.response.SimpleMember;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.found_404.funcomember.global.memberIdHeader.AuthMemberId;
 import com.found_404.funcomember.member.dto.RequestIntroduction;
@@ -22,6 +17,8 @@ import com.found_404.funcomember.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -97,10 +94,15 @@ public class MemberController {
 		return ResponseEntity.ok(memberService.getTotalAsset(memberId));
 	}
 
-
+	/*
+	* 	id 주면 멤버 정보 리스트 조회
+	* */
+	@GetMapping()
+	public ResponseEntity<List<SimpleMember>> getMembers(@RequestParam List<Long> ids) {
+		return ResponseEntity.ok(memberService.getMembers(ids));
+	}
 
 	/* auth */
-
 	@GetMapping("/auth/{provider}/{oauthId}")
 	public ResponseEntity<OAuthMemberResponse> getAuthMember(@PathVariable String provider,
 		@PathVariable String oauthId) {

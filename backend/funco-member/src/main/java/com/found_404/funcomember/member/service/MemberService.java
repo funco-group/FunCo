@@ -5,6 +5,7 @@ import static com.found_404.funcomember.member.exception.MemberErrorCode.*;
 import com.found_404.funcomember.feignClient.service.FollowService;
 import com.found_404.funcomember.feignClient.service.TradeService;
 import com.found_404.funcomember.member.dto.response.AssetResponse;
+import com.found_404.funcomember.member.dto.response.SimpleMember;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,8 @@ import com.found_404.funcomember.member.dto.response.OAuthMemberResponse;
 import com.found_404.funcomember.member.exception.MemberException;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -161,5 +164,16 @@ public class MemberService {
 		totalAsset += followService.getInvestments(memberId);
 
 		return new AssetResponse(totalAsset);
+	}
+
+	public List<SimpleMember> getMembers(List<Long> ids) {
+		return memberRepository.findAllByIdIn(ids)
+				.stream()
+				.map(member -> SimpleMember.builder()
+						.id(member.getId())
+						.nickname(member.getNickname())
+						.profileUrl(member.getProfileUrl())
+						.build())
+				.toList();
 	}
 }
