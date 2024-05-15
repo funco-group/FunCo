@@ -17,12 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class MemberService {
 	private final MemberServiceClient memberServiceClient;
+	private final String SERVER_NAME = "[member-service]";
 
 	public void updateMemberCash(Long memberId, Long cash) {
 		try {
 			memberServiceClient.updateCash(memberId, new UpdateCash(cash));
 		} catch (FeignException e) {
-			log.error("member client error : {}", e.getMessage());
+			log.error("{} update cash : {}", SERVER_NAME, e.getMessage());
 			throw new FollowException(INSUFFICIENT_ASSET);
 		}
 	}
@@ -31,7 +32,7 @@ public class MemberService {
 		try {
 			return memberServiceClient.getMemberCash(memberId).cash();
 		} catch (FeignException e) {
-			log.error("member client error : {}", e.getMessage());
+			log.error("{} get cash : {}", SERVER_NAME, e.getMessage());
 			throw new FollowException(INSUFFICIENT_ASSET);
 		}
 	}
