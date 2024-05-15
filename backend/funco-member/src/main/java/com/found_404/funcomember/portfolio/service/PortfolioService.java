@@ -70,7 +70,7 @@ public class PortfolioService {
 	}
 
 	public void synchronizeFollowers(Long followingId, double ratio) {
-		List<FollowerInfo> followerInfos = subscribeRepository.findFollowInfoByFollowingId(followingId);
+		// List<FollowerInfo> followerInfos = subscribeRepository.findFollowInfoByFollowingId(followingId);
 		// followerInfos.forEach(
 		// 	info -> {
 		// 		long cash = info.cash() + (long)multiple(info.cash(), ratio, ScaleType.CASH_SCALE);
