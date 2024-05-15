@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import com.found_404.funco.feignClient.dto.CoinValuation;
 import com.found_404.funco.feignClient.dto.CoinValuationResponse;
 import com.found_404.funco.feignClient.dto.NotificationType;
+import com.found_404.funco.feignClient.dto.SimpleMember;
 import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.feignClient.service.NotificationService;
 import com.found_404.funco.feignClient.service.TradeService;
@@ -20,11 +21,13 @@ import com.found_404.funco.follow.domain.repository.FollowRepository;
 import com.found_404.funco.follow.domain.repository.FollowTradeRepository;
 import com.found_404.funco.follow.domain.repository.FollowingCoinRepository;
 import com.found_404.funco.follow.domain.type.TradeType;
+import com.found_404.funco.follow.dto.*;
 import com.found_404.funco.follow.dto.FollowTradeDto;
 import com.found_404.funco.follow.dto.RatioPrice;
 import com.found_404.funco.follow.dto.SliceFollowingInfo;
 import com.found_404.funco.follow.dto.request.FollowerProfitRequest;
 import com.found_404.funco.follow.dto.request.FollowingRequest;
+import com.found_404.funco.follow.dto.response.*;
 import com.found_404.funco.follow.dto.response.FollowerInfoResponse;
 import com.found_404.funco.follow.dto.response.FollowerListResponse;
 import com.found_404.funco.follow.dto.response.FollowingListResponse;
@@ -252,14 +255,34 @@ public class FollowService {
 		SliceFollowingInfo sliceFollowingInfo = followRepository.findFollowingInfoListByMemberId(memberId,
 			lastFollowId, PAGE_SIZE);
 
+		Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(
+				sliceFollowingInfo.followingInfoList()
+						.stream()
+						.map(FollowingInfo::followingId)
+						.toList());
+
 		return FollowingListResponse.builder()
-			.followings(sliceFollowingInfo.followingInfoList())
-			.last(sliceFollowingInfo.last())
-			.build();
+				.followings(sliceFollowingInfo.followingInfoList()
+						.stream()
+						.map(followingInfo ->
+								FollowingResponse.getFollowingResponse(followingInfo, simpleMembers.get(followingInfo.followingId())))
+						.toList())
+				.last(sliceFollowingInfo.last())
+				.build();
 	}
 
 	public FollowerListResponse readFollowerList(Long memberId, String settled, Long lastFollowId) {
-		return followRepository.findFollowerListByMemberIdAndSettleType(memberId, settled, lastFollowId, PAGE_SIZE);
+		FollowerList followerList = followRepository.findFollowerListByMemberIdAndSettleType(memberId, settled, lastFollowId, PAGE_SIZE);
+
+		Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(followerList
+				.follows().stream()
+				.map(Follow::getFollowerMemberId)
+				.toList());
+
+		return new FollowerListResponse(followerList.last(),
+				followerList.follows().stream()
+						.map(follow -> FollowerResponse.getFollowerResponse(follow, simpleMembers.get(follow.getFollowingMemberId())))
+						.toList());
 	}
 
 	public List<FollowTradeDto> getFollowTrades(Pageable pageable, Long followId) {
