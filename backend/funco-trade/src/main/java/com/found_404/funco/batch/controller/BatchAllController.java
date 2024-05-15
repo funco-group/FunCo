@@ -20,20 +20,20 @@ public class BatchAllController {
 
 	private final BatchAllService batchAllService;
 
-	// [rank] 보유 코인 종류들 조회 API
-	@GetMapping("/holdings/ticker")
-	public ResponseEntity<List<String>> getHoldingCoinList() {
-		return ResponseEntity.ok(batchAllService.readHoldingCoinList());
-	}
-
 	// [rank] 멤버 별 보유 코인 조회
 	@GetMapping("/holdings")
 	public ResponseEntity<List<HoldingCoinInfo>> getHoldingCoinInfoList() {
 		return ResponseEntity.ok(batchAllService.readHoldingCoinInfoList());
 	}
 
+	// [rank] 보유 코인 종류들 조회 API
+	@GetMapping("/holdings/ticker")
+	public ResponseEntity<List<String>> getHoldingCoinList() {
+		return ResponseEntity.ok(batchAllService.readHoldingCoinList());
+	}
+
 	// [rank] 멤버 별 지정가 거래 코인 주문 금액 조회
-	@GetMapping("/api/v1/opentrades")
+	@GetMapping("/opentrades")
 	public ResponseEntity<Map<Long, Long>> getOpenTradeOrderCashList() {
 		return ResponseEntity.ok(batchAllService.readOpenTradeOrderCashList());
 	}
