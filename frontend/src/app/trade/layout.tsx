@@ -22,7 +22,6 @@ function TradeLayout({ children }: { children: React.ReactNode }) {
       <CryptoPageContainer>
         <div>
           <Chart priceList={priceList} />
-          {/* <div></div> */}
           <BottomContainer>{children}</BottomContainer>
         </div>
         <PriceWindow priceList={priceList} setPriceList={setPriceList} />
