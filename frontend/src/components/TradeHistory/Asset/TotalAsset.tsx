@@ -3,12 +3,12 @@ import {
   GreenDataDiv,
   GreenTitleDiv,
 } from '@/styles/TradeHistoryStyled'
-import { TotalAssetType } from '@/interfaces/AssetType'
 import {
   AssetItemContainer,
   AssetItemDiv,
   TotalAssetContainer,
 } from './TotalAsset.styled'
+import { TotalAssetType } from '@/interfaces/AssetType'
 
 interface TotalAssetProps {
   totalAsset: TotalAssetType | undefined
