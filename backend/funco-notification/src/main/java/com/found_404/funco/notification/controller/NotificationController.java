@@ -3,9 +3,9 @@ package com.found_404.funco.notification.controller;
 import com.found_404.funco.global.memberIdHeader.AuthMemberId;
 import com.found_404.funco.notification.dto.NotificationDto;
 import com.found_404.funco.notification.dto.UnreadCountResponse;
+import com.found_404.funco.notification.dto.request.NotificationRequest;
 import com.found_404.funco.notification.service.NotificationService;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -46,5 +46,11 @@ public class NotificationController {
     @GetMapping("/unreadCount")
     public ResponseEntity<UnreadCountResponse> getUnreadCount(@RequestParam Long memberId) {
         return ResponseEntity.ok(notificationService.getUnReadCount(memberId));
+    }
+
+    @PostMapping()
+    public ResponseEntity<?> createNotification(@RequestBody NotificationRequest notificationRequest) {
+        notificationService.sendNotification(notificationRequest.memberId(), notificationRequest.notificationType(), notificationRequest.message());
+        return ResponseEntity.ok().build();
     }
 }
