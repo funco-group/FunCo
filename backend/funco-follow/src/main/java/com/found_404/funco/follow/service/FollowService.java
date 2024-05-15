@@ -56,7 +56,6 @@ public class FollowService {
 	private static final double FOLLOW_FEE = 0.03, PERCENT = 100L;
 	private static final int PAGE_SIZE = Integer.MAX_VALUE - 1; // 임시
 
-	// private final NotificationService notificationService;
 
 	/*
 	*	부모 = 팔로우 당하는 사람, 팔로잉

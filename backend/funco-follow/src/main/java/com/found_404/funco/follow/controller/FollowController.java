@@ -76,17 +76,11 @@ public class FollowController {
 		return ResponseEntity.ok(followService.getInvestments(memberId));
 	}
 
-	/*
-	 * 	MSA SERVER API
-	 * */
 	@GetMapping("/{followingId}/followers")
 	public ResponseEntity<List<FollowerInfoResponse>> getFollowerInfos(@PathVariable Long followingId) {
 		return ResponseEntity.ok(followService.getFollowerInfos(followingId));
 	}
 
-	/*
-	 * 	MSA SERVER API
-	 * */
 	@PatchMapping("/{followingId}/followers")
 	public ResponseEntity<Void> modifyFollower(@PathVariable Long followingId, @RequestBody FollowerProfitRequest followerProfitRequest) {
 		followService.updateFollower(followingId, followerProfitRequest);
