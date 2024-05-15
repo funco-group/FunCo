@@ -24,7 +24,7 @@ public class FavoriteCoinBatchScheduler {
 	private final Job updateFavoriteCoinsJob;
 	private final JobLauncher jobLauncher;
 
-	@Scheduled(cron = "0 0/1 * * * *", zone = "Asia/Seoul")
+	@Scheduled(cron = "0 0 7 * * *", zone = "Asia/Seoul")
 	private void regularBatchJob() {
 		log.info("info log = {}", "=================== 7시에 동기화 스케줄러 실행 ===================");
 		log.info("info log = {}", "=================== 동기화 작업 시작 ===================");
