@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
+import com.found_404.funco.feignClient.dto.SimpleMember;
+import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.note.domain.Note;
 import com.found_404.funco.note.domain.NoteComment;
 import com.found_404.funco.note.domain.NoteLike;
@@ -25,12 +27,12 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.found_404.funco.note.exception.NoteErrorCode.*;
 import static com.found_404.funco.note.exception.S3ErrorCode.PUT_OBJECT_EXCEPTION;
@@ -46,6 +48,7 @@ public class NoteService {
     private final NoteCommentRepository noteCommentRepository;
     private final NoteLikeRepository noteLikeRepository;
 
+    private final MemberService memberService;
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -57,14 +60,13 @@ public class NoteService {
                 && Objects.isNull(notesFilterRequest.memberId())) {
             throw new NoteException(INVALID_FILTER);
         }
+        List<Note> notes = noteRepository.getNotesWithFilter(notesFilterRequest, pageable);
+        Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(notes.stream().map(Note::getMemberId).toList());
 
-        return noteRepository.getNotesWithFilter(notesFilterRequest, pageable)
+        return notes
             .stream().map(note ->  NotesResponse.builder()
                 .noteId(note.getId())
-                .member(NoteMemberResponse.builder()
-                    .memberId(note.getMemberId())
-                    .build()
-                )
+                .member(simpleMembers.get(note.getMemberId()))
                 .thumbnailImage(note.getThumbnailImage())
                 .thumbnailContent(note.getThumbnailContent())
                 .title(note.getTitle())
@@ -72,31 +74,29 @@ public class NoteService {
                 .writeDate(note.getCreatedAt())
                 .likeCount(noteLikeRepository.countByNote(note))
                 .liked(false)  // 수정!!
-                .commmentCount(noteCommentRepository.countByNote(note))
+                .commentCount(noteCommentRepository.countByNote(note))
                 .build())
             .toList();
 
     }
 
-
     public NoteResponse getNote(Long noteId) {
-         Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
-         Long likeCount = noteLikeRepository.countByNote(note);
-         Long commentCount = noteCommentRepository.countByNote(note);
+        Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        Long likeCount = noteLikeRepository.countByNote(note);
+        Long commentCount = noteCommentRepository.countByNote(note);
+
+        Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(note.getMemberId());
 
         return NoteResponse.builder()
-            .noteId(note.getId())
-            .member(NoteMemberResponse.builder()
-                    .memberId(note.getMemberId())
-                    .build()
-                )
-            .title(note.getTitle())
-            .content(note.getContent())
-            .ticker(note.getTicker())
-            .likeCount(likeCount)
-            .liked(false) // 수정해야 됨!!!
-            .commentCount(commentCount)
-            .build();
+                .noteId(note.getId())
+                .member(simpleMembers.get(note.getMemberId()))
+                .title(note.getTitle())
+                .content(note.getContent())
+                .ticker(note.getTicker())
+                .likeCount(likeCount)
+                .liked(false) // 수정해야 됨!!!
+                .commentCount(commentCount)
+                .build();
     }
 
 
@@ -128,7 +128,6 @@ public class NoteService {
         }
     }
 
-    @Transactional
     public void editNote(Long memberId, Long noteId, NoteRequest request) {
         Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
         checkAuthorization(memberId, note);
@@ -137,8 +136,13 @@ public class NoteService {
 
     public List<CommentsResponse> getComments(Long noteId) {
         List<NoteComment> comments = noteCommentRepository.findByNoteId(noteId);
-        List<CommentsResponse> commentsResponses = new ArrayList<>();
 
+        Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(comments.stream()
+                .map(NoteComment::getMemberId)
+                .collect(Collectors.toSet())
+                .stream().toList());
+
+        List<CommentsResponse> commentsResponses = new ArrayList<>();
         Map<Long, List<NoteComment>> childComments = new HashMap<>();
         for (NoteComment comment : comments) {
             long key = Objects.isNull(comment.getParentId()) ? 0 : comment.getParentId();
@@ -148,24 +152,22 @@ public class NoteService {
 
         for (NoteComment comment : childComments.getOrDefault(0L, Collections.emptyList())) {
             commentsResponses.add(
-                getCommentsResponse(childComments, comment)
+                getCommentsResponse(childComments, comment, simpleMembers)
             );
         }
 
         return commentsResponses;
     }
 
-    private CommentsResponse getCommentsResponse(Map<Long, List<NoteComment>> childComments,
-        NoteComment comment) {
+    private CommentsResponse getCommentsResponse(Map<Long, List<NoteComment>> childComments, NoteComment comment, Map<Long, SimpleMember> simpleMembers) {
+
         return CommentsResponse.builder()
             .commentId(comment.getId())
-            .member(NoteMemberResponse.builder()
-                .memberId(comment.getMemberId())
-                .build())
+            .member(simpleMembers.get(comment.getMemberId()))
             .content(comment.getContent())
             .date(comment.getCreatedAt())
             .childComments(childComments.getOrDefault(comment.getId(), Collections.emptyList())
-                .stream().map(childComment -> getCommentsResponse(childComments, childComment))
+                .stream().map(childComment -> getCommentsResponse(childComments, childComment, simpleMembers))
                 .toList())
             .build();
     }
