@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.found_404.funco.feignClient.service.FollowService;
 import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.global.util.CommissionUtil;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +49,7 @@ public class TradeService {
 	private final MemberService memberService;
 
 	private final CryptoPrice cryptoPrice;
-	//private final FollowTradeService followTradeService;
+	private final FollowService followService;
 
 	private long getPriceByTicker(String ticker) {
 		return cryptoPrice.getTickerPrice(ticker);
@@ -87,11 +88,11 @@ public class TradeService {
 
 		tradeRepository.save(trade);
 
-		// 팔로우 연동
-		//followTradeService.followTrade(trade);
-
 		// orderCash <= 자산 check, member 원화 감소
 		memberService.updateMemberCash(memberId, -orderCash);
+
+		// 팔로우 연동
+		followService.createFollowTrade(trade);
 
 		return MarketTradeResponse.builder()
 			.ticker(trade.getTicker())
@@ -126,11 +127,11 @@ public class TradeService {
 
 		tradeRepository.save(trade);
 
-		// 팔로우 연동
-		//followTradeService.followTrade(trade);
-
-		// member 원화 증가
+		// [API UPDATE] member 원화 증가
 		memberService.updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(orderCash));
+
+		// [API UPDATE] 팔로우 연동
+		followService.createFollowTrade(trade);
 
 		return MarketTradeResponse.builder()
 			.ticker(trade.getTicker())
@@ -149,7 +150,6 @@ public class TradeService {
 			.build();
 	}
 
-	@Transactional(readOnly = true)
 	public List<TradeDto> getOrders(Long memberId, String ticker, Pageable pageable) {
 		return tradeRepository.findMyTradeHistoryByTicker(memberId, ticker, pageable)
 			.stream()
@@ -157,7 +157,6 @@ public class TradeService {
 			.collect(Collectors.toList());
 	}
 
-	@Transactional(readOnly = true)
 	public List<OtherTradeDto> getOtherOrders(Long memberId, Pageable pageable) {
 		return tradeRepository.findMyTradeHistoryByTicker(memberId, null, pageable)
 				.stream()
@@ -165,14 +164,12 @@ public class TradeService {
 				.collect(Collectors.toList());
 	}
 
-	@Transactional(readOnly = true)
 	public List<OpenTradeDto> getOpenOrders(Long memberId, String ticker, Pageable pageable) {
 		// 멤버 아이디, 코인 유무, id 역순,
 		return openTradeRepository.findMyOpenTrade(memberId, ticker, pageable)
 			.stream()
 			.map(OpenTradeDto::fromEntity)
 			.collect(Collectors.toList());
-
 	}
 
 	@Transactional
@@ -221,7 +218,7 @@ public class TradeService {
 
 		cryptoPrice.addTrade(openTrade.getTicker(), openTrade.getId(), openTrade.getTradeType(), openTrade.getPrice());
 
-		// 돈 확인 및 감소
+		// [API UPDATE] 돈 확인 및 감소
 		memberService.updateMemberCash(memberId, -orderCash);
 	}
 
@@ -269,6 +266,7 @@ public class TradeService {
 
 
 	// 미체결 + 코인총합
+	@Transactional(readOnly = true)
 	public CoinValuationResponse getCoinValuations(Long memberId) {
 		List<HoldingCoin> holdingCoins = holdingCoinRepository.findByMemberId(memberId);
 
@@ -284,7 +282,6 @@ public class TradeService {
 				.price(tickerPriceMap.get(holdingCoin.getTicker()))
 				.build())
 			.toList();
-
 
 		long totalCoinValues = coinValuations
 			.stream()

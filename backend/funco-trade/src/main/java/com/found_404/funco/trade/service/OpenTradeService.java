@@ -3,6 +3,9 @@ package com.found_404.funco.trade.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.found_404.funco.feignClient.service.FollowService;
+import com.found_404.funco.feignClient.service.MemberService;
+import com.found_404.funco.global.util.CommissionUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +29,11 @@ public class OpenTradeService {
     private final TradeRepository tradeRepository;
     private final HoldingCoinRepository holdingCoinRepository;
     private final OpenTradeRepository openTradeRepository;
+    private final FollowService followService;
+    private final MemberService memberService;
 
     @Async
     public void processTrade(List<Long> concludingTradeIds, Long tradePrice) {
-//        if (removeTicker) {
-//            cryptoPrice.removeTicker(ticker);
-//        } 나중에 최적화
 
         // 거래 처리할 미체결 거래 가져오기
         List<OpenTrade> openTrades = openTradeRepository.findAllByIdIn(concludingTradeIds);
@@ -52,14 +54,19 @@ public class OpenTradeService {
         // 미체결 데이터 삭제
         openTradeRepository.deleteAll(openTrades);
 
+        notification();
+
+        // 팔로우 구매
+        followService.createFollowTrade(trades);
+    }
+
+    private void notification() {
         // 알림
         // for (Trade trade : trades) {
         //     notificationService.sendNotification(trade.getMember().getId(), trade.getTradeType().equals(TradeType.BUY) ? NotificationType.BUY : NotificationType.SELL
         //             , getMessage(trade));
         // }
         //
-        // // 팔로우 구매
-        // followTradeService.followTrade(trades);
     }
 
     private String getMessage(Trade trade) {
@@ -88,12 +95,12 @@ public class OpenTradeService {
             }
 
             holdingCoinRepository.save(holdingCoin);
+            // [API UPDATE] 거래 금액 대비 차액 입금
+            memberService.updateMemberCash(trade.getMemberId(), recoverCash);
         } else { // SELL
-            // trade.getMember().increaseCash(trade.getOrderCash());
-            // memberRepository.save(trade.getMember()); member의 자산 증가
+            // [API UPDATE] 자산 증가 + 거래 금액 대비 차액 입금
+            memberService.updateMemberCash(trade.getMemberId(), CommissionUtil.getCashWithoutCommission(trade.getOrderCash()) - recoverCash);
         }
-
-        // trade.getMember().recoverCash(recoverCash); // 거래 금액 대비 차액 입금
     }
 
 }

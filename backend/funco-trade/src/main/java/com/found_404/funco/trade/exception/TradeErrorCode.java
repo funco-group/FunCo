@@ -12,6 +12,7 @@ public enum TradeErrorCode {
     PRICE_CONNECTION_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "시세 조회에 실패했습니다."),
     NOT_FOUND_TRADE(HttpStatus.NOT_FOUND, "해당 거래를 찾을 수 없습니다."),
     TRADE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "해당 권한이 없습니다."),
+    FOLLOW_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "팔로우 서버 에러"),
     ;
 
     private final HttpStatus httpStatus;
