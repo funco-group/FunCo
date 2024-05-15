@@ -2,13 +2,10 @@ package com.found_404.funco.client.service;
 
 import static com.found_404.funco.follow.exception.FollowErrorCode.*;
 
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
 
 import com.found_404.funco.client.TradeServiceClient;
 import com.found_404.funco.client.dto.CoinValuationResponse;
-import com.found_404.funco.client.dto.UpdateCash;
 import com.found_404.funco.follow.exception.FollowException;
 
 import feign.FeignException;
