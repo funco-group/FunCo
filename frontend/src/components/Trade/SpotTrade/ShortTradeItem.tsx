@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { AxiosResponse } from 'axios'
 import TradeButton from '@/components/Common/Trade/TradeButton'
 import {
-  TradeContainer,
+  TradeInnerContainer,
   TradeItem,
   TitleDiv,
   ContentDiv,
@@ -14,7 +14,7 @@ import {
   AmountDiv,
   GreenDiv,
   TradeInfo,
-} from '@/styles/Crypto.styled'
+} from '@/styles/Trade.styled'
 import { userState } from '@/recoils/user'
 import { getCoinVolume } from '@/apis/asset'
 import { getCash } from '@/apis/member'
@@ -184,7 +184,7 @@ function ShortTradeItem({ name, curPrice }: ShortTradeItemProps) {
   }
 
   return (
-    <TradeContainer>
+    <TradeInnerContainer>
       {concludedModal && (
         <TradeConcludedModal
           result={result}
@@ -252,7 +252,7 @@ function ShortTradeItem({ name, curPrice }: ShortTradeItemProps) {
           onclick={name === '매수' ? clickBuy : clickSell}
         />
       </div>
-    </TradeContainer>
+    </TradeInnerContainer>
   )
 }
 
