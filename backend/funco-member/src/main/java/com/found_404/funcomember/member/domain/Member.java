@@ -87,6 +87,17 @@ public class Member extends BaseEntity {
 		this.cash += cash;
 	}
 
+	public void decreaseCash(long orderCash) {
+		if (this.cash < orderCash) {
+			throw new RuntimeException("잔액이 부족합니다.");  // member domain에서 custom exception 추가
+		}
+		this.cash -= orderCash;
+	}
+
+	public void increaseCashWithoutCommission(long orderCash) {
+		this.cash += orderCash;
+	}
+
 	public void updateOauthId(OauthId oauthId) {
 		this.oauthId = oauthId;
 	}
