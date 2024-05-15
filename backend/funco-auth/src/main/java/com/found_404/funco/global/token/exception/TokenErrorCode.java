@@ -1,11 +1,11 @@
-package com.found_404.funco.global.security.exception;
+package com.found_404.funco.global.token.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum SecurityErrorCode {
+public enum TokenErrorCode {
 	MEMBER_NOT_FOUND("해당 회원을 찾을 수 없습니다."),
 	EXPIRED_TOKEN("만료된 토큰입니다."),
 	EXPIRED_REFRESH_TOKEN("만료된 refresh 토큰입니다."),

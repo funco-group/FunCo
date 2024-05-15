@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.found_404.funco.auth.type.OauthServerType;
-import com.found_404.funco.global.security.GoogleOauthConfig;
+import com.found_404.funco.global.token.GoogleOauthConfig;
 
 import lombok.RequiredArgsConstructor;
 

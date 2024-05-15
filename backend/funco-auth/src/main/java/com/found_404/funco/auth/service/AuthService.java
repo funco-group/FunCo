@@ -6,14 +6,14 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.found_404.funco.auth.client.MemberServiceClient;
 import com.found_404.funco.auth.client.OauthMemberClientComposite;
 import com.found_404.funco.auth.dto.OauthDto;
-import com.found_404.funco.auth.dto.request.OAuthMemberRequest;
 import com.found_404.funco.auth.dto.response.LoginResponse;
-import com.found_404.funco.auth.dto.response.OAuthMemberResponse;
 import com.found_404.funco.auth.type.OauthServerType;
-import com.found_404.funco.global.security.service.TokenService;
+import com.found_404.funco.feignClient.client.MemberServiceClient;
+import com.found_404.funco.feignClient.dto.request.OAuthMemberRequest;
+import com.found_404.funco.feignClient.dto.response.OAuthMemberResponse;
+import com.found_404.funco.global.token.service.TokenService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

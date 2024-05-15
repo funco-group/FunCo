@@ -12,7 +12,7 @@ import com.found_404.funco.auth.dto.response.GoogleMemberResponse;
 import com.found_404.funco.auth.exception.AuthErrorCode;
 import com.found_404.funco.auth.exception.AuthException;
 import com.found_404.funco.auth.type.OauthServerType;
-import com.found_404.funco.global.security.GoogleOauthConfig;
+import com.found_404.funco.global.token.GoogleOauthConfig;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

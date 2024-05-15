@@ -1,4 +1,4 @@
-package com.found_404.funco.auth.dto.response;
+package com.found_404.funco.feignClient.dto.response;
 
 public record OAuthMemberResponse(
 	Long memberId,
