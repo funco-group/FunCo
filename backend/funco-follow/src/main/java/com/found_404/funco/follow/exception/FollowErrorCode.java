@@ -13,7 +13,9 @@ public enum FollowErrorCode {
 	SETTLE_TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST, "팔로워 목록 필터 타입이 없는 타입입니다."),
 	FOLLOW_SELF_ERROR(HttpStatus.BAD_REQUEST, "본인을 팔로우 할 수 없습니다."),
 	INSUFFICIENT_ASSET(HttpStatus.BAD_REQUEST,"자산이 부족합니다."),
-	TRADE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "trade server error")
+	TRADE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "trade server error"),
+	NOTIFICATION_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "notification server error")
+
 	;
 
 	private final HttpStatus httpStatus;
