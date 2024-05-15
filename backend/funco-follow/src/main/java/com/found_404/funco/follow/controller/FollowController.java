@@ -1,5 +1,9 @@
 package com.found_404.funco.follow.controller;
 
+import java.util.List;
+
+import com.found_404.funco.follow.dto.request.FollowerProfitRequest;
+import com.found_404.funco.follow.dto.response.FollowerInfoResponse;
 import com.found_404.funco.follow.dto.response.InvestmentsResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -70,4 +74,20 @@ public class FollowController {
 		return ResponseEntity.ok(followService.getInvestments(memberId));
 	}
 
+	/*
+	 * 	MSA SERVER API
+	 * */
+	@GetMapping("/{followingId}/followers")
+	public ResponseEntity<List<FollowerInfoResponse>> getFollowerInfos(@PathVariable Long followingId) {
+		return ResponseEntity.ok(followService.getFollowerInfos(followingId));
+	}
+
+	/*
+	 * 	MSA SERVER API
+	 * */
+	@PatchMapping("/{followingId}/followers")
+	public ResponseEntity<Void> modifyFollower(@PathVariable Long followingId, @RequestBody FollowerProfitRequest followerProfitRequest) {
+		followService.updateFollower(followingId, followerProfitRequest);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 }
