@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableFeignClients(basePackages = "com.found_404.funcomember") // main 패키지
+@EnableFeignClients(basePackages = "com.found_404.funcomember.feignClient.client") // main 패키지
 public class FeignClientConfig {
 
 	@Bean
