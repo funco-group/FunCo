@@ -3,8 +3,10 @@ package com.found_404.funco.trade.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.found_404.funco.feignClient.dto.NotificationType;
 import com.found_404.funco.feignClient.service.FollowService;
 import com.found_404.funco.feignClient.service.MemberService;
+import com.found_404.funco.feignClient.service.NotificationService;
 import com.found_404.funco.global.util.CommissionUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -29,8 +31,10 @@ public class OpenTradeService {
     private final TradeRepository tradeRepository;
     private final HoldingCoinRepository holdingCoinRepository;
     private final OpenTradeRepository openTradeRepository;
+
     private final FollowService followService;
     private final MemberService memberService;
+    private final NotificationService notificationService;
 
     @Async
     public void processTrade(List<Long> concludingTradeIds, Long tradePrice) {
@@ -54,19 +58,13 @@ public class OpenTradeService {
         // 미체결 데이터 삭제
         openTradeRepository.deleteAll(openTrades);
 
-        notification();
+        // [API async] 알림
+        trades.forEach(trade ->
+                notificationService.sendNotification(trade.getMemberId(),
+                        trade.getTradeType().equals(TradeType.BUY) ? NotificationType.BUY : NotificationType.SELL, getMessage(trade)));
 
         // 팔로우 구매
         followService.createFollowTrade(trades);
-    }
-
-    private void notification() {
-        // 알림
-        // for (Trade trade : trades) {
-        //     notificationService.sendNotification(trade.getMember().getId(), trade.getTradeType().equals(TradeType.BUY) ? NotificationType.BUY : NotificationType.SELL
-        //             , getMessage(trade));
-        // }
-        //
     }
 
     private String getMessage(Trade trade) {
