@@ -1,6 +1,7 @@
 package com.found_404.funco.batch.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,5 +30,11 @@ public class BatchAllController {
 	@GetMapping("/holdings")
 	public ResponseEntity<List<HoldingCoinInfo>> getHoldingCoinInfoList() {
 		return ResponseEntity.ok(batchAllService.readHoldingCoinInfoList());
+	}
+
+	// [rank] 멤버 별 지정가 거래 코인 주문 금액 조회
+	@GetMapping("/api/v1/opentrades")
+	public ResponseEntity<Map<Long, Long>> getOpenTradeOrderCashList() {
+		return ResponseEntity.ok(batchAllService.readOpenTradeOrderCashList());
 	}
 }
