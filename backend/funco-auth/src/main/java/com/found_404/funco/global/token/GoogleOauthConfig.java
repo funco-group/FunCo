@@ -1,4 +1,4 @@
-package com.found_404.funco.global.security;
+package com.found_404.funco.global.token;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

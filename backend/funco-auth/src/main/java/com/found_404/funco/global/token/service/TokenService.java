@@ -1,6 +1,6 @@
-package com.found_404.funco.global.security.service;
+package com.found_404.funco.global.token.service;
 
-import static com.found_404.funco.global.security.exception.SecurityErrorCode.*;
+import static com.found_404.funco.global.token.exception.TokenErrorCode.*;
 import static java.util.concurrent.TimeUnit.*;
 
 import java.util.Base64;
@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.found_404.funco.auth.dto.MemberDto;
-import com.found_404.funco.global.security.exception.SecurityException;
+import com.found_404.funco.global.token.exception.TokenException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -80,7 +80,7 @@ public class TokenService {
 		String accessToken = request.getHeader("Authorization");
 
 		if (accessToken == null || accessToken.trim().isEmpty()) {
-			throw new SecurityException(EMPTY_TOKEN, HttpStatus.UNAUTHORIZED);
+			throw new TokenException(EMPTY_TOKEN, HttpStatus.UNAUTHORIZED);
 		}
 
 		return accessToken;
