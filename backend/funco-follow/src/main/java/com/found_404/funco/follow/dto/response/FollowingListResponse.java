@@ -8,8 +8,6 @@ import lombok.Builder;
 
 @Builder
 public record FollowingListResponse(
-
-	Long totalAsset,
 	List<FollowingInfo> followings,
 	Boolean last
 ) {
