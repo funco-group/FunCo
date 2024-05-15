@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import TradeButton from '@/components/Common/Trade/TradeButtonTab'
-import { ButtonContainer } from '@/styles/Crypto.styled'
+import { ButtonContainer } from '@/styles/Trade.styled'
 import ShortTradeItem from './ShortTradeItem'
 import { userState } from '@/recoils/user'
 import { useRecoilValue } from 'recoil'

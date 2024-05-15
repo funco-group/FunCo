@@ -1,15 +1,15 @@
-import { TabContainer, TabItemDiv } from "./Tab.style";
+import { TabContainer, TabItemDiv } from './Tab.styled'
 
 interface Props {
-  columns: number;
-  tabs: string[];
-  activeTab: string;
-  changeTab: (tab: string) => void;
+  columns: number
+  tabs: string[]
+  activeTab: string
+  changeTab: (tab: string) => void
 }
 
 function Tab({ columns, tabs, activeTab, changeTab }: Props) {
   return (
-    <TabContainer columns={columns}>
+    <TabContainer $columns={columns}>
       {tabs.map((tab) => (
         <TabItemDiv
           key={tab}
@@ -20,7 +20,7 @@ function Tab({ columns, tabs, activeTab, changeTab }: Props) {
         </TabItemDiv>
       ))}
     </TabContainer>
-  );
+  )
 }
 
-export default Tab;
+export default Tab

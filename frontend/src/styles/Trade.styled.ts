@@ -1,18 +1,23 @@
-import styled from "styled-components";
-import palette from "@/lib/palette";
+import styled from 'styled-components'
+import palette from '@/lib/palette'
+import { CommonComponent } from './CommonStyled'
+
+export const TradeContainer = styled.div`
+  ${CommonComponent}/* height: 36.5rem; */
+`
 
 export const ButtonContainer = styled.div`
   display: flex;
   padding: 1.2rem 0.7rem;
-`;
+`
 
-export const TradeContainer = styled.div`
+export const TradeInnerContainer = styled.div`
   /* background-color: red; */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 30.5rem;
-`;
+`
 
 export const TradeItem = styled.div`
   display: flex;
@@ -21,19 +26,19 @@ export const TradeItem = styled.div`
   /* background-color: blue; */
   align-items: center;
   padding: 0.8rem;
-`;
+`
 
 export const AmountDiv = styled.div`
   display: flex;
   align-items: center;
   /* background-color: red; */
   width: 20.8rem;
-`;
+`
 
 export const TitleDiv = styled.div`
   font-size: 0.95rem;
   color: ${palette.brandBlack};
-`;
+`
 
 export const ContentDiv = styled.div`
   font-size: 0.9rem;
@@ -46,7 +51,7 @@ export const ContentDiv = styled.div`
     min-width: 2.7rem;
     text-align: right;
   }
-`;
+`
 
 export const PriceInput = styled.input`
   background-color: ${palette.background};
@@ -60,7 +65,7 @@ export const PriceInput = styled.input`
     border-color: ${palette.mainColor};
     outline: none;
   }
-`;
+`
 
 export const UpdownButton = styled.div`
   align-items: center;
@@ -69,7 +74,7 @@ export const UpdownButton = styled.div`
   border: 1px solid ${palette.deactivatedGray};
   font-size: 0.9rem;
   cursor: pointer;
-`;
+`
 
 export const PriceButtons = styled.div`
   display: flex;
@@ -77,7 +82,7 @@ export const PriceButtons = styled.div`
   /* background-color: blue; */
   width: 22rem;
   justify-content: flex-end;
-`;
+`
 
 export const PriceButton = styled.div`
   background-color: ${palette.brandWhite};
@@ -95,17 +100,17 @@ export const PriceButton = styled.div`
   &:hover {
     opacity: 0.8;
   }
-`;
+`
 
 export const GreenDiv = styled.div<{ $last: boolean }>`
   background-color: ${palette.brandColor2};
   border-bottom: ${(props) =>
     !props.$last && `1px solid ${palette.mainColor};`};
-`;
+`
 
 export const TradeInfo = styled.div`
   font-size: 0.7rem;
   text-align: right;
   padding: 0 0.7rem 0.7rem 0.7rem;
   color: ${palette.brandDarkGray};
-`;
+`

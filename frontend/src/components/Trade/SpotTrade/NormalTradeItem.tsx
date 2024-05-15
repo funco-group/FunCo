@@ -6,7 +6,7 @@ import { AxiosResponse } from 'axios'
 import TradeButton from '@/components/Common/Trade/TradeButton'
 import { userState } from '@/recoils/user'
 import {
-  TradeContainer,
+  TradeInnerContainer,
   TradeItem,
   TitleDiv,
   ContentDiv,
@@ -17,7 +17,7 @@ import {
   AmountDiv,
   GreenDiv,
   TradeInfo,
-} from '@/styles/Crypto.styled'
+} from '@/styles/Trade.styled'
 import { getCoinVolume } from '@/apis/asset'
 import { getCash } from '@/apis/member'
 import { CashType } from '@/interfaces/common/AssetType'
@@ -221,7 +221,7 @@ function NormalTradeItem({ name, curPrice }: NormalTradeItemProps) {
   }, [orderVolume, commission])
 
   return (
-    <TradeContainer>
+    <TradeInnerContainer>
       {alert && (
         <AlertModal
           title="알림"
@@ -325,7 +325,7 @@ function NormalTradeItem({ name, curPrice }: NormalTradeItemProps) {
           onclick={name === '매수' ? clickBuy : clickSell}
         />
       </div>
-    </TradeContainer>
+    </TradeInnerContainer>
   )
 }
 
