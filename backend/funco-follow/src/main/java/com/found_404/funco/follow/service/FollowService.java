@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 
 import com.found_404.funco.feignClient.dto.CoinValuation;
 import com.found_404.funco.feignClient.dto.CoinValuationResponse;
+import com.found_404.funco.feignClient.dto.NotificationType;
 import com.found_404.funco.feignClient.service.MemberService;
+import com.found_404.funco.feignClient.service.NotificationService;
 import com.found_404.funco.feignClient.service.TradeService;
 import com.found_404.funco.follow.domain.Follow;
 import com.found_404.funco.follow.domain.FollowTrade;
@@ -44,6 +46,7 @@ public class FollowService {
 
 	private final MemberService memberService;
 	private final TradeService tradeService;
+	private final NotificationService notificationService;
 
 	private static final double FOLLOW_FEE = 0.03, PERCENT = 100L;
 	private static final int PAGE_SIZE = Integer.MAX_VALUE - 1; // 임시
@@ -127,8 +130,12 @@ public class FollowService {
 		// [API update] 팔로워 자산 차감
 		memberService.updateMemberCash(followerMemberId, -investment);
 
-		// 알림
-		notification();
+		// [API] async 팔로우 알림
+		StringBuilder message = new StringBuilder();
+		message.append("id:").append(followerMemberId).append("님에게 ")
+			.append(String.format("%,d", investment)).append("원을 투자 받으셨습니다.");
+
+		notificationService.sendNotification(followingMemberId, NotificationType.FOLLOW, message.toString());
 	}
 
 	private Long getTotalFollowInvestment(Long followingMemberId) {
@@ -146,21 +153,6 @@ public class FollowService {
 	private void checkDuplicatedFollow(Long followingMemberId, Long followerMemberId) {
 		followRepository.findFollowByFollowingMemberIdAndFollowerMemberIdAndSettledFalse(
 				followingMemberId, followerMemberId).ifPresent(follow -> {throw new FollowException(FOLLOW_DUPLICATED_ERROR);});
-	}
-
-	private void notification() {
-		/* 팔로우 */
-		// StringBuilder message = new StringBuilder();
-		// message.append(followerMember.getNickname()).append("님에게 ")
-		// 		.append(String.format("%,d", investment)).append("원을 투자 받으셨습니다.");
-		// notificationService.sendNotification(followingMemberId, NotificationType.FOLLOW, message.toString());
-
-		/* 정산 */
-		// StringBuilder message = new StringBuilder();
-		// message.append(followerMember.getNickname()).append("님이 투자금액 ")
-		// 		.append(String.format("%,d", follow.getInvestment())).append("원을 정산하셨습니다. ")
-		// 		.append(String.format("%,d", commission)).append("원의 수수료를 받았습니다.");
-		// notificationService.sendNotification(followingMemberId, NotificationType.SETTLE, message.toString());
 	}
 
 	private FollowTrade getFollowTrade(Follow follow, FollowingCoin coin) {
@@ -232,7 +224,12 @@ public class FollowService {
 			memberService.updateMemberCash(follow.getFollowingMemberId(), commission);
 		}
 
-		notification();
+		/* [API async] 정산 알림 */
+		StringBuilder message = new StringBuilder();
+		message.append("id:").append(follow.getFollowerMemberId()).append("님이 투자금액 ")
+			.append(String.format("%,d", follow.getInvestment())).append("원을 정산하셨습니다. ")
+			.append(String.format("%,d", commission)).append("원의 수수료를 받았습니다.");
+		notificationService.sendNotification(follow.getFollowingMemberId(), NotificationType.SETTLE, message.toString());
 	}
 
 	private static long getCommission(long proceed, Long investment) {
