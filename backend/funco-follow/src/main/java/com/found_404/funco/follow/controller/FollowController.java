@@ -1,5 +1,6 @@
 package com.found_404.funco.follow.controller;
 
+import com.found_404.funco.follow.dto.response.InvestmentsResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,4 +60,14 @@ public class FollowController {
 
 		return ResponseEntity.ok(followService.getFollowTrades(pageable, followId));
 	}
+
+
+	/*
+	* 	MSA SERVER API
+	* */
+	@GetMapping("/investments")
+	public ResponseEntity<InvestmentsResponse> getInvestments(@RequestParam Long memberId) {
+		return ResponseEntity.ok(followService.getInvestments(memberId));
+	}
+
 }

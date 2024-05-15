@@ -24,6 +24,7 @@ import com.found_404.funco.follow.dto.SliceFollowingInfo;
 import com.found_404.funco.follow.dto.request.FollowingRequest;
 import com.found_404.funco.follow.dto.response.FollowerListResponse;
 import com.found_404.funco.follow.dto.response.FollowingListResponse;
+import com.found_404.funco.follow.dto.response.InvestmentsResponse;
 import com.found_404.funco.follow.exception.FollowException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -269,5 +270,9 @@ public class FollowService {
 				.stream()
 				.map(FollowTradeDto::fromEntity)
 				.toList();
+	}
+
+	public InvestmentsResponse getInvestments(Long memberId) {
+		return new InvestmentsResponse(getTotalFollowInvestment(memberId));
 	}
 }
