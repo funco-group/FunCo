@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import SearchSVG from '@/../public/icon/search-icon-copy.svg'
 import palette from '@/lib/palette'
