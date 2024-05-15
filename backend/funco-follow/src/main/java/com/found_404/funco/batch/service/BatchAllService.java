@@ -1,5 +1,6 @@
 package com.found_404.funco.batch.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -14,10 +15,12 @@ public class BatchAllService {
 	private final FollowRepository followRepository;
 
 	public Map<Long, Long> readFollowerInvestmentList() {
-		return followRepository.findFollowerInvestmentList();
+		Map<Long, Long> followerInvestmentList = followRepository.findFollowerInvestmentList();
+		return followerInvestmentList != null ? followerInvestmentList : new HashMap<>();
 	}
 
 	public Map<Long, Long> readFollowingInvestmentList() {
-		return followRepository.findFollowingInvestmentList();
+		Map<Long, Long> followingInvestmentList = followRepository.findFollowingInvestmentList();
+		return followingInvestmentList != null ? followingInvestmentList : new HashMap<>();
 	}
 }
