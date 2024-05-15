@@ -109,7 +109,21 @@ export const TradePriceDiv = styled.div<{ color: string }>`
 `
 
 export const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
   padding: 0.5rem 1.3rem;
+`
+
+export const NoteButton = styled.div`
+  padding: 0.3rem;
+  font-size: 0.8rem;
+  color: ${palette.brandDarkGray};
+  border: 1px solid ${palette.brandDarkGray};
+  border-radius: 0.3rem;
+  cursor: pointer;
+`
+
+export const ChartButtons = styled.div`
   display: flex;
 `
 
