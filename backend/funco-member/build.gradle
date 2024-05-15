@@ -44,8 +44,11 @@ dependencies {
     // jpa
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    // openfeign
+    /* openfeign */
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    /* openfeign okhttp로 실행 */
+    implementation 'io.github.openfeign:feign-okhttp:13.2.1'
 
     // webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
