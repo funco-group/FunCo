@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.found_404.funco.global.util.AuthMemberId;
+import com.found_404.funco.global.memberIdHeader.AuthMemberId;
 import com.found_404.funco.statistics.dto.response.DailyStatisticsResponse;
 import com.found_404.funco.statistics.dto.response.MonthlyStatisticsResponse;
 import com.found_404.funco.statistics.dto.response.StartDateResponse;
