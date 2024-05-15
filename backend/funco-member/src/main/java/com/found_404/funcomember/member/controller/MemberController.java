@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.found_404.funcomember.global.memberIdHeader.AuthMemberId;
 import com.found_404.funcomember.member.dto.RequestIntroduction;
 import com.found_404.funcomember.member.dto.RequestNickName;
 import com.found_404.funcomember.member.dto.request.OAuthMemberRequest;
@@ -72,8 +73,10 @@ public class MemberController {
 		return ResponseEntity.ok().build();
 	}
 
+	// MSA server 용 API
+
 	@GetMapping("/cash")
-	public ResponseEntity<CashResponse> getCash(Long memberId) {
+	public ResponseEntity<CashResponse> getCash(@AuthMemberId Long memberId) {
 		return ResponseEntity.ok(memberService.getCash(memberId));
 	}
 
