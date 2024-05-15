@@ -19,16 +19,7 @@ import static com.found_404.funco.note.exception.NoteErrorCode.API_SERVER_ERROR;
 @Service
 public class MemberService {
 	private final MemberServiceClient memberServiceClient;
-	private final String SERVER_NAME = "[follow-service]";
-
-	public Long getMemberCash(Long memberId) {
-		try {
-			return memberServiceClient.getMemberCash(memberId).cash();
-		} catch (FeignException e) {
-			log.error("member client error : {}", e.getMessage());
-			throw new NoteException(API_SERVER_ERROR);
-		}
-	}
+	private final String SERVER_NAME = "[member-service]";
 
 	public Map<Long, SimpleMember> getSimpleMember(Long id) {
 		return getSimpleMember(List.of(id));
@@ -42,7 +33,7 @@ public class MemberService {
 
 			return map;
 		} catch (FeignException e) {
-			log.error("member client error : {}", e.getMessage());
+			log.error("{} get member info : {}", SERVER_NAME, e.getMessage());
 			throw new NoteException(API_SERVER_ERROR);
 		}
 	}
