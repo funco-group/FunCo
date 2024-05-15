@@ -26,7 +26,16 @@ public class TradeService {
 		try {
 			return tradeServiceClient.getCoinValuations(memberId);
 		} catch (FeignException e) {
-			log.error("{} updateMemberCash error : {}", SERVER_NAME, e.getMessage());
+			log.error("{} updateMemberCash : {}", SERVER_NAME, e.getMessage());
+			throw new FollowException(TRADE_SERVER_ERROR);
+		}
+	}
+
+	public Double getHoldingCoinVolume(Long memberId, String ticker) {
+		try {
+			return tradeServiceClient.getHoldingCoin(memberId, ticker).volume();
+		} catch (FeignException e) {
+			log.error("{} get holding coin : {}", SERVER_NAME, e.getMessage());
 			throw new FollowException(TRADE_SERVER_ERROR);
 		}
 	}
@@ -35,7 +44,7 @@ public class TradeService {
 		try {
 			return tradeServiceClient.getCryptoPrice(tickers);
 		} catch (FeignException e) {
-			log.error("{} Crypto price error : {}", SERVER_NAME, e.getMessage());
+			log.error("{} Crypto price : {}", SERVER_NAME, e.getMessage());
 			throw new FollowException(TRADE_SERVER_ERROR);
 		}
 	}

@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.found_404.funco.feignClient.service.MemberService;
+import com.found_404.funco.feignClient.service.TradeService;
 import com.found_404.funco.follow.domain.Follow;
 import com.found_404.funco.follow.domain.FollowTrade;
 import com.found_404.funco.follow.domain.FollowingCoin;
@@ -28,30 +30,30 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class FollowTradeService {
     private final FollowRepository followRepository;
-
     private final FollowingCoinRepository followingCoinRepository;
     private final FollowTradeRepository followTradeRepository;
 
-    //private final HoldingCoinRepository holdingCoinRepository;
+    private final MemberService memberService;
+    private final TradeService tradeService;
 
     @Async
     public void followTrade(Trade trade) {
         List<Follow> followerList = followRepository.findAllByFollowerMemberIdAndSettledFalse(trade.memberId());
 
         followTradeRepository.saveAll(followerList.stream()
-                .map(follow -> getTrade(trade, follow))
+                .map(follow -> getFollowTrade(trade, follow))
                 .toList());
     }
 
-    public FollowTrade getTrade(Trade trade, Follow follow) {
+    public FollowTrade getFollowTrade(Trade trade, Follow follow) {
 
         double volume;
         long orderCash;
 
         if (trade.tradeType().equals(BUY)) {
-            // 부모가 현금에서 얼마를 썼냐 비율 => 캡쳐링 필요
-            //long prevCash = following.getCash() + trade.orderCash();
-            long prevCash = 0;
+            // [API SELECT] 부모가 현금에서 얼마를 썼냐 비율, (팔로우, 미체결 현금,,필요)
+            long prevCash = memberService.getMemberCash(follow.getFollowingMemberId()) + trade.orderCash();
+
             double ratio = divide(trade.orderCash(), prevCash, NORMAL_SCALE);
 
             orderCash = (long) multiple(follow.getCash(), ratio, CASH_SCALE);
@@ -73,12 +75,8 @@ public class FollowTradeService {
                 followerCoin.get().increaseVolume(volume, trade.price());
             }
         } else {
-            // 코인에서 얼마를 팔았냐 비율
-            //Optional<HoldingCoin> followingCoin = holdingCoinRepository.findByMemberAndTicker(following, trade.ticker());
-
-            //double prevVolume = trade.volume() + (followingCoin.isEmpty() ? 0 : followingCoin.get().getVolume());
-            double prevVolume = 0;
-
+            // [API SELECT] 코인에서 얼마를 팔았냐 비율
+            double prevVolume = trade.volume() + tradeService.getHoldingCoinVolume(follow.getFollowingMemberId(), trade.ticker());
             double ratio = divide(trade.volume(), prevVolume, NORMAL_SCALE);
 
             FollowingCoin followerCoin = followingCoinRepository.findByFollowAndTicker(follow, trade.ticker())
@@ -110,10 +108,8 @@ public class FollowTradeService {
                 .build();
     }
 
-    @Async
     public void followTrade(List<Trade> trades) {
         trades.forEach(this::followTrade);
     }
-
 
 }

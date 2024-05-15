@@ -1,7 +1,9 @@
 package com.found_404.funco.feignClient.client;
 
+import com.found_404.funco.feignClient.dto.HoldingCoinResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.found_404.funco.feignClient.dto.CoinValuationResponse;
@@ -18,6 +20,9 @@ public interface TradeServiceClient {
 
     @GetMapping("api/v1/crypto")
     Map<String, Long> getCryptoPrice(@RequestParam List<String> tickers);
+
+    @GetMapping("/holding/{ticker}")
+    HoldingCoinResponse getHoldingCoin(@RequestParam Long memberId, @PathVariable String ticker);
 
     @GetMapping("/api/v1/hello")
     String hello();
