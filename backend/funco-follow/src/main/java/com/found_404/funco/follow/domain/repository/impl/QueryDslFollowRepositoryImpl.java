@@ -102,6 +102,14 @@ public class QueryDslFollowRepositoryImpl implements QueryDslFollowRepository {
 			.transform(groupBy(follow.followingMemberId).as(follow.investment.sum().coalesce(0L)));
 	}
 
+	@Override
+	public Map<Long, Long> findFollowingInvestmentList() {
+		return jpaQueryFactory
+			.from(follow)
+			.where(follow.settled.isFalse())
+			.transform(groupBy(follow.followerMemberId).as(follow.investment.sum().coalesce(0L)));
+	}
+
 	private BooleanExpression ltFollowId(Long followId) {
 		if (followId == null) { // 요청이 처음일 때 where 절에 null을 주면 page size만큼 반환
 			return null;

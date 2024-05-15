@@ -25,4 +25,10 @@ public class BatchAllController {
 	public ResponseEntity<Map<Long, Long>> getFollowerInvestmentList() {
 		return ResponseEntity.ok(batchAllService.readFollowerInvestmentList());
 	}
+
+	// 멤버 별 총 팔로우 투자금
+	@GetMapping("/following/investment")
+	public ResponseEntity<Map<Long, Long>> getFollowingInvestmentList() {
+		return ResponseEntity.ok(batchAllService.readFollowingInvestmentList());
+	}
 }

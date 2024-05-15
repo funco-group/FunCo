@@ -14,4 +14,6 @@ public interface QueryDslFollowRepository {
 		int pageSize);
 
 	Map<Long, Long> findFollowerInvestmentList();
+
+	Map<Long, Long> findFollowingInvestmentList();
 }
