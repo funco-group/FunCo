@@ -71,12 +71,12 @@ public class Follow extends BaseEntity {
 		this.settlement = settlement;
 	}
 
-	public void settleFollow(Long commission, Double returnRate, LocalDateTime settleDate, Long settlement) {
+	public void settleFollow(Long commission, Double returnRate, Long settlement) {
 		this.commission = commission;
 		this.returnRate = returnRate;
-		this.settleDate = settleDate;
-		this.settled = true;
 		this.settlement = settlement;
+		this.settleDate = LocalDateTime.now();
+		this.settled = true;
 	}
 
 	public void decreaseCash(long orderCash) {
