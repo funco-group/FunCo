@@ -10,6 +10,7 @@ import {
   BottomContainer,
   CryptoPageContainer,
 } from '@/containers/CryptoContainer/styled'
+import Chart from '@/components/Trade/Chart'
 
 function TradeLayout({ children }: { children: React.ReactNode }) {
   const [priceList, setPriceList] = useState<PriceType[]>(
@@ -20,8 +21,8 @@ function TradeLayout({ children }: { children: React.ReactNode }) {
     <WideLayout>
       <CryptoPageContainer>
         <div>
-          {/* <Chart priceList={priceList} /> */}
-          <div></div>
+          <Chart priceList={priceList} />
+          {/* <div></div> */}
           <BottomContainer>{children}</BottomContainer>
         </div>
         <PriceWindow priceList={priceList} setPriceList={setPriceList} />

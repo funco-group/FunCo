@@ -31,7 +31,7 @@ function PriceItem({ price, isFav, onClickFavorite }: PriceItemProps) {
   const router = useRouter()
   const pathname = usePathname()
 
-  const coinCode = pathname.split('/')[3]
+  const coinCode = pathname?.split('/')[3]
   const clickCoin = (code: string) => {
     router.push(code)
   }

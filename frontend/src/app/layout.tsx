@@ -36,7 +36,7 @@ export default function RootLayout({
               <StyledComponentsRegistry>
                 <Navbar />
                 <ScrollToTop />
-                <GlobalStyle />
+                {/* <GlobalStyle /> */}
                 <div style={{ padding: '6.5rem 0' }}>{children}</div>
               </StyledComponentsRegistry>
             </ToastProvider>
