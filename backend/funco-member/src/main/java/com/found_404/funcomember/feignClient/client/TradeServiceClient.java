@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name="trade-service")
+@FeignClient(name = "trade-service")
 public interface TradeServiceClient {
 
     // 보유 코인 별 평가금액 리스트 api
