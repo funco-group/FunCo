@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import ChartGraph from './ChartGraph'
 import {
   ChartContainer,
@@ -17,6 +17,8 @@ import {
   TradePriceItemDiv,
   TradeTitleDiv,
   TradePriceDiv,
+  ChartButtons,
+  NoteButton,
 } from './Chart.styled'
 import { PriceType } from '@/interfaces/PriceWindowType'
 
@@ -26,6 +28,7 @@ interface ChartProps {
 
 function Chart({ priceList }: ChartProps) {
   const pathname = usePathname()
+  const router = useRouter()
 
   const coinCode = pathname?.split('/')[3]
   const coin = priceList.find((price) => price.code === coinCode)
@@ -41,6 +44,10 @@ function Chart({ priceList }: ChartProps) {
 
   const clickButton = (name: string) => {
     setButton(name)
+  }
+
+  const goNote = () => {
+    router.push(`/notes?type=ALL&coin=${coinCode}&sorted=LATEST`)
   }
 
   if (!coin) return null
@@ -111,15 +118,18 @@ function Chart({ priceList }: ChartProps) {
         </PriceContainer>
       </ChartInfoContainer>
       <ButtonsContainer>
-        {buttons.map((name) => (
-          <TypeButton
-            $selected={name === button}
-            key={name}
-            onClick={() => clickButton(name)}
-          >
-            {name}
-          </TypeButton>
-        ))}
+        <ChartButtons>
+          {buttons.map((name) => (
+            <TypeButton
+              $selected={name === button}
+              key={name}
+              onClick={() => clickButton(name)}
+            >
+              {name}
+            </TypeButton>
+          ))}
+        </ChartButtons>
+        <NoteButton onClick={goNote}>인사이트</NoteButton>
       </ButtonsContainer>
       <ChartGraph button={button} />
     </ChartContainer>
