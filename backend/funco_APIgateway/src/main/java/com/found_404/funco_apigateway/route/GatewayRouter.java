@@ -20,6 +20,7 @@ public class GatewayRouter {
 	private final String EUREKA_TRADE = "lb://TRADE-SERVICE";
 	private final String EUREKA_STATISTICS = "lb://STATISTICS-SERVICE";
 	private final String EUREKA_FOLLOW = "lb://FOLLOW-SERVICE";
+	private final String EUREKA_NOTIFICATION = "lb://NOTIFICATION-SERVICE";
 	private final String EUREKA_RANK = "lb://RANK-SERVICE";
 
 	private final JwtAuthenticationGatewayFilterFactory jwtAuthentication;
@@ -32,6 +33,7 @@ public class GatewayRouter {
 			.route(r -> getJwtFilterRoute(r, "/api/v1/members/**", EUREKA_MEMBER))
 			.route(r -> getJwtFilterRoute(r, "/api/v1/trade/**", EUREKA_TRADE))
 			.route(r -> getJwtFilterRoute(r, "/api/v1/follows/**", EUREKA_FOLLOW))
+			.route(r -> getJwtFilterRoute(r, "/api/v1/notifications/**", EUREKA_NOTIFICATION))
 			.route(r -> getJwtFilterRoute(r, "/api/v1/statistics/**", EUREKA_STATISTICS))
 			.build();
 	}
