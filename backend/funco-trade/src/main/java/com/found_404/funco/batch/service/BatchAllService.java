@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.found_404.funco.trade.domain.repository.HoldingCoinRepository;
+import com.found_404.funco.trade.dto.HoldingCoinInfo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,5 +19,9 @@ public class BatchAllService {
 
 	public List<String> readHoldingCoinList() {
 		return holdingCoinRepository.findHoldingCoin();
+	}
+
+	public List<HoldingCoinInfo> readHoldingCoinInfoList() {
+		return holdingCoinRepository.findHoldingCoinInfoList();
 	}
 }
