@@ -9,11 +9,6 @@ import searchByChosung from '@/utils/searchByChosung'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 
-// interface CoinTickerKorType {
-//   ticker: string
-//   name: string
-// }
-
 interface CoinSelectModalProps {
   coin: string
   setCoin: Dispatch<SetStateAction<string>>
@@ -28,12 +23,6 @@ function CoinSelectModal({
   const AllCoinList = useRecoilValue(codeListState)
   const coinMap = useRecoilValue(codeNameMapState)
 
-  // const [MappingCoinList, setMappingCoinList] = useState<CoinTickerKorType[]>(
-  //   AllCoinList.map((ticker) => ({
-  //     ticker,
-  //     name: coinMap.get(ticker) || '',
-  //   })),
-  // )
   const MappingCoinList = AllCoinList.map((ticker) => ({
     ticker,
     name: coinMap.get(ticker) || '',
@@ -89,7 +78,7 @@ function CoinSelectModal({
                   className="border-1 my-1 mr-1 rounded border-solid border-brandColor bg-brandWhite p-1 text-brandColor"
                   onClick={() => handleCoinBtn(coin)}
                 >
-                  {coin}
+                  {coinMap.get(coin)}
                 </button>
               ) : null}
             </div>
