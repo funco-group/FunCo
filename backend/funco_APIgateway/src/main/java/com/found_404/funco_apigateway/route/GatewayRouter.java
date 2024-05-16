@@ -37,7 +37,7 @@ public class GatewayRouter {
 				.route(r -> r.path("/api/v1/rank/**").uri(EUREKA_RANK))
 
 				.route(r -> getJwtFilterRoute(r, "/api/v1/members/**", EUREKA_MEMBER))
-				.route(r -> r.path("/api/v1/my-page/**")
+				.route(r -> r.path("/api/v2/members/**")
 						.filters(f -> f.filter(jwtAuthentication.apply(FALSE))).uri(EUREKA_MEMBER))
 				.route(r -> getJwtFilterRoute(r, "/api/v1/crypto/favorite/**", EUREKA_MEMBER))
 
