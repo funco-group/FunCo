@@ -10,13 +10,14 @@ import {
   TradeItem,
 } from '@/styles/Trade.styled'
 import React, { useState } from 'react'
-import { FuturesTradeButton } from './FuturesTrade.styled'
 import { getCash } from '@/apis/member'
 import { AxiosResponse } from 'axios'
 import { CashType } from '@/interfaces/common/AssetType'
+import { FuturesTradeButton } from './FuturesTrade.styled'
 
 function FuturesTrade() {
   const volumeButtons = [10, 20, 25, 30, 40, 50, 75, 100]
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [buttons, setButtons] = useState<string[]>(['Long', 'Short'])
   const [cash, setCash] = useState<number>(0) // 주문 가능
   const [volume, setVolume] = useState<number>(50)
@@ -69,25 +70,23 @@ function FuturesTrade() {
           <TradeItem>
             <div />
             <PriceButtons>
-              {volumeButtons.map((rate) => {
-                return (
-                  <PriceButton
-                    key={rate}
-                    // onClick={() => clickVolumeButton(rate)}
-                  >
-                    {rate}%
-                  </PriceButton>
-                )
-              })}
+              {volumeButtons.map((rate) => (
+                <PriceButton
+                  key={rate}
+                  // onClick={() => clickVolumeButton(rate)}
+                >
+                  {rate}%
+                </PriceButton>
+              ))}
             </PriceButtons>
           </TradeItem>
         </div>
       </TradeInnerContainer>
 
       <ButtonContainer>
-        {buttons.map((button) => {
-          return <FuturesTradeButton name={button}>{button}</FuturesTradeButton>
-        })}
+        {buttons.map((button) => (
+          <FuturesTradeButton name={button}>{button}</FuturesTradeButton>
+        ))}
       </ButtonContainer>
     </>
   )

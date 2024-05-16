@@ -9,6 +9,7 @@ import NotiHistoryContent from '@/components/Header/NotiHistoryContent'
 import { getNotiHistoryList, sendReadNotiList } from '@/apis/notification'
 import useUserState from '@/hooks/recoilHooks/useUserState'
 import DownArrow from '@/../public/icon/chevron-down.svg'
+import NoData from '../Common/NoData'
 
 interface NotiDropdownProps {
   visible: boolean
@@ -55,7 +56,7 @@ function NotiDropdown({ visible }: NotiDropdownProps) {
             />
           ))
         ) : (
-          <>노티없어영~~~</>
+          <NoData content="알림이 없습니다." />
         )}
       </NotiHistoryContentContainer>
       <NotiMoreButton>

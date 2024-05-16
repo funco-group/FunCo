@@ -1,13 +1,13 @@
 'use client'
 
 import React from 'react'
+import { TradeItem } from '@/styles/Trade.styled'
 import {
   ContentContainer,
   OrderBookContainer,
   TitleContainer,
   TitleDiv,
 } from '../SpotTrade/OrderBook.styled'
-import { TradeItem } from '@/styles/Trade.styled'
 
 function Position() {
   const topTitle = ['포지션 현황', '', '']

@@ -1,9 +1,6 @@
 'use client'
 
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import noteParseDate from '@/utils/noteParseDate'
 import useUserState from '@/hooks/recoilHooks/useUserState'
 import { useRecoilValue } from 'recoil'
