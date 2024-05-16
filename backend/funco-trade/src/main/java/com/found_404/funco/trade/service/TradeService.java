@@ -305,7 +305,7 @@ public class TradeService {
 
 	public ReturnRateResponse getReturnRate(ReturnRateRequest returnRateRequest) {
 		return ReturnRateResponse.builder()
-			.ratio(divide(returnRateRequest.portfolioPirce(), returnRateRequest.cash(), RETURN_RATE_SCALE))
+			.ratio(divide(returnRateRequest.portfolioPrice(), returnRateRequest.cash(), RETURN_RATE_SCALE))
 			.build();
 	}
 

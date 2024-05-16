@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record ReturnRateRequest(
-	Long portfolioPirce,
+	Long portfolioPrice,
 	Long cash
 ) {
 }
