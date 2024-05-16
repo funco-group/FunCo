@@ -64,7 +64,6 @@ public class PortfolioService {
 
 		// 구독
 		subscribe(subscriber, seller);
-		log.info("===================== ratio {}", ratio);
 		// seller의 팔로워들 동기화(더해줌)
 		synchronizeFollowers(seller.getId(), ratio);
 
