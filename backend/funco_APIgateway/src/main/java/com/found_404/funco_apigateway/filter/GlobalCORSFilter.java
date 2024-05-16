@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 public class GlobalCORSFilter {
 	private static final String ALLOWED_HEADERS = "x-requested-with, authorization, Content-Type";
 	private static final String ALLOWED_METHODS = "GET, PUT, POST, DELETE, OPTIONS";
-	private static final String ALLOWED_ORIGIN = "https://funco.co.kr, http://localhost:3000";
+	private static final String ALLOWED_ORIGIN = "https://funco.co.kr";
 	private static final String MAX_AGE = "3600";
 
 	private static final String ALLOWED_CREDENTIALS = "true";
