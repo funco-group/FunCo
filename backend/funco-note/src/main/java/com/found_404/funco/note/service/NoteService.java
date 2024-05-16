@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,6 +54,45 @@ public class NoteService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
+
+    // ----
+
+    public ImageResponse upload(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new RuntimeException("NOT_FOUND_IMAGE");
+        }
+
+        String originName = file.getOriginalFilename();
+        String type = Objects.requireNonNull(originName).substring(originName.lastIndexOf(".") + 1);
+
+        validationFileType(type.toUpperCase());
+
+        String fileName = UUID.randomUUID() + originName;
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+
+        try {
+            objectMetadata.setContentLength(file.getInputStream().available());
+            amazonS3.putObject(bucketName, fileName, file.getInputStream(), objectMetadata);
+        } catch (IOException e) {
+            throw new RuntimeException("IMAGE_UPLOAD_FAIL");
+        }
+
+        return new ImageResponse(amazonS3.getUrl(bucketName, fileName).toString());
+    }
+
+    private void validationFileType(String type) {
+        switch (type){
+            case "PNG":
+            case "JPG":
+            case "JPEG":
+            case "GIF":
+                return;
+            default:
+                throw new RuntimeException("MISS_MATCH_IMAGE_TYPE");
+        }
+    }
+
+    // ----
 
 
     public List<NotesResponse> getNotes(NotesFilterRequest notesFilterRequest, Pageable pageable) {

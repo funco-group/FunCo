@@ -50,7 +50,8 @@ public class NoteController {
     @PostMapping("/image")
     public ResponseEntity<ImageResponse> uploadImage(
             MultipartFile file)  {
-        return ResponseEntity.ok(noteService.uploadImage(file));
+        //return ResponseEntity.ok(noteService.uploadImage(file));
+        return ResponseEntity.ok(noteService.upload(file));
     }
 
     // 게시글 작성
