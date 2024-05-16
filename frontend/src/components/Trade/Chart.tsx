@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { PriceType } from '@/interfaces/PriceWindowType'
 import ChartGraph from './ChartGraph'
 import {
   ChartContainer,
@@ -20,7 +21,6 @@ import {
   ChartButtons,
   NoteButton,
 } from './Chart.styled'
-import { PriceType } from '@/interfaces/PriceWindowType'
 
 interface ChartProps {
   priceList: PriceType[]
@@ -35,12 +35,11 @@ function Chart({ priceList }: ChartProps) {
   const buttons = ['일봉', '주봉', '월봉', '1분봉', '5분봉', '10분봉']
   const [button, setButton] = useState<string>('일봉')
 
-  const formatNumber = (number: number) => {
-    return new Intl.NumberFormat('ko-KR', {
+  const formatNumber = (number: number) =>
+    new Intl.NumberFormat('ko-KR', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(number)
-  }
 
   const clickButton = (name: string) => {
     setButton(name)

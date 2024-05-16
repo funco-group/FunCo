@@ -44,6 +44,7 @@ export const CurPriceDiv = styled.div<{ change: string }>`
     if (props.change === 'FALL') {
       return palette.brandBlue
     }
+    return palette.brandBlack
   }};
 `
 
@@ -99,6 +100,7 @@ export const TradePriceDiv = styled.div<{ color: string }>`
     if (props.color === 'blue') {
       return palette.brandBlue
     }
+    return palette.brandBlack
   }};
 
   span {

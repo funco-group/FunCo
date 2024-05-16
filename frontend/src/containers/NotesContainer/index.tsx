@@ -6,7 +6,6 @@ import NoData from '@/components/Common/NoData'
 import NotePreviewList from '@/components/Note/Notes/NotePreviewList'
 import NotesFilterBtnList from '@/components/Note/Notes/NotesFilterBtnList'
 import NotesSearch from '@/components/Note/Notes/NotesSearch'
-import useUserState from '@/hooks/recoilHooks/useUserState'
 import { NotePreviewType } from '@/interfaces/note/NotePreviewType'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -20,7 +19,6 @@ function Notes() {
   const [params, setParams] = useState<string[]>([])
   const [notePreviewList, setNotePreviewList] = useState<NotePreviewType[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const { user } = useUserState()
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -46,7 +44,6 @@ function Notes() {
     setSorted(searchParams.get('sorted') || 'LATEST')
 
     const apiParams = [
-      user ? `memberId=${user.memberId}` : '',
       searchParams.get('type')
         ? `type=${searchParams.get('type')}`
         : 'type=ALL',

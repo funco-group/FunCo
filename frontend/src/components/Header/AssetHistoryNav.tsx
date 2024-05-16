@@ -19,11 +19,11 @@ function AssetHistoryNav({ path, name }: NavLinkProps) {
   const router = useRouter()
 
   const clickNav = () => {
-    // if (user.user) {
-    router.push(path)
-    // } else {
-    // onLoginAlertModal()
-    // }
+    if (user.user) {
+      router.push(path)
+    } else {
+      onLoginAlertModal()
+    }
   }
 
   return (

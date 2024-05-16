@@ -14,7 +14,7 @@ export const TitleContainer = styled.div<{ $top: boolean }>`
   border-top: ${(props) => !props.$top && `1px solid ${palette.borderGray}`};
 `
 
-export const TitleDiv = styled.div<{ type: string }>`
+export const TitleDiv = styled.div<{ type?: string }>`
   padding: 0.6rem 0;
   text-align: center;
   color: ${(props) => {
@@ -24,6 +24,7 @@ export const TitleDiv = styled.div<{ type: string }>`
     if (props.type === '매도') {
       return palette.brandBlue
     }
+    return palette.brandBlack
   }};
 `
 

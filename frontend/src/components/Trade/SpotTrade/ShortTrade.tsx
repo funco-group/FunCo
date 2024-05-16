@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import TradeButton from '@/components/Common/Trade/TradeButtonTab'
 import { ButtonContainer } from '@/styles/Trade.styled'
-import ShortTradeItem from './ShortTradeItem'
 import { userState } from '@/recoils/user'
 import { useRecoilValue } from 'recoil'
 import useLoginAlertModalState from '@/hooks/recoilHooks/useLoginAlertModalState'
+import ShortTradeItem from './ShortTradeItem'
 
 interface ShortTradeProps {
   curPrice: number
@@ -28,16 +28,14 @@ function ShortTrade({ curPrice, getCurPrice }: ShortTradeProps) {
   return (
     <div>
       <ButtonContainer>
-        {buttons.map((button) => {
-          return (
-            <TradeButton
-              key={button}
-              name={button}
-              activeButton={activeButton}
-              changeButton={changeButton}
-            />
-          )
-        })}
+        {buttons.map((button) => (
+          <TradeButton
+            key={button}
+            name={button}
+            activeButton={activeButton}
+            changeButton={changeButton}
+          />
+        ))}
       </ButtonContainer>
       {activeButton === '매수' ? (
         <ShortTradeItem name="매수" curPrice={curPrice} />

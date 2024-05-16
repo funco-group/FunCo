@@ -70,7 +70,7 @@ function ChartGraph({ button }: ChartGraphProps) {
           enabled: true,
         },
         labels: {
-          formatter: function (y: number) {
+          formatter(y: number) {
             return y.toLocaleString('ko-KR')
           },
         },
@@ -87,17 +87,15 @@ function ChartGraph({ button }: ChartGraphProps) {
     series: [
       {
         name: 'price',
-        data: candleList?.map((candle) => {
-          return {
-            x: new Date(candle.candle_date_time_kst).getTime(),
-            y: [
-              candle.opening_price,
-              candle.high_price,
-              candle.low_price,
-              candle.trade_price,
-            ],
-          }
-        }),
+        data: candleList?.map((candle) => ({
+          x: new Date(candle.candle_date_time_kst).getTime(),
+          y: [
+            candle.opening_price,
+            candle.high_price,
+            candle.low_price,
+            candle.trade_price,
+          ],
+        })),
       },
     ],
     // optionsBar: {
