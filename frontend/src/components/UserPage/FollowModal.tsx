@@ -12,7 +12,7 @@ import BrandButton from '@/components/Common/Button/BrandButtonComponent.styled'
 import AlertModal from '@/components/Common/Modal/AlertModal'
 import { MemberType } from '@/interfaces/userPage/MemberType'
 import { addFollow } from '@/apis/follow'
-import { getCash } from '@/apis/asset'
+import { getCash } from '@/apis/member'
 import palette from '@/lib/palette'
 import {
   FollowModalContentDiv,
