@@ -4,8 +4,8 @@ import {
   ColumnTitleDiv,
 } from '@/styles/CommonStyled'
 import { AssetType } from '@/interfaces/AssetType'
-import AssetListContainer from './AssetList.styled'
 import AssetListItem from './AssetListItem'
+import AssetListContainer from './AssetList.styled'
 
 interface AssetListProps {
   assets: AssetType[]

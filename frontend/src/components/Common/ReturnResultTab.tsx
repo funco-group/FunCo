@@ -1,10 +1,10 @@
 import { OptionType } from '@/interfaces/AssetType'
-import TabButton from './Button/TabButton.styled'
+import TabButton from '@/components/Common/Button/TabButton.styled'
 import {
-  ReturnResultTabContainer,
   DateDiv,
   DateSetDiv,
-} from './ReturnResultTab.styled'
+  ReturnResultTabContainer,
+} from '@/components/Common/ReturnResultTab.styled'
 
 interface ReturnResultTabProps {
   activeTab: string
