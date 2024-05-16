@@ -27,15 +27,11 @@ import com.found_404.funco.trade.domain.type.TradeType;
 import com.found_404.funco.trade.dto.OpenTradeDto;
 import com.found_404.funco.trade.dto.OtherTradeDto;
 import com.found_404.funco.trade.dto.TradeDto;
-import com.found_404.funco.trade.dto.request.ProfitRequest;
-import com.found_404.funco.trade.dto.request.ReturnRateRequest;
 import com.found_404.funco.trade.dto.response.CoinValuation;
 import com.found_404.funco.trade.dto.response.CoinValuationResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinsResponse;
 import com.found_404.funco.trade.dto.response.MarketTradeResponse;
-import com.found_404.funco.trade.dto.response.ProfitResponse;
-import com.found_404.funco.trade.dto.response.ReturnRateResponse;
 import com.found_404.funco.trade.exception.TradeException;
 
 import lombok.RequiredArgsConstructor;
@@ -300,18 +296,6 @@ public class TradeService {
 		return CoinValuationResponse.builder()
 			.coinValuations(coinValuations)
 			.totalTradeAsset(totalCoinValues + totalOpenTradeCash)
-			.build();
-	}
-
-	public ReturnRateResponse getReturnRate(ReturnRateRequest returnRateRequest) {
-		return ReturnRateResponse.builder()
-			.ratio(divide(returnRateRequest.portfolioPrice(), returnRateRequest.cash(), RETURN_RATE_SCALE))
-			.build();
-	}
-
-	public ProfitResponse getProfit(ProfitRequest profitRequest) {
-		return ProfitResponse.builder()
-			.profit((long)multiple(profitRequest.cash(), profitRequest.ratio(), CASH_SCALE))
 			.build();
 	}
 }
