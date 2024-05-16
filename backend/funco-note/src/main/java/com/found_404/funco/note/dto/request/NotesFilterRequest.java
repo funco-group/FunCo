@@ -8,9 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record NotesFilterRequest(
-
-    Long memberId,
-
     @NotNull(message = "type이 없습니다.")
     PostType type,
 

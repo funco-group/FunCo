@@ -95,12 +95,12 @@ public class NoteService {
     // ----
 
 
-    public List<NotesResponse> getNotes(NotesFilterRequest notesFilterRequest, Pageable pageable) {
+    public List<NotesResponse> getNotes(Long memberId, NotesFilterRequest notesFilterRequest, Pageable pageable) {
         if ((notesFilterRequest.type() == PostType.MY || notesFilterRequest.type() == PostType.LIKE)
-                && Objects.isNull(notesFilterRequest.memberId())) {
+                && Objects.isNull(memberId)) {
             throw new NoteException(INVALID_FILTER);
         }
-        List<Note> notes = noteRepository.getNotesWithFilter(notesFilterRequest, pageable);
+        List<Note> notes = noteRepository.getNotesWithFilter(memberId ,notesFilterRequest, pageable);
         Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(notes.stream().map(Note::getMemberId).toList());
 
         return notes
@@ -113,14 +113,15 @@ public class NoteService {
                 .ticker(note.getTicker())
                 .writeDate(note.getCreatedAt())
                 .likeCount(noteLikeRepository.countByNote(note))
-                .liked(false)  // 수정!!
+                .liked(Objects.nonNull(memberId) && noteLikeRepository.existsByMemberIdAndNoteId(
+                    memberId, note.getId()))
                 .commentCount(noteCommentRepository.countByNote(note))
                 .build())
             .toList();
 
     }
 
-    public NoteResponse getNote(Long noteId) {
+    public NoteResponse getNote(Long memberId, Long noteId) {
         Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
         Long likeCount = noteLikeRepository.countByNote(note);
         Long commentCount = noteCommentRepository.countByNote(note);
@@ -134,7 +135,8 @@ public class NoteService {
                 .content(note.getContent())
                 .ticker(note.getTicker())
                 .likeCount(likeCount)
-                .liked(false) // 수정해야 됨!!!
+                .liked(Objects.nonNull(memberId) && noteLikeRepository.existsByMemberIdAndNoteId(
+                    memberId, note.getId()))
                 .commentCount(commentCount)
                 .build();
     }

@@ -22,6 +22,7 @@ public class AuthMemberIdArgumentResolver implements HandlerMethodArgumentResolv
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-		return Long.valueOf(Objects.requireNonNull(webRequest.getHeader(HEADER)));
+		String header = webRequest.getHeader(HEADER);
+		return Objects.isNull(header) ? null : Long.valueOf(header);
 	}
 }

@@ -25,16 +25,18 @@ public class NoteController {
     // 게시글 목록 조회
     @GetMapping()
     public ResponseEntity<List<NotesResponse>> getNotes(
+        @AuthMemberId Long memberId,
         @Valid NotesFilterRequest notesFilterRequest,
         Pageable pageable) {
-        return ResponseEntity.ok(noteService.getNotes(notesFilterRequest, pageable));
+        return ResponseEntity.ok(noteService.getNotes(memberId, notesFilterRequest, pageable));
     }
 
     // 게시글 상세 조회
     @GetMapping("/{noteId}")
     public ResponseEntity<NoteResponse> getNote(
+        @AuthMemberId Long memberId,
         @PathVariable Long noteId) {
-        return ResponseEntity.ok(noteService.getNote(noteId));
+        return ResponseEntity.ok(noteService.getNote(memberId ,noteId));
     }
 
     // 댓글 목록 조회
