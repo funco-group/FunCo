@@ -39,7 +39,7 @@ export const ContentDiv = styled.div`
 `
 
 export const SizeDiv = styled.div<{ $buy: boolean }>`
-  padding: 0.43rem 0.5rem;
+  padding: 0.42rem 0.5rem;
   margin: 0.05rem;
   text-align: ${(props) => (props.$buy ? 'left' : 'right')};
   background-color: ${(props) => (props.$buy ? '#fcf1f0' : '#eef2fb')};
@@ -48,7 +48,7 @@ export const SizeDiv = styled.div<{ $buy: boolean }>`
 `
 
 export const PriceDiv = styled.div<{ $buy: boolean }>`
-  padding: 0.43rem;
+  padding: 0.42rem;
   margin: 0.05rem;
   text-align: center;
   background-color: ${(props) => (props.$buy ? '#fcf1f0' : '#eef2fb')};

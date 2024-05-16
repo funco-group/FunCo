@@ -18,7 +18,7 @@ import {
   GreenDiv,
   TradeInfo,
 } from '@/styles/Trade.styled'
-import { getCoinVolume } from '@/apis/asset'
+import { getCoinVolume } from '@/apis/trade'
 import { getCash } from '@/apis/member'
 import { CashType } from '@/interfaces/common/AssetType'
 import inputDecimalFormat from '@/utils/inputDecimalFormat'
@@ -67,11 +67,11 @@ function NormalTradeItem({ name, curPrice }: NormalTradeItemProps) {
     })
   }
 
-  useEffect(() => {
-    if (user.user) {
-      getCashFunc()
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (user.user) {
+  //     getCashFunc()
+  //   }
+  // }, [])
 
   const resetInput = () => {
     setOrderVolume(0)

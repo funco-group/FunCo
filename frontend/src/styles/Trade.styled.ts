@@ -51,6 +51,11 @@ export const ContentDiv = styled.div`
     min-width: 2.7rem;
     text-align: right;
   }
+
+  input {
+    /* accent-color: ${palette.mainColor}; */
+    /* background-color: ${palette.brandWhite}; */
+  }
 `
 
 export const PriceInput = styled.input`

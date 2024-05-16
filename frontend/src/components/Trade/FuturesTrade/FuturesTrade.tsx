@@ -27,66 +27,69 @@ function FuturesTrade() {
   })
 
   return (
-    <TradeInnerContainer>
-      <div>
-        <TradeItem>
-          <TitleDiv>주문 가능</TitleDiv>
-          <ContentDiv>
-            {cash.toLocaleString('ko-KR')}
-            <div>WON</div>
-          </ContentDiv>
-        </TradeItem>
-        <TradeItem>
-          <TitleDiv>레버리지</TitleDiv>
-          <ContentDiv>
-            <input
-              type="range"
-              onChange={(e) => {
-                setVolume(e.target.valueAsNumber)
-              }}
-            />
-            <div>{volume} X</div>
-          </ContentDiv>
-        </TradeItem>
-        <TradeItem>
-          <TitleDiv>주문총액</TitleDiv>
-          <AmountDiv>
-            <PriceInput
-              // value={formattedVolume}
-              placeholder="0"
-              // onChange={(e) => {
-              //   inputDecimalFormat(
-              //     e,
-              //     setFormattedVolume,
-              //     setOrderVolume,
-              //     '매도',
-              //   )
-              // }}
-            />
-          </AmountDiv>
-        </TradeItem>
-        <TradeItem>
-          <div />
-          <PriceButtons>
-            {volumeButtons.map((rate) => {
-              return (
-                <PriceButton
-                  key={rate}
-                  // onClick={() => clickVolumeButton(rate)}
-                >
-                  {rate}%
-                </PriceButton>
-              )
-            })}
-          </PriceButtons>
-        </TradeItem>
-      </div>
+    <>
+      <TradeInnerContainer>
+        <div>
+          <TradeItem>
+            <TitleDiv>주문 가능</TitleDiv>
+            <ContentDiv>
+              {cash.toLocaleString('ko-KR')}
+              <div>WON</div>
+            </ContentDiv>
+          </TradeItem>
+          <TradeItem>
+            <TitleDiv>레버리지</TitleDiv>
+            <ContentDiv>
+              <input
+                type="range"
+                onChange={(e) => {
+                  setVolume(e.target.valueAsNumber)
+                }}
+              />
+              <div>{volume} X</div>
+            </ContentDiv>
+          </TradeItem>
+          <TradeItem>
+            <TitleDiv>주문총액</TitleDiv>
+            <AmountDiv>
+              <PriceInput
+                // value={formattedVolume}
+                placeholder="0"
+                // onChange={(e) => {
+                //   inputDecimalFormat(
+                //     e,
+                //     setFormattedVolume,
+                //     setOrderVolume,
+                //     '매도',
+                //   )
+                // }}
+              />
+            </AmountDiv>
+          </TradeItem>
+          <TradeItem>
+            <div />
+            <PriceButtons>
+              {volumeButtons.map((rate) => {
+                return (
+                  <PriceButton
+                    key={rate}
+                    // onClick={() => clickVolumeButton(rate)}
+                  >
+                    {rate}%
+                  </PriceButton>
+                )
+              })}
+            </PriceButtons>
+          </TradeItem>
+        </div>
+      </TradeInnerContainer>
+
       <ButtonContainer>
         {buttons.map((button) => {
           return <FuturesTradeButton name={button}>{button}</FuturesTradeButton>
         })}
       </ButtonContainer>
-    </TradeInnerContainer>
+    </>
   )
 }
 
