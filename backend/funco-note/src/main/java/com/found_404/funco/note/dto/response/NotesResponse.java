@@ -15,7 +15,7 @@ public record NotesResponse (
     String ticker,
     LocalDateTime writeDate,
     Long likeCount,
-    boolean liked,
+    Boolean liked,
     Long commentCount
 ) {
 
