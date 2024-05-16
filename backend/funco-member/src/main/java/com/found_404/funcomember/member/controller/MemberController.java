@@ -1,7 +1,6 @@
 package com.found_404.funcomember.member.controller;
 
-import com.found_404.funcomember.member.dto.response.AssetResponse;
-import com.found_404.funcomember.member.dto.response.SimpleMember;
+import com.found_404.funcomember.member.dto.response.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +9,6 @@ import com.found_404.funcomember.member.dto.RequestIntroduction;
 import com.found_404.funcomember.member.dto.RequestNickName;
 import com.found_404.funcomember.member.dto.request.OAuthMemberRequest;
 import com.found_404.funcomember.member.dto.request.UpdateCash;
-import com.found_404.funcomember.member.dto.response.CashResponse;
-import com.found_404.funcomember.member.dto.response.OAuthMemberResponse;
 import com.found_404.funcomember.member.service.MemberService;
 
 import jakarta.validation.Valid;
@@ -27,15 +24,14 @@ import java.util.List;
 public class MemberController {
 	private final MemberService memberService;
 
-	// // 유저 페이지 조회
-	// @GetMapping("/{memberId}")
-	// public ResponseEntity<UserInfoResponse> getMember(
-	// 	@AuthMemberId Long loginMemberId,
-	// 	@PathVariable Long memberId
-	// ) {
-	// 	return ResponseEntity.ok(memberService.readMember(loginMemberId, memberId));
-	// }
-	//
+	// 유저 페이지 조회 => v2로 이관
+//	 @GetMapping("/{memberId}")
+//	 public ResponseEntity<UserInfoResponse> getMember(
+//	 	@AuthMemberId Long loginMemberId,
+//	 	@PathVariable Long memberId) {
+//	 	return ResponseEntity.ok(memberService.readMember(loginMemberId, memberId));
+//	 }
+
 	// // 마이 페이지 조회
 	// @GetMapping("/mypage")
 	// public ResponseEntity<MyInfoResponse> getMember(@AuthMemberId Long memberId) {
