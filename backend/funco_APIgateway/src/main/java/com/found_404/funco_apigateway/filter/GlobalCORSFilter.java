@@ -24,29 +24,23 @@ import reactor.core.publisher.Mono;
 public class GlobalCORSFilter {
 	private static final String ALLOWED_HEADERS = "x-requested-with, authorization, Content-Type";
 	private static final String ALLOWED_METHODS = "GET, PUT, POST, DELETE, OPTIONS";
-	private static final String ALLOWED_ORIGIN = "https://funco.co.kr";
 	private static final List<String> ALLOWED_ORIGINS = Arrays.asList("https://funco.co.kr", "http://localhost:3000");
 	private static final String MAX_AGE = "3600";
-
 	private static final String ALLOWED_CREDENTIALS = "true";
 
 	@Bean
 	public WebFilter corsFilter() {
 
 		return (ServerWebExchange ctx, WebFilterChain chain) -> {
-			log.info("cors : filter uri: {}", ctx.getRequest().getURI());
 
 			ServerHttpRequest request = ctx.getRequest();
 			ServerHttpResponse response = ctx.getResponse();
 			HttpHeaders headers = response.getHeaders();
 
 			String origin = request.getHeaders().getOrigin();
-			log.info("now origin : {}", origin);
 			if (ALLOWED_ORIGINS.contains(origin)) {
-				log.info("허용 origin : {}", origin);
 				headers.add(ACCESS_CONTROL_ALLOW_ORIGIN, origin);
 			}
-			//headers.add(ACCESS_CONTROL_ALLOW_ORIGIN, ALLOWED_ORIGIN);
 
 			headers.add(ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHODS);
 			headers.add(ACCESS_CONTROL_MAX_AGE, MAX_AGE);
