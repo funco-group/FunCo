@@ -1,5 +1,8 @@
 package com.found_404.funco.trade.service;
 
+import com.found_404.funco.asset.domain.type.AssetTradeType;
+import com.found_404.funco.asset.domain.type.AssetType;
+import com.found_404.funco.asset.service.AssetService;
 import com.found_404.funco.follow.service.FollowTradeService;
 import com.found_404.funco.member.domain.repository.MemberRepository;
 import com.found_404.funco.notification.domain.type.NotificationType;
@@ -31,6 +34,7 @@ public class OpenTradeService {
     private final FollowTradeService followTradeService;
     private final NotificationService notificationService;
     private final MemberRepository memberRepository;
+    private final AssetService assetService;
 
     @Async
     public void processTrade(List<Long> concludingTradeIds, Long tradePrice) {
@@ -62,7 +66,6 @@ public class OpenTradeService {
             notificationService.sendNotification(trade.getMember().getId(), trade.getTradeType().equals(TradeType.BUY) ? NotificationType.BUY : NotificationType.SELL
                     , getMessage(trade));
         }
-
         // 팔로우 구매
         followTradeService.followTrade(trades);
     }
@@ -99,6 +102,10 @@ public class OpenTradeService {
         }
 
         trade.getMember().recoverCash(recoverCash); // 거래 금액 대비 차액 입금
+
+        assetService.saveCoinToAssetHistory(trade.getMember(), trade.getTicker(), AssetTradeType.valueOf(trade.getTradeType().toString()),
+                                            trade.getVolume(), trade.getPrice(), trade.getOrderCash(), trade.getMember().getCash());
+
     }
 
 }
