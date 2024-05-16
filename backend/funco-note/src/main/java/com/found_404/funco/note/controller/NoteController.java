@@ -41,7 +41,7 @@ public class NoteController {
 
     // 댓글 목록 조회
     @GetMapping("/{noteId}/comments")
-    public ResponseEntity<List<CommentsResponse>> getComments(
+    public ResponseEntity<NoteCommentResponse> getComments(
             @PathVariable Long noteId
     ) {
         return ResponseEntity.ok(noteService.getComments(noteId));

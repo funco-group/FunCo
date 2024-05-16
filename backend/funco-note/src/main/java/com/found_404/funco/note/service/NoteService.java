@@ -124,7 +124,6 @@ public class NoteService {
     public NoteResponse getNote(Long memberId, Long noteId) {
         Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
         Long likeCount = noteLikeRepository.countByNote(note);
-        Long commentCount = noteCommentRepository.countByNote(note);
 
         Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(note.getMemberId());
 
@@ -137,7 +136,6 @@ public class NoteService {
                 .likeCount(likeCount)
                 .liked(Objects.nonNull(memberId) && noteLikeRepository.existsByMemberIdAndNoteId(
                     memberId, note.getId()))
-                .commentCount(commentCount)
                 .build();
     }
 
@@ -176,7 +174,7 @@ public class NoteService {
         note.editNote(request.title(), request.content(), request.ticker(), request.thumbnailImage(), getThumbnailContent(request.content(), THUMBNAIL_CONTENT_LENGTH));
     }
 
-    public List<CommentsResponse> getComments(Long noteId) {
+    public NoteCommentResponse getComments(Long noteId) {
         List<NoteComment> comments = noteCommentRepository.findByNoteId(noteId);
 
         Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(comments.stream()
@@ -198,7 +196,10 @@ public class NoteService {
             );
         }
 
-        return commentsResponses;
+        return NoteCommentResponse.builder()
+            .comments(commentsResponses)
+            .commentCount(comments.size())
+            .build();
     }
 
     private CommentsResponse getCommentsResponse(Map<Long, List<NoteComment>> childComments, NoteComment comment, Map<Long, SimpleMember> simpleMembers) {
