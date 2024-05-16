@@ -16,7 +16,7 @@ export async function getMemberInfo(
   memberId: number,
   success: (res: AxiosResponse<MemberType>) => void,
 ) {
-  await localAxios.get(`/${version}/${domain}/${memberId}`).then(success)
+  await localAxios.get(`/v2/${domain}/${memberId}`).then(success)
 }
 
 export async function editNickname(nickname: string) {
