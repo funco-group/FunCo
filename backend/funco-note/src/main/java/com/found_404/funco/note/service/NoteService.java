@@ -253,7 +253,8 @@ public class NoteService {
     public String getThumbnailContent(String content, int length) {
         Document doc = Jsoup.parse(content);
         doc.select("img").remove();
-        return doc.text().substring(length);
+
+        return doc.text().substring(0, Math.min(doc.text().length(), length));
     }
 
     public void addNoteLike(Long memberId, Long noteId) {
@@ -273,4 +274,5 @@ public class NoteService {
         }
 
     }
+
 }
