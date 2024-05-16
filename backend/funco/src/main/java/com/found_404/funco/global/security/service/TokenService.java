@@ -49,7 +49,7 @@ public class TokenService {
 	private final MemberRepository memberRepository;
 	private final RedisTemplate<String, Object> tokenRedisTemplate;
 /*	private final long TOKEN_PERIOD = 12 * 60 * 60 * 1000L; // 12h*/
-	private final long TOKEN_PERIOD = 10 * 1000L;
+	private final long TOKEN_PERIOD = 60 * 60 * 1000L; // 1시간
 	private final long REFRESH_PERIOD = 14 * 24 * 60 * 60 * 1000L; // 14일
 	private final String REDIS_REFRESH_TOKEN_KEY = "refreshToken";
 
