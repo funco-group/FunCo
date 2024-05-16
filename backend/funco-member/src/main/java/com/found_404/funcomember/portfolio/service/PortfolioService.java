@@ -1,5 +1,8 @@
 package com.found_404.funcomember.portfolio.service;
 
+import static com.found_404.funcomember.global.util.DecimalCalculator.*;
+import static com.found_404.funcomember.global.util.DecimalCalculator.ScaleType.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,8 +21,6 @@ import com.found_404.funcomember.portfolio.domain.Subscribe;
 import com.found_404.funcomember.portfolio.domain.repository.SubscribeRepository;
 import com.found_404.funcomember.portfolio.dto.request.FollowerProfitRequest;
 import com.found_404.funcomember.portfolio.dto.request.PortfolioStatusRequest;
-import com.found_404.funcomember.portfolio.dto.request.ProfitRequest;
-import com.found_404.funcomember.portfolio.dto.request.ReturnRateRequest;
 import com.found_404.funcomember.portfolio.dto.request.SubscribeRequest;
 import com.found_404.funcomember.portfolio.exception.PortfolioErrorCode;
 import com.found_404.funcomember.portfolio.exception.PortfolioException;
@@ -56,10 +57,7 @@ public class PortfolioService {
 			throw new PortfolioException(PortfolioErrorCode.INSUFFICIENT_CASH);
 		}
 
-		Double ratio = tradeService.getReturnRate(ReturnRateRequest.builder()
-			.portfolioPrice(portfolioPrice)
-			.cash(seller.getCash())
-			.build());
+		double ratio = divide(portfolioPrice, seller.getCash(), RETURN_RATE_SCALE);
 
 		subscriber.decreaseCash(portfolioPrice);
 		seller.increaseCashWithoutCommission(portfolioPrice);
@@ -83,10 +81,7 @@ public class PortfolioService {
 		List<FollowerInfoResponse> followerInfos = followService.getFollowerInfos(followingId);
 		followerInfos.forEach(
 			info -> {
-				long cash = info.cash() + tradeService.getProfit(ProfitRequest.builder()
-					.cash(info.cash())
-					.ratio(ratio)
-					.build());
+				long cash = info.cash() + (long)multiple(info.cash(), ratio, CASH_SCALE);
 				followService.modifyFollower(followingId, FollowerProfitRequest
 					.builder()
 					.followerId(info.followerId())
