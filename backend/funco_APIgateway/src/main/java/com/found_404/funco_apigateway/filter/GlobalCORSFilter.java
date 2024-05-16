@@ -2,6 +2,9 @@ package com.found_404.funco_apigateway.filter;
 
 import static org.springframework.http.HttpHeaders.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +25,7 @@ public class GlobalCORSFilter {
 	private static final String ALLOWED_HEADERS = "x-requested-with, authorization, Content-Type";
 	private static final String ALLOWED_METHODS = "GET, PUT, POST, DELETE, OPTIONS";
 	private static final String ALLOWED_ORIGIN = "https://funco.co.kr";
+	private static final List<String> ALLOWED_ORIGINS = Arrays.asList("https://funco.co.kr", "http://localhost:3000");
 	private static final String MAX_AGE = "3600";
 
 	private static final String ALLOWED_CREDENTIALS = "true";
@@ -35,7 +39,15 @@ public class GlobalCORSFilter {
 			ServerHttpRequest request = ctx.getRequest();
 			ServerHttpResponse response = ctx.getResponse();
 			HttpHeaders headers = response.getHeaders();
-			headers.add(ACCESS_CONTROL_ALLOW_ORIGIN, ALLOWED_ORIGIN);
+
+			String origin = headers.getOrigin();
+			log.info("now origin : {}", origin);
+			if (ALLOWED_ORIGINS.contains(origin)) {
+				log.info("허용 origin : {}", origin);
+				headers.add(ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+			}
+			//headers.add(ACCESS_CONTROL_ALLOW_ORIGIN, ALLOWED_ORIGIN);
+
 			headers.add(ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHODS);
 			headers.add(ACCESS_CONTROL_MAX_AGE, MAX_AGE);
 			headers.add(ACCESS_CONTROL_ALLOW_HEADERS, ALLOWED_HEADERS);
