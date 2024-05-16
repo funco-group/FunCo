@@ -25,9 +25,11 @@ import com.found_404.funcomember.portfolio.exception.PortfolioErrorCode;
 import com.found_404.funcomember.portfolio.exception.PortfolioException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class PortfolioService {
 	private final MemberRepository memberRepository;
 	private final SubscribeRepository subscribeRepository;
@@ -62,7 +64,7 @@ public class PortfolioService {
 
 		// 구독
 		subscribe(subscriber, seller);
-
+		log.info("===================== ratio ", ratio);
 		// seller의 팔로워들 동기화(더해줌)
 		synchronizeFollowers(seller.getId(), ratio);
 
