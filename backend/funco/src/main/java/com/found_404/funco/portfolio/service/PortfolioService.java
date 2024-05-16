@@ -47,6 +47,10 @@ public class PortfolioService {
 		Member subscriber = findByMemberId(memberId);
 		Member seller = findByMemberId(subscribeRequest.memberId());
 
+		// 구매한 유저와 판매한 유저의 beginning cash
+		Long subscriberBeginningCash = subscriber.getCash();
+		Long sellerBeginningCash = seller.getCash();
+
 		// 포트폴리오 가격 확인
 		Long portfolioPrice = seller.getPortfolioPrice();
 
@@ -68,6 +72,13 @@ public class PortfolioService {
 
 		// subscriber의 팔로워들 동기화(빼줌)
 		synchronizeFollowers(subscriber.getId(), -ratio);
+
+		// 포트폴리오 구매, 판매 각각 저장
+		assetService.savePortfolioToAssetHistory(subscriber, seller.getNickname(), AssetTradeType.PURCHASE_PORTFOLIO,
+			seller.getPortfolioPrice(), subscriberBeginningCash, subscriber.getCash());
+		assetService.savePortfolioToAssetHistory(seller, subscriber.getNickname(), AssetTradeType.SELL_PORTFOLIO,
+			seller.getPortfolioPrice(), sellerBeginningCash, seller.getCash());
+
 	}
 
 	private Member findByMemberId(Long memberId) {
@@ -92,12 +103,6 @@ public class PortfolioService {
 			.orderCash(seller.getPortfolioPrice())
 			.expiredAt(LocalDateTime.now().plusWeeks(2))
 			.build());
-
-		// 포트폴리오 구매, 판매 각각 저장
-		assetService.savePortfolioToAssetHistory(subscriber, seller.getNickname(), AssetTradeType.PURCHASE_PORTFOLIO,
-			seller.getPortfolioPrice(), subscriber.getCash());
-		assetService.savePortfolioToAssetHistory(seller, subscriber.getNickname(), AssetTradeType.SELL_PORTFOLIO,
-			seller.getPortfolioPrice(), seller.getCash());
 
 	}
 }
