@@ -46,7 +46,7 @@ public class PortfolioService {
 	@Transactional
 	public void createPortfolio(Long memberId, SubscribeRequest subscribeRequest) {
 		Member subscriber = findByMemberId(memberId);
-		Member seller = findByMemberId(subscribeRequest.memberId());
+		Member seller = findByMemberId(subscribeRequest.sellerId());
 
 		// 포트폴리오 가격 확인
 		Long portfolioPrice = seller.getPortfolioPrice();
