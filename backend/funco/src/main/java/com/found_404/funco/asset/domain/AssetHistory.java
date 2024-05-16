@@ -41,11 +41,9 @@ public class AssetHistory extends BaseEntity {
 	private AssetTradeType assetTradeType;
 
 	@Comment("거래 수량")
-	@Column(nullable = false)
 	private Double volume;
 
 	@Comment("거래 단가")
-	@Column(nullable = false)
 	private Long price;
 
 	@Comment("수수료")
@@ -63,7 +61,6 @@ public class AssetHistory extends BaseEntity {
 	private Long endingCash;
 
 	@Comment("주문 금액")
-	@Column(nullable = false)
 	private Long orderCash;
 
 	@Comment("가상화폐 티커")
