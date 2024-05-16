@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface QueryDslNoteRepository {
 
-    List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest, Pageable pageable);
+    List<Note> getNotesWithFilter(Long memberId, NotesFilterRequest notesFilterRequest, Pageable pageable);
 }
