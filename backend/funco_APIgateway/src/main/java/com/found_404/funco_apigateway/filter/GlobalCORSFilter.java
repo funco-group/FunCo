@@ -40,7 +40,7 @@ public class GlobalCORSFilter {
 			ServerHttpResponse response = ctx.getResponse();
 			HttpHeaders headers = response.getHeaders();
 
-			String origin = headers.getOrigin();
+			String origin = request.getHeaders().getOrigin();
 			log.info("now origin : {}", origin);
 			if (ALLOWED_ORIGINS.contains(origin)) {
 				log.info("허용 origin : {}", origin);
