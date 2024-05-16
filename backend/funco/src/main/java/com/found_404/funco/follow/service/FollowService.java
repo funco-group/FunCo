@@ -183,6 +183,11 @@ public class FollowService {
 		// 팔로워 멤버
 		Member followerMember = findMemberById(follow.getFollower().getId());
 
+		// 팔로잉 멤버의 follow 취소 전 가용 현금
+		Long followingBeginningCash = followingMember.getCash();
+		// 팔로워 멤버의 follow 취소 전 가용 현금
+		Long followerBeginningCash = followerMember.getCash();
+
 		// 팔로잉 코인
 		List<FollowingCoin> followingCoins = followingCoinRepository.findFollowingCoinsByFollow(follow);
 
@@ -256,8 +261,8 @@ public class FollowService {
 
 		// 팔로우 거래 내역 AssetHistory에 저장
 		// 팔로워, 팔로잉 각각 저장
-		assetService.saveFollowToAssetHistory(followerMember, AssetTradeType.FOLLOWING, followingMember.getNickname(), follow.getInvestment(), follow.getReturnRate(), follow.getCommission(), follow.getCreatedAt());
-		assetService.saveFollowToAssetHistory(followingMember, AssetTradeType.FOLLOWER, followerMember.getNickname(), follow.getInvestment(), follow.getReturnRate(), follow.getCommission(), follow.getCreatedAt());
+		assetService.saveFollowToAssetHistory(followerMember, AssetTradeType.FOLLOWING, followingMember.getNickname(), follow.getInvestment(), follow.getReturnRate(), follow.getCommission(), follow.getSettlement(),follow.getCreatedAt(), followerBeginningCash, followerMember.getCash());
+		assetService.saveFollowToAssetHistory(followingMember, AssetTradeType.FOLLOWER, followerMember.getNickname(), follow.getInvestment(), follow.getReturnRate(), follow.getCommission(), follow.getSettlement(), follow.getCreatedAt(), followingBeginningCash, followingMember.getCash());
 	}
 
 	public FollowingListResponse readFollowingList(Member member, Long lastFollowId) {

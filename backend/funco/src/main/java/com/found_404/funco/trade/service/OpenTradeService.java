@@ -80,6 +80,10 @@ public class OpenTradeService {
     }
 
     private void processAsset(Trade trade, Long recoverCash) {
+
+        // 유저에게 반영하기 전 cash
+        Long beginningCash = trade.getMember().getCash();
+
         if (trade.getTradeType().equals(TradeType.BUY)) { // BUY
             Optional<HoldingCoin> optionalHoldingCoin = holdingCoinRepository.findByMemberAndTicker(trade.getMember(), trade.getTicker());
             HoldingCoin holdingCoin;
@@ -104,7 +108,7 @@ public class OpenTradeService {
         trade.getMember().recoverCash(recoverCash); // 거래 금액 대비 차액 입금
 
         assetService.saveCoinToAssetHistory(trade.getMember(), trade.getTicker(), AssetTradeType.valueOf(trade.getTradeType().toString()),
-                                            trade.getVolume(), trade.getPrice(), trade.getOrderCash(), trade.getMember().getCash());
+                                            trade.getVolume(), trade.getPrice(), trade.getOrderCash(), beginningCash, trade.getMember().getCash());
 
     }
 

@@ -194,26 +194,20 @@ public class AssetService {
 		// switch-case 문으로 between에 들어갈 날짜 설정
 		LocalDateTime endDateTime = LocalDateTime.now();
 		LocalDate endDate = LocalDate.now();
-		LocalDateTime startDateTime = null;
-		switch(period){
-			case "DAY" -> startDateTime = endDate.atStartOfDay();
-			case "WEEK" -> startDateTime = endDate.minusWeeks(1).atStartOfDay();
-			case "ONEMONTH" -> startDateTime = endDate.minusMonths(1).atStartOfDay();
-			case "THREEMONTH" -> startDateTime = endDate.minusMonths(3).atStartOfDay();
-			case "SIXMONTH" -> startDateTime = endDate.minusMonths(6).atStartOfDay();
-		}
+		LocalDateTime startDateTime = switch(period){
+			case "DAY" -> endDate.atStartOfDay();
+			case "WEEK" -> endDate.minusWeeks(1).atStartOfDay();
+			case "ONEMONTH" -> endDate.minusMonths(1).atStartOfDay();
+			case "THREEMONTH" -> endDate.minusMonths(3).atStartOfDay();
+			case "SIXMONTH" -> endDate.minusMonths(6).atStartOfDay();
+			default -> null;
+		};
 
 		// asset별 값 전달하기
 		switch(asset){
-			case "COIN" -> {
-				return queryDslAssetHistoryRepository.findCoinHistory(memberId, startDateTime, endDateTime, tradeType);
-			}
-			case "FOLLOW" -> {
-				return queryDslAssetHistoryRepository.findFollowHistory(memberId, startDateTime, endDateTime, tradeType);
-			}
-			case "PORTFOLIO" -> {
-				return queryDslAssetHistoryRepository.findPortfolioHistory(memberId, startDateTime, endDateTime, tradeType);
-			}
+			case "COIN" -> queryDslAssetHistoryRepository.findCoinHistory(memberId, startDateTime, endDateTime, tradeType);
+			case "FOLLOW" -> queryDslAssetHistoryRepository.findFollowHistory(memberId, startDateTime, endDateTime, tradeType);
+			case "PORTFOLIO" -> queryDslAssetHistoryRepository.findPortfolioHistory(memberId, startDateTime, endDateTime, tradeType);
 		}
 
 		return new ArrayList<>();
@@ -242,7 +236,6 @@ public class AssetService {
 	}
 
 
-
 	@Transactional
 	protected void settleCoinAndFollow(Member member) {
 		// 강제 정산 로직
@@ -265,9 +258,8 @@ public class AssetService {
 
 	}
 
-	@Transactional
 	public void saveCoinToAssetHistory(Member member, String ticker, AssetTradeType tradeType, Double volume,
-										Long price, Long orderCash, Long endingCash) {
+										Long price, Long orderCash, Long beginningCash, Long endingCash) {
 
 		// 코인 거래 시 assetHistory에 필요한 요소들 저장
 		assetHistoryRepository.save(
@@ -279,15 +271,15 @@ public class AssetService {
 				.volume(volume)
 				.price(price)
 				.orderCash(orderCash)
+				.beginningCash(beginningCash)
 				.endingCash(endingCash)
 				.build()
 		);
 
 	}
 
-	@Transactional
 	public void saveFollowToAssetHistory(Member member, AssetTradeType tradeType, String followName,
-		Long investment, Double returnRate, Long commission, LocalDateTime followDate) {
+		Long investment, Double returnRate, Long commission, Long settlement, LocalDateTime followDate, Long beginningCash, Long endingCash) {
 
 		// 코인 거래 시 assetHistory에 필요한 요소들 저장
 		assetHistoryRepository.save(
@@ -299,16 +291,17 @@ public class AssetService {
 				.investment(investment)
 				.followReturnRate(returnRate)
 				.commission(commission)
+				.settlement(settlement)
 				.followDate(followDate)
+				.beginningCash(beginningCash)
+				.endingCash(endingCash)
 				.build()
 		);
 
 	}
 
-
-	@Transactional
 	public void savePortfolioToAssetHistory(Member member, String portfolioName, AssetTradeType tradeType,
-		Long price, Long endingCash) {
+		Long price, Long beginningCash, Long endingCash) {
 
 		// 코인 거래 시 assetHistory에 필요한 요소들 저장
 		assetHistoryRepository.save(
@@ -318,12 +311,12 @@ public class AssetService {
 				.assetTradeType(tradeType)
 				.portfolioName(portfolioName)
 				.price(price)
+				.beginningCash(beginningCash)
 				.endingCash(endingCash)
 				.build()
 		);
 
 	}
-
 
 	private Member findByMemberId(Long memberId) {
 		return memberRepository.findById(memberId)
