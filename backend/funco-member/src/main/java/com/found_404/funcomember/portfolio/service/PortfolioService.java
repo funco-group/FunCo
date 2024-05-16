@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.found_404.funcomember.feignClient.dto.FollowerInfoResponse;
 import com.found_404.funcomember.feignClient.service.FollowService;
-import com.found_404.funcomember.feignClient.service.TradeService;
 import com.found_404.funcomember.member.domain.Member;
 import com.found_404.funcomember.member.domain.repository.MemberRepository;
 import com.found_404.funcomember.member.domain.type.PortfolioStatusType;
@@ -33,7 +32,6 @@ public class PortfolioService {
 	private final MemberRepository memberRepository;
 	private final SubscribeRepository subscribeRepository;
 	private final FollowService followService;
-	private final TradeService tradeService;
 
 	@Transactional
 	public void updatePortfolioStatus(Long memberId, PortfolioStatusRequest portfolioStatusRequest) {
