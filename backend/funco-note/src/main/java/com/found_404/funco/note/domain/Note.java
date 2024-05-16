@@ -21,7 +21,7 @@ public class Note extends BaseEntity {
 
 	@Comment("내용")
 	@Lob
-	@Column(nullable = false)
+	@Column(columnDefinition = "TEXT", nullable = false)
 	private String content;
 
 	@Comment("코인명")
