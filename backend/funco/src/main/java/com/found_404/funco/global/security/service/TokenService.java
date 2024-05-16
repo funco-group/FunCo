@@ -3,6 +3,7 @@ package com.found_404.funco.global.security.service;
 import static com.found_404.funco.global.security.exception.SecurityErrorCode.*;
 import static java.util.concurrent.TimeUnit.*;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +48,7 @@ public class TokenService {
 
 	private final MemberRepository memberRepository;
 	private final RedisTemplate<String, Object> tokenRedisTemplate;
-	private final long ACCESS_PERIOD = 12 * 60 * 60 * 1000L; // 12h
+	private final long TOKEN_PERIOD = 30 * 60 * 1000L; // 30분
 	private final long REFRESH_PERIOD = 14 * 24 * 60 * 60 * 1000L; // 14일
 	private final String REDIS_REFRESH_TOKEN_KEY = "refreshToken";
 
@@ -59,7 +60,7 @@ public class TokenService {
 
 	public String createAccessToken(Member member) {
 		Claims claims = Jwts.claims().setSubject(String.valueOf(member.getId()));
-		return createToken(claims, ACCESS_PERIOD);
+		return createToken(claims, TOKEN_PERIOD);
 	}
 
 	public String createRefreshToken(Member member) {
@@ -71,7 +72,6 @@ public class TokenService {
 		HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
 		hashOperations.put(member.getOauthId().getOauthServerId(), REDIS_REFRESH_TOKEN_KEY, refreshToken);
 		tokenRedisTemplate.expire(member.getOauthId().getOauthServerId(), REFRESH_PERIOD, MILLISECONDS);
-
 		return refreshToken;
 	}
 

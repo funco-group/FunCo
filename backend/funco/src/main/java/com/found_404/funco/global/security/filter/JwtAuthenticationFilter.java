@@ -35,7 +35,17 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		throws IOException, ServletException {
 		try {
 			String token = tokenService.resolveToken((HttpServletRequest)request).replace("Bearer ", "");
-
+			/*if (tokenService.validateToken(token)) { // access_token 유효할 때
+				Authentication authentication = tokenService.readAuthentication(token);
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			} else { // access_token 유효하지 않을 때 재발급
+				String accessToken =
+					tokenService.reissueAccessToken((HttpServletRequest)request,
+						(HttpServletResponse)response).accessToken();
+				((HttpServletResponse)response).setHeader("Authorization", accessToken);
+				Authentication authentication = tokenService.readAuthentication(accessToken);
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}*/
 			if(!tokenService.validateToken(token)){
 				throw new SecurityException(EXPIRED_TOKEN, HttpStatus.UNAUTHORIZED);
 			}
