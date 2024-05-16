@@ -8,6 +8,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.found_404.funco.asset.domain.type.AssetTradeType;
+import com.found_404.funco.asset.service.AssetService;
 import com.found_404.funco.global.util.ScaleType;
 import com.found_404.funco.member.domain.Member;
 import com.found_404.funco.member.domain.repository.MemberRepository;
@@ -29,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class PortfolioService {
 	private final MemberRepository memberRepository;
 	private final SubscribeRepository subscribeRepository;
+	private final AssetService assetService;
 
 	@Transactional
 	public void updatePortfolioStatus(Long memberId, PortfolioStatusRequest portfolioStatusRequest) {
@@ -89,5 +92,12 @@ public class PortfolioService {
 			.orderCash(seller.getPortfolioPrice())
 			.expiredAt(LocalDateTime.now().plusWeeks(2))
 			.build());
+
+		// 포트폴리오 구매, 판매 각각 저장
+		assetService.savePortfolioToAssetHistory(subscriber, seller.getNickname(), AssetTradeType.PURCHASE_PORTFOLIO,
+			seller.getPortfolioPrice(), subscriber.getCash());
+		assetService.savePortfolioToAssetHistory(seller, subscriber.getNickname(), AssetTradeType.SELL_PORTFOLIO,
+			seller.getPortfolioPrice(), seller.getCash());
+
 	}
 }

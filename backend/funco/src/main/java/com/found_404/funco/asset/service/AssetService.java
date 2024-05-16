@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.found_404.funco.asset.domain.AssetHistory;
+import com.found_404.funco.asset.domain.repository.AssetHistoryRepository;
 import com.found_404.funco.asset.domain.repository.QueryDslAssetHistoryRepository;
 import com.found_404.funco.asset.domain.type.AssetTradeType;
 import com.found_404.funco.asset.domain.type.AssetType;
@@ -54,6 +55,7 @@ public class AssetService {
 	private final ActiveFutureRepository activeFutureRepository;
 	private final FollowService followService;
 	private final QueryDslAssetHistoryRepository queryDslAssetHistoryRepository;
+	private final AssetHistoryRepository assetHistoryRepository;
 
 	public CashResponse getMemberCash(Member member) {
 		return new CashResponse(member.getCash());
@@ -262,6 +264,66 @@ public class AssetService {
 		}
 
 	}
+
+	@Transactional
+	public void saveCoinToAssetHistory(Member member, String ticker, AssetTradeType tradeType, Double volume,
+										Long price, Long orderCash, Long endingCash) {
+
+		// 코인 거래 시 assetHistory에 필요한 요소들 저장
+		assetHistoryRepository.save(
+			AssetHistory.builder()
+				.member(member)
+				.ticker(ticker)
+				.assetType(AssetType.COIN)
+				.assetTradeType(tradeType)
+				.volume(volume)
+				.price(price)
+				.orderCash(orderCash)
+				.endingCash(endingCash)
+				.build()
+		);
+
+	}
+
+	@Transactional
+	public void saveFollowToAssetHistory(Member member, AssetTradeType tradeType, String followName,
+		Long investment, Double returnRate, Long commission, LocalDateTime followDate) {
+
+		// 코인 거래 시 assetHistory에 필요한 요소들 저장
+		assetHistoryRepository.save(
+			AssetHistory.builder()
+				.member(member)
+				.assetType(AssetType.FOLLOW)
+				.assetTradeType(tradeType)
+				.followName(followName)
+				.investment(investment)
+				.followReturnRate(returnRate)
+				.commission(commission)
+				.followDate(followDate)
+				.build()
+		);
+
+	}
+
+
+	@Transactional
+	public void savePortfolioToAssetHistory(Member member, String portfolioName, AssetTradeType tradeType,
+		Long price, Long endingCash) {
+
+		// 코인 거래 시 assetHistory에 필요한 요소들 저장
+		assetHistoryRepository.save(
+			AssetHistory.builder()
+				.member(member)
+				.assetType(AssetType.PORTFOLIO)
+				.assetTradeType(tradeType)
+				.portfolioName(portfolioName)
+				.price(price)
+				.endingCash(endingCash)
+				.build()
+		);
+
+	}
+
 
 	private Member findByMemberId(Long memberId) {
 		return memberRepository.findById(memberId)
