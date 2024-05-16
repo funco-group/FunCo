@@ -27,11 +27,11 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Note> getNotesWithFilter(NotesFilterRequest notesFilterRequest, Pageable pageable) {
+    public List<Note> getNotesWithFilter(Long memberId, NotesFilterRequest notesFilterRequest, Pageable pageable) {
         JPAQuery<Note> query = switch (notesFilterRequest.type()) {
             case ALL -> allPost();
-            case MY -> myPost(notesFilterRequest.memberId());
-            case LIKE -> likePost(notesFilterRequest.memberId());
+            case MY -> myPost(memberId);
+            case LIKE -> likePost(memberId);
         };
 
         return query

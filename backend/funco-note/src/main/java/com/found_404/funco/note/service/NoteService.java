@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,13 +55,52 @@ public class NoteService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
+    // ----
 
-    public List<NotesResponse> getNotes(NotesFilterRequest notesFilterRequest, Pageable pageable) {
+    public ImageResponse upload(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new RuntimeException("NOT_FOUND_IMAGE");
+        }
+
+        String originName = file.getOriginalFilename();
+        String type = Objects.requireNonNull(originName).substring(originName.lastIndexOf(".") + 1);
+
+        validationFileType(type.toUpperCase());
+
+        String fileName = UUID.randomUUID() + originName;
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+
+        try {
+            objectMetadata.setContentLength(file.getInputStream().available());
+            amazonS3.putObject(bucketName, fileName, file.getInputStream(), objectMetadata);
+        } catch (IOException e) {
+            throw new RuntimeException("IMAGE_UPLOAD_FAIL");
+        }
+
+        return new ImageResponse(amazonS3.getUrl(bucketName, fileName).toString());
+    }
+
+    private void validationFileType(String type) {
+        switch (type){
+            case "PNG":
+            case "JPG":
+            case "JPEG":
+            case "GIF":
+                return;
+            default:
+                throw new RuntimeException("MISS_MATCH_IMAGE_TYPE");
+        }
+    }
+
+    // ----
+
+
+    public List<NotesResponse> getNotes(Long memberId, NotesFilterRequest notesFilterRequest, Pageable pageable) {
         if ((notesFilterRequest.type() == PostType.MY || notesFilterRequest.type() == PostType.LIKE)
-                && Objects.isNull(notesFilterRequest.memberId())) {
+                && Objects.isNull(memberId)) {
             throw new NoteException(INVALID_FILTER);
         }
-        List<Note> notes = noteRepository.getNotesWithFilter(notesFilterRequest, pageable);
+        List<Note> notes = noteRepository.getNotesWithFilter(memberId ,notesFilterRequest, pageable);
         Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(notes.stream().map(Note::getMemberId).toList());
 
         return notes
@@ -73,17 +113,17 @@ public class NoteService {
                 .ticker(note.getTicker())
                 .writeDate(note.getCreatedAt())
                 .likeCount(noteLikeRepository.countByNote(note))
-                .liked(false)  // 수정!!
+                .liked(Objects.nonNull(memberId) && noteLikeRepository.existsByMemberIdAndNoteId(
+                    memberId, note.getId()))
                 .commentCount(noteCommentRepository.countByNote(note))
                 .build())
             .toList();
 
     }
 
-    public NoteResponse getNote(Long noteId) {
+    public NoteResponse getNote(Long memberId, Long noteId) {
         Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
         Long likeCount = noteLikeRepository.countByNote(note);
-        Long commentCount = noteCommentRepository.countByNote(note);
 
         Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(note.getMemberId());
 
@@ -94,8 +134,8 @@ public class NoteService {
                 .content(note.getContent())
                 .ticker(note.getTicker())
                 .likeCount(likeCount)
-                .liked(false) // 수정해야 됨!!!
-                .commentCount(commentCount)
+                .liked(Objects.nonNull(memberId) && noteLikeRepository.existsByMemberIdAndNoteId(
+                    memberId, note.getId()))
                 .build();
     }
 
@@ -134,7 +174,7 @@ public class NoteService {
         note.editNote(request.title(), request.content(), request.ticker(), request.thumbnailImage(), getThumbnailContent(request.content(), THUMBNAIL_CONTENT_LENGTH));
     }
 
-    public List<CommentsResponse> getComments(Long noteId) {
+    public NoteCommentResponse getComments(Long noteId) {
         List<NoteComment> comments = noteCommentRepository.findByNoteId(noteId);
 
         Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(comments.stream()
@@ -156,7 +196,10 @@ public class NoteService {
             );
         }
 
-        return commentsResponses;
+        return NoteCommentResponse.builder()
+            .comments(commentsResponses)
+            .commentCount(comments.size())
+            .build();
     }
 
     private CommentsResponse getCommentsResponse(Map<Long, List<NoteComment>> childComments, NoteComment comment, Map<Long, SimpleMember> simpleMembers) {
@@ -213,7 +256,8 @@ public class NoteService {
     public String getThumbnailContent(String content, int length) {
         Document doc = Jsoup.parse(content);
         doc.select("img").remove();
-        return doc.text().substring(length);
+
+        return doc.text().substring(0, Math.min(doc.text().length(), length));
     }
 
     public void addNoteLike(Long memberId, Long noteId) {
@@ -233,4 +277,5 @@ public class NoteService {
         }
 
     }
+
 }
