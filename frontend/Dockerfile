@@ -1,39 +1,19 @@
-FROM node:18-alpine AS base
+# 빌드를 위한 이미지
+FROM node:20.10.0-alpine
 
-# Install dependencies only when needed
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
-WORKDIR /usr/src/app
+# root에 /app 폴더 생성
+RUN mkdir /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock ./
-RUN yarn --frozen-lockfile --production;
-RUN rm -rf ./.next/cache
+WORKDIR /app
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /usr/src/app
-COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY . .
-RUN yarn build
-
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /usr/src/app
-
+# 환경 변수 설정
 ENV NODE_ENV=production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# 필요한 파일 복사
+COPY . /app
 
-COPY --from=builder /usr/src/app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next/static ./.next/static
-
-USER nextjs
-
+# 포트 열기
 EXPOSE 3000
 
-ENV PORT 3000
-
-CMD ["node", "server.js"]
+# 서버 실행
+CMD ["npm", "start"]
