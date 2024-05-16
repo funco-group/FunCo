@@ -17,7 +17,7 @@ const nextConfig = {
     return [
       {
         source: '/history',
-        destination: '/history/follow',
+        destination: '/history/asset',
         permanent: false,
       },
       {
@@ -25,11 +25,11 @@ const nextConfig = {
         destination: '/history/follow/following',
         permanent: false,
       },
-      {
-        source: '/trade',
-        destination: '/trade/KRW-BTC',
-        permanent: false,
-      },
+      // {
+      //   source: '/trade',
+      //   destination: '/trade/KRW-BTC',
+      //   permanent: false,
+      // },
     ]
   },
   images: {
