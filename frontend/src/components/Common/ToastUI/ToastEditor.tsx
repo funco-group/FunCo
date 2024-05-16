@@ -2,6 +2,7 @@ import { ThumbnailImageType } from '@/interfaces/note/ThumbnailImageType'
 import { Editor } from '@toast-ui/react-editor'
 import { Dispatch, RefObject, SetStateAction } from 'react'
 import '@toast-ui/editor/dist/toastui-editor.css'
+import { postImage } from '@/apis/note'
 
 const toolbarItems = [
   ['heading', 'bold', 'italic', 'strike'],
@@ -20,16 +21,22 @@ interface ToastEditorProps {
 
 function ToastEditor({ editorRef, imageList, setImageList }: ToastEditorProps) {
   const onUploadImage = (file: File, callback: typeof Function) => {
-    const DummySrc = `https://dummyimage.com/600x400/000/fff&text=${new Date().getMilliseconds()}`
-    setImageList((prev) => [
-      ...prev,
-      {
-        src: DummySrc,
-        thumbnail: prev.length === 0,
-        onMouse: false,
-      },
-    ])
-    callback(DummySrc)
+    const formData = new FormData()
+    formData.append('file', file)
+
+    postImage(formData, (res) => {
+      const { data } = res
+      console.log(data)
+      setImageList((prev) => [
+        ...prev,
+        {
+          src: data.url,
+          thumbnail: prev.length === 0,
+          onMouse: false,
+        },
+      ])
+      callback(data.url)
+    })
   }
 
   const handleChangeEditor = () => {

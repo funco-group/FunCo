@@ -1,16 +1,22 @@
-import { AxiosResponse } from "axios";
-import localAxios from "@/utils/http-commons";
-import { HoldingCoinResponseType } from "@/interfaces/PriceWindowType";
-import { TradeResultType, TradeListType } from "@/interfaces/TradeType";
-import { AssetHistoryType } from "@/interfaces/AssetType";
+import { AxiosResponse } from 'axios'
+import localAxios from '@/utils/http-commons'
+import { HoldingCoinResponseType } from '@/interfaces/PriceWindowType'
+import { TradeResultType, TradeListType } from '@/interfaces/TradeType'
+import { AssetHistoryType, CoinVolumeType } from '@/interfaces/AssetType'
 
-const domain = "trade";
-const version = "v1";
+const domain = 'trade'
+
+export async function getCoinVolume(
+  code: string,
+  success: (response: AxiosResponse<CoinVolumeType>) => void,
+) {
+  await localAxios.get(`/v1/${domain}/holding/${code}`).then(success)
+}
 
 export async function getHoldingCoin(
   success: (response: AxiosResponse<HoldingCoinResponseType>) => void,
 ) {
-  await localAxios.get(`/${version}/${domain}/holding`).then(success);
+  await localAxios.get(`/v1/${domain}/holding`).then(success)
 }
 
 export async function buyMarket(
@@ -20,12 +26,12 @@ export async function buyMarket(
   error: (response: any) => void,
 ) {
   await localAxios
-    .post(`/${version}/${domain}/market-buying`, {
+    .post(`/v1/${domain}/market-buying`, {
       ticker,
       orderCash,
     })
     .then(success)
-    .catch(error);
+    .catch(error)
 }
 
 export async function sellMarket(
@@ -35,12 +41,12 @@ export async function sellMarket(
   error: (response: any) => void,
 ) {
   await localAxios
-    .post(`/${version}/${domain}/market-selling`, {
+    .post(`/v1/${domain}/market-selling`, {
       ticker,
       volume,
     })
     .then(success)
-    .catch(error);
+    .catch(error)
 }
 
 export async function buyLimit(
@@ -51,13 +57,13 @@ export async function buyLimit(
   error: (response: any) => void,
 ) {
   await localAxios
-    .post(`/${version}/${domain}/limit-buying`, {
+    .post(`/v1/${domain}/limit-buying`, {
       ticker,
       volume,
       price,
     })
     .then(success)
-    .catch(error);
+    .catch(error)
 }
 
 export async function sellLimit(
@@ -68,13 +74,13 @@ export async function sellLimit(
   error: (response: any) => void,
 ) {
   await localAxios
-    .post(`/${version}/${domain}/limit-selling`, {
+    .post(`/v1/${domain}/limit-selling`, {
       ticker,
       volume,
       price,
     })
     .then(success)
-    .catch(error);
+    .catch(error)
 }
 
 export async function getTradeList(
@@ -84,10 +90,8 @@ export async function getTradeList(
   success: (response: AxiosResponse<TradeListType[]>) => void,
 ) {
   await localAxios
-    .get(
-      `/${version}/${domain}/orders?ticker=${ticker}&page=${page}&size=${size}`,
-    )
-    .then(success);
+    .get(`/v1/${domain}/orders?ticker=${ticker}&page=${page}&size=${size}`)
+    .then(success)
 }
 
 export async function getOpenTradeList(
@@ -97,10 +101,8 @@ export async function getOpenTradeList(
   success: (response: AxiosResponse<TradeListType[]>) => void,
 ) {
   await localAxios
-    .get(
-      `/${version}/${domain}/open-orders?ticker=${ticker}&page=${page}&size=${size}`,
-    )
-    .then(success);
+    .get(`/v1/${domain}/open-orders?ticker=${ticker}&page=${page}&size=${size}`)
+    .then(success)
 }
 
 export async function getAllOpenTradeList(
@@ -109,14 +111,12 @@ export async function getAllOpenTradeList(
   success: (response: AxiosResponse<TradeListType[]>) => void,
 ) {
   await localAxios
-    .get(`/${version}/${domain}/open-orders?page=${page}&size=${size}`)
-    .then(success);
+    .get(`/v1/${domain}/open-orders?page=${page}&size=${size}`)
+    .then(success)
 }
 
 export async function cancleOrder(id: number, success: () => void) {
-  await localAxios
-    .delete(`/${version}/${domain}/open-orders/${id}`)
-    .then(success);
+  await localAxios.delete(`/v1/${domain}/open-orders/${id}`).then(success)
 }
 
 export async function getUserTradeList(
@@ -126,6 +126,6 @@ export async function getUserTradeList(
   success: (response: AxiosResponse<AssetHistoryType[]>) => void,
 ) {
   await localAxios
-    .get(`/${version}/${domain}/orders/${memberId}?&page=${page}&size=${size}`)
-    .then(success);
+    .get(`/v1/${domain}/orders/${memberId}?&page=${page}&size=${size}`)
+    .then(success)
 }
