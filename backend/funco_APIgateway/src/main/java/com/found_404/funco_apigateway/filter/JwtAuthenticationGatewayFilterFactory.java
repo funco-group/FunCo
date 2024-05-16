@@ -1,5 +1,7 @@
 package com.found_404.funco_apigateway.filter;
 
+import static java.lang.Boolean.*;
+
 import java.util.Arrays;
 
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -31,28 +33,41 @@ public class JwtAuthenticationGatewayFilterFactory extends
 	}
 
 	public GatewayFilter apply() {
-		return apply(new Config(DEFAULT_HEADER, DEFAULT_GRANTED));
+		return apply(new Config(DEFAULT_HEADER, DEFAULT_GRANTED, TRUE));
+	}
+
+	public GatewayFilter apply(Boolean authenticated) {
+		return apply(new Config(DEFAULT_HEADER, DEFAULT_GRANTED, authenticated));
 	}
 
 	@Override
 	public GatewayFilter apply(Config config) {
 		return (exchange, chain) -> {
 			String authorizationHeader = exchange.getRequest().getHeaders().getFirst(config.headerName);
+
+			// 예외 플래그 변수
+			boolean invalidToken = false;
+
 			if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(config.granted + " ")) {
 				String token = authorizationHeader.substring(7);
 				try {
 					String memberId = tokenService.validateToken(token);
 					exchange.getRequest().mutate().header("X-Member-ID", memberId);
-					return chain.filter(exchange);
 				} catch (TokenException e) {
 					log.error("토큰 에러 : {}", e.getErrorMessage());
-					return unauthorizedResponse(exchange);
+					invalidToken = true;
 				} catch (Exception e) {
 					log.error(Arrays.toString(e.getStackTrace()));
-					return unauthorizedResponse(exchange);
+					invalidToken = true;
 				}
+			} else {
+				invalidToken = true;
 			}
-			return unauthorizedResponse(exchange);
+
+			if (invalidToken && config.authenticated) {
+				return unauthorizedResponse(exchange);
+			}
+			return chain.filter(exchange);
 		};
 	}
 
@@ -66,10 +81,12 @@ public class JwtAuthenticationGatewayFilterFactory extends
 	public static class Config {
 		private String headerName;
 		private String granted;
+		private Boolean authenticated;
 
-		public Config(String headerName, String granted) {
+		public Config(String headerName, String granted, Boolean authenticated) {
 			this.headerName = headerName;
 			this.granted = granted;
+			this.authenticated = authenticated;
 		}
 	}
 }
