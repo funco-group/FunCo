@@ -258,66 +258,6 @@ public class AssetService {
 
 	}
 
-	public void saveCoinToAssetHistory(Member member, String ticker, AssetTradeType tradeType, Double volume,
-										Long price, Long orderCash, Long beginningCash, Long endingCash) {
-
-		// 코인 거래 시 assetHistory에 필요한 요소들 저장
-		assetHistoryRepository.save(
-			AssetHistory.builder()
-				.member(member)
-				.ticker(ticker)
-				.assetType(AssetType.COIN)
-				.assetTradeType(tradeType)
-				.volume(volume)
-				.price(price)
-				.orderCash(orderCash)
-				.beginningCash(beginningCash)
-				.endingCash(endingCash)
-				.build()
-		);
-
-	}
-
-	public void saveFollowToAssetHistory(Member member, AssetTradeType tradeType, String followName,
-		Long investment, Double returnRate, Long commission, Long settlement, LocalDateTime followDate, Long beginningCash, Long endingCash) {
-
-		// 코인 거래 시 assetHistory에 필요한 요소들 저장
-		assetHistoryRepository.save(
-			AssetHistory.builder()
-				.member(member)
-				.assetType(AssetType.FOLLOW)
-				.assetTradeType(tradeType)
-				.followName(followName)
-				.investment(investment)
-				.followReturnRate(returnRate)
-				.commission(commission)
-				.settlement(settlement)
-				.followDate(followDate)
-				.beginningCash(beginningCash)
-				.endingCash(endingCash)
-				.build()
-		);
-
-	}
-
-	public void savePortfolioToAssetHistory(Member member, String portfolioName, AssetTradeType tradeType,
-		Long price, Long beginningCash, Long endingCash) {
-
-		// 코인 거래 시 assetHistory에 필요한 요소들 저장
-		assetHistoryRepository.save(
-			AssetHistory.builder()
-				.member(member)
-				.assetType(AssetType.PORTFOLIO)
-				.assetTradeType(tradeType)
-				.portfolioName(portfolioName)
-				.price(price)
-				.beginningCash(beginningCash)
-				.endingCash(endingCash)
-				.build()
-		);
-
-	}
-
 	private Member findByMemberId(Long memberId) {
 		return memberRepository.findById(memberId)
 			.orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
