@@ -7,10 +7,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.found_404.funco.asset.dto.response.AssetHistoryResponse;
 import com.found_404.funco.asset.dto.response.CashResponse;
+import com.found_404.funco.asset.dto.response.CoinHistoryResponse;
 import com.found_404.funco.asset.dto.response.CryptoResponse;
 import com.found_404.funco.asset.dto.response.HistoryResponse;
 import com.found_404.funco.asset.dto.response.TotalAssetResponse;
@@ -19,9 +21,11 @@ import com.found_404.funco.global.util.AuthMemberId;
 import com.found_404.funco.member.domain.Member;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class AssetController {
 
 	private final AssetService assetService;
@@ -36,7 +40,6 @@ public class AssetController {
 	public ResponseEntity<TotalAssetResponse> getMemberTotalAsset(@AuthMemberId Long memberId) {
 		return ResponseEntity.ok(assetService.getMemberTotalAsset(memberId));
 	}
-
 
 	// 남의 보유자산 확인하기
 	@GetMapping("/v1/asset/{memberId}")
@@ -65,5 +68,13 @@ public class AssetController {
 	public ResponseEntity<Void> initializeMemberCash(@AuthenticationPrincipal Member member){
 		assetService.initializeMemberCash(member);
 		return ResponseEntity.ok().build();
+	}
+
+
+	@GetMapping("/v2/asset/history")
+	public ResponseEntity<List<? extends AssetHistoryResponse>> getMemberHistoryV2(@AuthMemberId Long memberId, @RequestParam("period") String period,
+		@RequestParam("asset") String asset, @RequestParam("trade") String trade) {
+
+		return ResponseEntity.ok(assetService.getMemberHistoryV2(memberId, period, asset, trade));
 	}
 }
