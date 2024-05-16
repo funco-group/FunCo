@@ -4,7 +4,6 @@ import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponen
 import { MemberType } from '@/interfaces/userPage/MemberType'
 import useFollowModalState from '@/hooks/recoilHooks/useFollowModalState'
 import medalMap from '@/lib/medalMap'
-import { editIntroduction, editNickname } from '@/apis/member'
 import { ComponentTitleH3 } from '@/containers/UserPageContainer/styled'
 import PortfolioModal from './PortfolioModal'
 import {
@@ -12,25 +11,19 @@ import {
   NicknameDiv,
   ProfileButtonDiv,
   ProfileDetailContainer,
-  ProfileEditButtonDiv,
-  ProfileInput,
   ProfileRankDiv,
   ProfileRankFlexDiv,
   ProfileRankOuterDiv,
-  ProfileTextArea,
   UserPageProfileContainer,
 } from './UserPageProfile.styled'
 
 interface UserPageProfileProps {
-  isCurrentUser: boolean
   member: MemberType
 }
 
-function UserPageProfile({ isCurrentUser, member }: UserPageProfileProps) {
+function UserPageProfile({ member }: UserPageProfileProps) {
   const [nickname, setNickname] = useState(member.nickname)
-  const [isEditNickname, setIsEditNickname] = useState(false)
   const [introduction, setIntroduction] = useState(member.introduction)
-  const [isEditIntro, setIsEditIntro] = useState(false)
   const { onFollowModal } = useFollowModalState()
   const [onFollowAssetModal, setOnFollowAssetModal] = useState(false)
 
@@ -43,30 +36,6 @@ function UserPageProfile({ isCurrentUser, member }: UserPageProfileProps) {
     }
   }, [member])
 
-  const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value)
-  }
-
-  const handleNicknameEditClick = async () => {
-    if (isEditNickname) {
-      await editNickname(nickname)
-    }
-    setIsEditNickname((prev) => !prev)
-
-    // 여기에 recoil에 저장된 닉네임 바꾸는 것도 넣어줘야돼요!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  }
-
-  const handleIntroInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setIntroduction(e.target.value)
-  }
-
-  const handleIntroEditClick = async () => {
-    if (isEditIntro) {
-      await editIntroduction(introduction)
-    }
-    setIsEditIntro((prev) => !prev)
-  }
-
   const handleFollowClick = () => {
     onFollowModal({
       memberId: member.memberId,
@@ -78,26 +47,6 @@ function UserPageProfile({ isCurrentUser, member }: UserPageProfileProps) {
   }
 
   function renderButton() {
-    if (isCurrentUser) {
-      return (
-        <ProfileEditButtonDiv>
-          <BrandButtonComponent
-            content={isEditNickname ? '닉네임 저장' : '닉네임 수정'}
-            color={null}
-            cancel={false}
-            onClick={handleNicknameEditClick}
-            disabled={false}
-          />
-          <BrandButtonComponent
-            content={isEditIntro ? '한 줄 소개 저장' : '한 줄 소개 수정'}
-            color={null}
-            cancel={false}
-            onClick={handleIntroEditClick}
-            disabled={false}
-          />
-        </ProfileEditButtonDiv>
-      )
-    }
     if (!member.isFollow) {
       return (
         <BrandButtonComponent
@@ -131,18 +80,7 @@ function UserPageProfile({ isCurrentUser, member }: UserPageProfileProps) {
       <ComponentTitleH3>프로필</ComponentTitleH3>
       <ProfileDetailContainer>
         <img src={member.profileUrl} alt="member-profile" />
-        <NicknameDiv>
-          {isEditNickname ? (
-            <ProfileInput
-              type="text"
-              value={nickname}
-              onChange={handleNicknameInput}
-              maxLength={15}
-            />
-          ) : (
-            nickname
-          )}
-        </NicknameDiv>
+        <NicknameDiv>{nickname}</NicknameDiv>
         <ProfileRankFlexDiv>
           <ProfileRankOuterDiv>
             <div>총 자산 랭킹</div>
@@ -173,17 +111,7 @@ function UserPageProfile({ isCurrentUser, member }: UserPageProfileProps) {
             </ProfileRankDiv>
           </ProfileRankOuterDiv>
         </ProfileRankFlexDiv>
-        <IntroductionDiv>
-          {isEditIntro ? (
-            <ProfileTextArea
-              value={introduction}
-              onChange={handleIntroInput}
-              maxLength={21}
-            />
-          ) : (
-            <div>{introduction}</div>
-          )}
-        </IntroductionDiv>
+        <IntroductionDiv>{introduction}</IntroductionDiv>
       </ProfileDetailContainer>
       <ProfileButtonDiv>{renderButton()}</ProfileButtonDiv>
     </UserPageProfileContainer>

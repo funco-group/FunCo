@@ -8,11 +8,20 @@ export interface AssetCoinType {
   averagePrice: number
 }
 
+export interface AssetFuturesType {
+  ticker: string
+  tradeType: string
+  orderCash: number
+  price: number
+  leverage: number
+}
+
 export interface AssetResponseType {
   memberId: number
   cash: number
   followingInvestment: number
   holdingCoinInfos: AssetCoinType[]
+  activeFutureInfos: AssetFuturesType[]
 }
 
 export interface AssetType {
@@ -20,8 +29,8 @@ export interface AssetType {
   name: string
   volume: number | null
   averagePrice: number | null
-  price: number | null
-  evaluationAmount: number
+  price: number | string | null
+  evaluationAmount: number | null
   evaluationProfit: number | null
 }
 
