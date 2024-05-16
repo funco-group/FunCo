@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import NormalTradeItem from './NormalTradeItem'
 import TradeButton from '@/components/Common/Trade/TradeButtonTab'
 import { ButtonContainer } from '@/styles/Trade.styled'
 import { userState } from '@/recoils/user'
 import useLoginAlertModalState from '@/hooks/recoilHooks/useLoginAlertModalState'
 import { useRecoilValue } from 'recoil'
+import NormalTradeItem from './NormalTradeItem'
 
 interface NormalTradeProps {
   curPrice: number
@@ -28,16 +28,14 @@ function NormalTrade({ curPrice, getCurPrice }: NormalTradeProps) {
   return (
     <div>
       <ButtonContainer>
-        {buttons.map((button) => {
-          return (
-            <TradeButton
-              key={button}
-              name={button}
-              activeButton={activeButton}
-              changeButton={changeButton}
-            />
-          )
-        })}
+        {buttons.map((button) => (
+          <TradeButton
+            key={button}
+            name={button}
+            activeButton={activeButton}
+            changeButton={changeButton}
+          />
+        ))}
       </ButtonContainer>
       {activeButton === '매수' ? (
         <NormalTradeItem name="매수" curPrice={curPrice} />

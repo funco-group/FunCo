@@ -75,7 +75,7 @@ function ReturnResult() {
       />
       {accReturnRate && returnResult && (
         <ChartGraph
-          key={accReturnRate?.length + returnResult?.length}
+          key={accReturnRate.length + returnResult.length}
           accReturnRate={accReturnRate}
           returnResult={returnResult}
         />

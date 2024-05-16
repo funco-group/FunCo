@@ -1,10 +1,6 @@
 import { AxiosResponse } from 'axios'
 import localAxios from '@/utils/http-commons'
-import {
-  AssetHistoryType,
-  AssetResponseType,
-  CoinVolumeType,
-} from '@/interfaces/AssetType'
+import { AssetHistoryType, AssetResponseType } from '@/interfaces/AssetType'
 
 const domain = 'asset'
 

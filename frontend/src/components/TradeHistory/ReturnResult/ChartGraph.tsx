@@ -1,7 +1,7 @@
 import { TitleDiv } from '@/styles/TradeHistoryStyled'
-import { ChartGraphContainer, ChartDiv } from './ChartGraph.styled'
 import AreaChart from '@/components/Common/Chart/AreaChart'
 import ColumnChart from '@/components/Common/Chart/ColumnChart'
+import { ChartGraphContainer, ChartDiv } from './ChartGraph.styled'
 
 interface ChartGraphProps {
   accReturnRate: (string | number)[][]

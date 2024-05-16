@@ -4,9 +4,9 @@ import {
   ColumnTitleDiv,
 } from '@/styles/CommonStyled'
 import { TitleDiv } from '@/styles/TradeHistoryStyled'
-import ReturnResultListItem from './ReturnResultListItem'
 import { StatisticsType } from '@/interfaces/StatisticsType'
-import ReturnResultListContainer from './ReturnResultList.styled'
+import ReturnResultListItem from './ReturnResultListItem'
+import { ReturnResultListContainer } from './ReturnResultList.styled'
 
 interface ReturnResultListProps {
   resultList: StatisticsType[]
@@ -34,9 +34,9 @@ function ReturnResultList({ resultList }: ReturnResultListProps) {
         </ColumnGrid>
       </ColumnContainer>
       <ReturnResultListContainer>
-        {resultList.map((result: StatisticsType) => {
-          return <ReturnResultListItem key={result.date} result={result} />
-        })}
+        {resultList.map((result: StatisticsType) => (
+          <ReturnResultListItem key={result.date} result={result} />
+        ))}
       </ReturnResultListContainer>
     </div>
   )

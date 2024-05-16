@@ -6,9 +6,9 @@ import {
   DataDiv,
   ResultContainer,
   TextInfoDiv,
-} from './TotalReturnResult.styled'
+} from '@/components/TradeHistory/ReturnResult/TotalReturnResult.styled'
 import { GreenContainer } from '@/styles/TradeHistoryStyled'
-import ReturnResultTab from '@/components/common/ReturnResultTab'
+import ReturnResultTab from '@/components/Common/ReturnResultTab'
 import { OptionType } from '@/interfaces/AssetType'
 import { getStartDate } from '@/apis/statistics'
 import { AxiosResponse } from 'axios'
@@ -50,7 +50,7 @@ function TotalReturnResult({
       let month = startMonth
       const todayYear = new Date().getFullYear()
       const todayMonth = new Date().getMonth() + 1
-      let dateList = []
+      const dateList = []
 
       if (activeTab === '일별') {
         while (year < todayYear || (year === todayYear && month < todayMonth)) {
@@ -58,14 +58,14 @@ function TotalReturnResult({
             value: `${year}-${month}`,
             name: `${year}년 ${month}월`,
           })
-          month++
+          month += 1
           if (month > 12) {
             month = 1
-            year++
+            year += 1
           }
         }
       } else {
-        for (let i = startYear; i <= todayYear; i++) {
+        for (let i = startYear; i <= todayYear; i += 1) {
           dateList.push({
             value: `${year}`,
             name: `${year}년`,
@@ -98,27 +98,26 @@ function TotalReturnResult({
         <ResultContainer>
           <GreenContainer>
             <ResultItemContainer>
-              {titles.map((title, index) => {
-                return (
-                  <ResultItemDiv $right={index < 1} key={title}>
-                    <TitleDiv>{title}</TitleDiv>
-                    <DataDiv
-                      color={
-                        resultData[index] > 0
-                          ? 'red'
-                          : resultData[index] < 0
-                            ? 'blue'
-                            : 'black'
-                      }
-                    >
-                      {resultData[index]
-                        ? resultData[index].toLocaleString('ko-KR')
-                        : '-'}{' '}
-                      <span>{unit[index]}</span>
-                    </DataDiv>
-                  </ResultItemDiv>
-                )
-              })}
+              {titles.map((title, index) => (
+                <ResultItemDiv $right={index < 1} key={title}>
+                  <TitleDiv>{title}</TitleDiv>
+                  <DataDiv
+                    color={
+                      // eslint-disable-next-line no-nested-ternary
+                      resultData[index] > 0
+                        ? 'red'
+                        : resultData[index] < 0
+                          ? 'blue'
+                          : 'black'
+                    }
+                  >
+                    {resultData[index]
+                      ? resultData[index].toLocaleString('ko-KR')
+                      : '-'}{' '}
+                    <span>{unit[index]}</span>
+                  </DataDiv>
+                </ResultItemDiv>
+              ))}
             </ResultItemContainer>
             <TextInfoDiv>※ 기준 금액 : 초기 자금 천 만원</TextInfoDiv>
           </GreenContainer>

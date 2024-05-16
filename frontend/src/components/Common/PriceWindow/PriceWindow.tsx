@@ -1,11 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { AxiosResponse } from 'axios'
 import { useRecoilValue } from 'recoil'
-import {
-  PriceWindowContainer,
-  ColumnTitleDiv,
-  PriceItemContainer,
-} from './PriceWindow.styled'
 import tickerWebSocket from '@/sockets/tickerWebSocket'
 import {
   PriceType,
@@ -18,14 +13,19 @@ import {
   getFavoriteCoinList,
   removeFavoriteCoin,
 } from '@/apis/crypto'
-import CoinSearch from './CoinSearch'
-import PriceItem from './PriceItem'
 import Tab from '@/components/Common/Tab/TableTab'
 import codeListState from '@/recoils/crypto/withCodeList'
 import { getHoldingCoin } from '@/apis/trade'
 import { ColumnContainer, ColumnGrid } from '@/styles/CommonStyled'
 import { userState } from '@/recoils/user'
 import useLoginAlertModalState from '@/hooks/recoilHooks/useLoginAlertModalState'
+import PriceItem from './PriceItem'
+import CoinSearch from './CoinSearch'
+import {
+  PriceWindowContainer,
+  ColumnTitleDiv,
+  PriceItemContainer,
+} from './PriceWindow.styled'
 
 interface PriceWindowProps {
   priceList: PriceType[]
@@ -67,13 +67,14 @@ function PriceWindow({ priceList, setPriceList }: PriceWindowProps) {
     }
   }, [])
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (socket?.status === WebSocket.OPEN) {
         socket.close()
       }
-    }
-  }, [])
+    },
+    [],
+  )
 
   useEffect(() => {
     if (socket?.status === WebSocket.OPEN) {
@@ -90,10 +91,8 @@ function PriceWindow({ priceList, setPriceList }: PriceWindowProps) {
   const changeTab = (tab: string) => {
     if (user.user) {
       setActiveTab(tab)
-    } else {
-      if (tab === '보유' || tab === '관심') {
-        onLoginAlertModal()
-      }
+    } else if (tab === '보유' || tab === '관심') {
+      onLoginAlertModal()
     }
   }
 

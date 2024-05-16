@@ -1,7 +1,5 @@
 'use client'
 
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable @next/next/no-img-element */
 
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
@@ -11,6 +9,7 @@ import { Editor } from '@toast-ui/react-editor'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useRef, useState } from 'react'
+import { postNotes } from '@/apis/note'
 
 const ToastEditor = dynamic(
   () => import('@/components/Common/ToastUI/ToastEditor'),
@@ -34,12 +33,19 @@ function NotesWrite() {
 
   const handleSaveBtn = () => {
     const htmlContent = editorRef.current?.getInstance().getHTML()
-    console.log('title', titleText)
-    console.log('content', htmlContent)
-    console.log('ticker', coin)
-    console.log(
-      'thumbnailImage',
-      imageList.find((image) => image.thumbnail)?.src,
+    const thumbnailImage = imageList.find((image) => image.thumbnail)?.src
+    if (!thumbnailImage) return
+    postNotes(
+      {
+        title: titleText,
+        content: htmlContent,
+        ticker: coin,
+        thumbnailImage,
+      },
+      (res) => {
+        const { data } = res
+        router.push(`/notes/${data.noteId}`)
+      },
     )
   }
 

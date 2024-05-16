@@ -18,11 +18,10 @@ import {
   GreenDiv,
   TradeInfo,
 } from '@/styles/Trade.styled'
-import { getCoinVolume } from '@/apis/trade'
+import { getCoinVolume, buyLimit, sellLimit } from '@/apis/trade'
 import { getCash } from '@/apis/member'
 import { CashType } from '@/interfaces/common/AssetType'
 import inputDecimalFormat from '@/utils/inputDecimalFormat'
-import { buyLimit, sellLimit } from '@/apis/trade'
 import AlertModal from '@/components/Common/Modal/AlertModal'
 import { CoinVolumeType } from '@/interfaces/AssetType'
 import useLoginAlertModalState from '@/hooks/recoilHooks/useLoginAlertModalState'
@@ -276,13 +275,11 @@ function NormalTradeItem({ name, curPrice }: NormalTradeItemProps) {
         <TradeItem>
           <div />
           <PriceButtons>
-            {volumeButtons.map((rate) => {
-              return (
-                <PriceButton key={rate} onClick={() => clickVolumeButton(rate)}>
-                  {rate}%
-                </PriceButton>
-              )
-            })}
+            {volumeButtons.map((rate) => (
+              <PriceButton key={rate} onClick={() => clickVolumeButton(rate)}>
+                {rate}%
+              </PriceButton>
+            ))}
           </PriceButtons>
         </TradeItem>
       </div>
