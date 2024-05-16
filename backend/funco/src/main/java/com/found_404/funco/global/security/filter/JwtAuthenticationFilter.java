@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.*;
 
 import java.io.IOException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -34,17 +35,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		throws IOException, ServletException {
 		try {
 			String token = tokenService.resolveToken((HttpServletRequest)request).replace("Bearer ", "");
-			if (tokenService.validateToken(token)) { // access_token 유효할 때
-				Authentication authentication = tokenService.readAuthentication(token);
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-			} else { // access_token 유효하지 않을 때 재발급
-				String accessToken =
-					tokenService.reissueAccessToken((HttpServletRequest)request,
-						(HttpServletResponse)response).accessToken();
-				((HttpServletResponse)response).setHeader("Authorization", accessToken);
-				Authentication authentication = tokenService.readAuthentication(accessToken);
-				SecurityContextHolder.getContext().setAuthentication(authentication);
+
+			if(!tokenService.validateToken(token)){
+				throw new SecurityException(EXPIRED_TOKEN, HttpStatus.UNAUTHORIZED);
 			}
+
+			Authentication authentication = tokenService.readAuthentication(token);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+
 		} catch (SecurityException e) {
 			request.setAttribute("errorCode", e.getErrorCode());
 			request.setAttribute("httpStatus", e.getHttpStatus());
