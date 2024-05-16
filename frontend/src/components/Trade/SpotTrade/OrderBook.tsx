@@ -1,7 +1,12 @@
 'use client'
 
+/* eslint-disable react/no-array-index-key */
+
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+import orderbookWebSockets from '@/sockets/orderbookWebSocket'
+import { WebSocketHandlers } from '@/interfaces/PriceWindowType'
+import { OrderType } from '@/interfaces/CryptoType'
 import {
   OrderBookContainer,
   TitleContainer,
@@ -11,9 +16,6 @@ import {
   SizeDiv,
   PriceDiv,
 } from './OrderBook.styled'
-import orderbookWebSockets from '@/sockets/orderbookWebSocket'
-import { WebSocketHandlers } from '@/interfaces/PriceWindowType'
-import { OrderType } from '@/interfaces/CryptoType'
 
 function OrderBook() {
   const pathname = usePathname()

@@ -1,20 +1,21 @@
 'use client'
 
+import { getNotesList } from '@/apis/note'
 import TabButton from '@/components/Common/Button/TabButton.styled'
+import NoData from '@/components/Common/NoData'
 import NotePreviewList from '@/components/Note/Notes/NotePreviewList'
 import NotesFilterBtnList from '@/components/Note/Notes/NotesFilterBtnList'
 import NotesSearch from '@/components/Note/Notes/NotesSearch'
 import { NotePreviewType } from '@/interfaces/note/NotePreviewType'
-import getNotePreviewList from '@/lib/getNotesPreviewList'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 function Notes() {
-  const [nowFilter, setNowFilter] = useState<string>('')
+  const [nowFilter, setNowFilter] = useState<string>('ALL')
   const [coinList, setCoinList] = useState<string[]>([])
   const [search, setSearch] = useState<string>('')
   const [keyword, setKeyword] = useState<string>('')
-  const [sorted, setSorted] = useState<string>('')
+  const [sorted, setSorted] = useState<string>('LATEST')
   const [params, setParams] = useState<string[]>([])
   const [notePreviewList, setNotePreviewList] = useState<NotePreviewType[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -43,18 +44,25 @@ function Notes() {
     setSorted(searchParams.get('sorted') || 'LATEST')
 
     const apiParams = [
-      searchParams.get('type') ? `type=${searchParams.get('type')}` : '',
+      searchParams.get('type')
+        ? `type=${searchParams.get('type')}`
+        : 'type=ALL',
       searchParams.get('coin') ? `coin=${searchParams.get('coin')}` : '',
       searchParams.get('search') ? `search=${searchParams.get('search')}` : '',
       searchParams.get('keyword')
         ? `keyword=${searchParams.get('keyword')}`
         : '',
-      searchParams.get('sorted') ? `sorted=${searchParams.get('sorted')}` : '',
+      searchParams.get('sorted')
+        ? `sorted=${searchParams.get('sorted')}`
+        : 'sorted=LATEST',
+      'page=0',
+      'size=100',
     ].filter(Boolean)
 
-    console.log('api 호출', apiParams)
-    setNotePreviewList(getNotePreviewList(`/notes?${apiParams.join('&')}`))
-    setIsLoading(false)
+    getNotesList(apiParams.join('&'), (res) => {
+      const { data } = res
+      setNotePreviewList(data)
+    })
   }, [searchParams])
 
   useEffect(() => {
@@ -116,10 +124,14 @@ function Notes() {
           글 작성
         </button>
       </div>
-      <NotePreviewList
-        notePreviewList={notePreviewList}
-        setCoinList={setCoinList}
-      />
+      {notePreviewList.length === 0 ? (
+        <NoData content="게시글이 없습니다." />
+      ) : (
+        <NotePreviewList
+          notePreviewList={notePreviewList}
+          setCoinList={setCoinList}
+        />
+      )}
     </>
   )
 }

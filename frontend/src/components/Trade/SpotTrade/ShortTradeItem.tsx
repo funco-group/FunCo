@@ -16,16 +16,15 @@ import {
   TradeInfo,
 } from '@/styles/Trade.styled'
 import { userState } from '@/recoils/user'
-import { getCoinVolume } from '@/apis/trade'
+import { getCoinVolume, buyMarket, sellMarket } from '@/apis/trade'
 import { getCash } from '@/apis/member'
 import { CashType } from '@/interfaces/common/AssetType'
-import { buyMarket, sellMarket } from '@/apis/trade'
-import TradeConcludedModal from './TradeConcludedModal'
 import { TradeResultType } from '@/interfaces/TradeType'
 import { CoinVolumeType } from '@/interfaces/AssetType'
 import AlertModal from '@/components/Common/Modal/AlertModal'
 import inputDecimalFormat from '@/utils/inputDecimalFormat'
 import useLoginAlertModalState from '@/hooks/recoilHooks/useLoginAlertModalState'
+import TradeConcludedModal from './TradeConcludedModal'
 
 interface ShortTradeItemProps {
   name: string
@@ -222,13 +221,11 @@ function ShortTradeItem({ name, curPrice }: ShortTradeItemProps) {
         <TradeItem>
           <div />
           <PriceButtons>
-            {volumeButtons.map((rate) => {
-              return (
-                <PriceButton onClick={() => clickVolumeButton(rate)} key={rate}>
-                  {rate}%
-                </PriceButton>
-              )
-            })}
+            {volumeButtons.map((rate) => (
+              <PriceButton onClick={() => clickVolumeButton(rate)} key={rate}>
+                {rate}%
+              </PriceButton>
+            ))}
           </PriceButtons>
         </TradeItem>
       </div>

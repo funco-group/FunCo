@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 import './globals.css'
 import StyledComponentsRegistry from '@/lib/registry'
 import Navbar from '@/containers/HeaderContainer'
+import ScrollToTop from '@/styles/ScrollToTop'
 import RecoilRootProvider from './RecoilProvider'
 import ToastProvider from './ToastProvider'
 import RecoilSetter from './RecoilSetter'
-import ScrollToTop from '@/styles/ScrollToTop'
 
 export const metadata: Metadata = {
   title: 'FUNCO',
