@@ -32,7 +32,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 		TradeType tradeType) {
 
 		return jpaQueryFactory
-			.select(new QCoinHistoryResponse(assetHistory.createdAt, assetHistory.ticker, assetHistory.assetTradeType,
+			.select(new QCoinHistoryResponse(assetHistory.createdAt, assetHistory.ticker, assetHistory.tradeType,
 				assetHistory.volume, assetHistory.price, assetHistory.orderCash, assetHistory.endingCash))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),
@@ -47,7 +47,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	public List<FollowHistoryResponse> findFollowHistory(Long memberId, LocalDateTime startDate, LocalDateTime endDate,
 		TradeType tradeType) {
 		return jpaQueryFactory
-			.select(new QFollowHistoryResponse(assetHistory.createdAt, assetHistory.assetTradeType, assetHistory.followName, assetHistory.investment,
+			.select(new QFollowHistoryResponse(assetHistory.createdAt, assetHistory.tradeType, assetHistory.followName, assetHistory.investment,
 				assetHistory.settlement, assetHistory.followReturnRate, assetHistory.commission, assetHistory.followDate))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),
@@ -62,7 +62,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	public List<PortfolioHistoryResponse> findPortfolioHistory(Long memberId, LocalDateTime startDate,
 		LocalDateTime endDate, TradeType tradeType) {
 		return jpaQueryFactory
-			.select(new QPortfolioHistoryResponse(assetHistory.createdAt, assetHistory.portfolioName, assetHistory.assetTradeType,
+			.select(new QPortfolioHistoryResponse(assetHistory.createdAt, assetHistory.portfolioName, assetHistory.tradeType,
 				assetHistory.price, assetHistory.endingCash))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),
@@ -79,7 +79,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	}
 
 	private Predicate filterType(TradeType tradeType) {
-		return assetHistory.assetTradeType.eq(tradeType);
+		return assetHistory.tradeType.eq(tradeType);
 	}
 
 

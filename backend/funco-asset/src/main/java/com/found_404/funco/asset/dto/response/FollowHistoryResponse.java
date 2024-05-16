@@ -12,20 +12,20 @@ public record FollowHistoryResponse(
 	Long investment,
 	Long settlement,
 	Double returnRate,
-	Long commision,
+	Long commission,
 	LocalDateTime followDate
 ) implements AssetHistoryResponse {
 
 	@QueryProjection
 	public FollowHistoryResponse(LocalDateTime settleDate, TradeType tradeType, String followName, Long investment, Long settlement,
-		Double returnRate, Long commision, LocalDateTime followDate) {
+								 Double returnRate, Long commission, LocalDateTime followDate) {
 		this.settleDate = settleDate;
 		this.tradeType = tradeType;
 		this.followName = followName;
 		this.investment = investment;
 		this.settlement = settlement;
 		this.returnRate = returnRate;
-		this.commision = commision;
+		this.commission = commission;
 		this.followDate = followDate;
 	}
 
