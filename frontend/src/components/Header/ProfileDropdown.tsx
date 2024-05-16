@@ -30,13 +30,12 @@ function ProfileDropdown({
   }
 
   const handleLogout = () => {
-    postLogout(() => {
-      logout()
+    logout()
 
-      setIsProfileOpen((prev) => !prev)
-      window.location.reload()
-      window.location.href = '/'
-    })
+    setIsProfileOpen((prev) => !prev)
+    window.location.reload()
+    window.location.href = '/'
+    postLogout()
   }
 
   const [open, setOpen] = useState(false)

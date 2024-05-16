@@ -27,6 +27,6 @@ export async function getTokenReissue() {
   })
 }
 
-export async function postLogout(success: () => void) {
-  localAxios.post(`/${version}/${domain}/google/signout`).then(success)
+export async function postLogout() {
+  localAxios.post(`/${version}/${domain}/google/signout`)
 }
