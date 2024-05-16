@@ -12,15 +12,17 @@ import RecentInvestment from '@/components/UserPage/RecentInvestment'
 import UserFollow from '@/components/UserPage/UserFollow'
 import ReturnRateGraph from '@/components/UserPage/ReturnRateGraph'
 import { UserLayoutRowDiv } from './styled'
+import MyPageProfile from '@/components/UserPage/MyPageProfile'
 
 function UserPageContainer({ memberId }: { memberId: number }) {
   const { user } = useUserState()
   const [member, setMember] = useState<MemberType>()
+  const [my, setMy] = useState<MyType>()
   const { followModal } = useFollowModalState()
 
   useEffect(() => {
     if (memberId) {
-      getMemberInfo(+memberId, (res) => {
+      getMemberInfo(memberId, (res) => {
         const { data } = res
         setMember(data)
       })
@@ -38,7 +40,12 @@ function UserPageContainer({ memberId }: { memberId: number }) {
         <FollowModal member={member} setMember={setMember} />
       )}
       <UserLayoutRowDiv>
-        <UserPageProfile isCurrentUser={isCurrentUser} member={member} />
+        {isCurrentUser ? (
+          <UserPageProfile member={member} />
+        ) : (
+          <MyPageProfile member={member} />
+        )}
+
         <AssetGraph member={member} />
       </UserLayoutRowDiv>
       <UserLayoutRowDiv>
