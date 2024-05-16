@@ -22,7 +22,7 @@ public interface MemberServiceClient {
 	@GetMapping("/api/v1/members/{memberId}/cash")
 	CashResponse getMemberCash(@PathVariable Long memberId);
 
-	@GetMapping()
+	@GetMapping("/api/v1/members")
 	List<SimpleMember> getMembers(@RequestParam List<Long> ids);
 
 	@GetMapping("/api/v1/hello")
