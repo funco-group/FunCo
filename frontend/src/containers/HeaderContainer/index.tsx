@@ -22,6 +22,7 @@ import {
   NavBarProfileImg,
   NavBarRightDiv,
 } from './styled'
+import Image from 'next/image'
 
 function Navbar() {
   const { user, unReadCount } = useUserState()
