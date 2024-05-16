@@ -7,7 +7,8 @@ interface NavLinkProps {
 }
 function NavLinkComponent({ path, name }: NavLinkProps) {
   const pathname = usePathname()
-  const isActive = pathname.split('/')[1] === path.split('/')[1]
+  const pathIndex = name.includes('거래소') ? 2 : 1
+  const isActive = pathname.split('/')[pathIndex] === path.split('/')[pathIndex]
 
   return (
     <Link
