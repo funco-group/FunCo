@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.found_404.funco.asset.domain.type.AssetTradeType;
+import com.found_404.funco.asset.domain.type.AssetType;
+import com.found_404.funco.asset.service.AssetService;
 import com.found_404.funco.follow.dto.FollowTradeDto;
 import com.found_404.funco.notification.domain.type.NotificationType;
 import com.found_404.funco.notification.service.NotificationService;
@@ -51,6 +54,7 @@ public class FollowService {
 	private final HoldingCoinRepository holdingCoinRepository;
 	private final FollowingCoinRepository followingCoinRepository;
 	private final FollowTradeRepository followTradeRepository;
+	private final AssetService assetService;
 
 	private final CryptoPrice cryptoPrice;
 
@@ -179,6 +183,11 @@ public class FollowService {
 		// 팔로워 멤버
 		Member followerMember = findMemberById(follow.getFollower().getId());
 
+		// 팔로잉 멤버의 follow 취소 전 가용 현금
+		Long followingBeginningCash = followingMember.getCash();
+		// 팔로워 멤버의 follow 취소 전 가용 현금
+		Long followerBeginningCash = followerMember.getCash();
+
 		// 팔로잉 코인
 		List<FollowingCoin> followingCoins = followingCoinRepository.findFollowingCoinsByFollow(follow);
 
@@ -250,6 +259,10 @@ public class FollowService {
 				.append(String.format("%,d", commission)).append("원의 수수료를 받았습니다.");
 		notificationService.sendNotification(followingMember.getId(), NotificationType.SETTLE, message.toString());
 
+		// 팔로우 거래 내역 AssetHistory에 저장
+		// 팔로워, 팔로잉 각각 저장
+		assetService.saveFollowToAssetHistory(followerMember, AssetTradeType.FOLLOWING, followingMember.getNickname(), follow.getInvestment(), follow.getReturnRate(), follow.getCommission(), follow.getSettlement(),follow.getCreatedAt(), followerBeginningCash, followerMember.getCash());
+		assetService.saveFollowToAssetHistory(followingMember, AssetTradeType.FOLLOWER, followerMember.getNickname(), follow.getInvestment(), follow.getReturnRate(), follow.getCommission(), follow.getSettlement(), follow.getCreatedAt(), followingBeginningCash, followingMember.getCash());
 	}
 
 	public FollowingListResponse readFollowingList(Member member, Long lastFollowId) {
