@@ -12,4 +12,6 @@ public interface NoteLikeRepository extends JpaRepository<NoteLike, Long> {
 
     Optional<NoteLike> findByMemberIdAndNote(Long memberId, Note note);
 
+    boolean existsByMemberIdAndNoteId(Long memberId, Long noteId);
+
 }

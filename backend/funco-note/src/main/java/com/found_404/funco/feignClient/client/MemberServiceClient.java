@@ -10,7 +10,7 @@ import java.util.List;
 @FeignClient(name="member-service")
 public interface MemberServiceClient {
 
-    @GetMapping()
+    @GetMapping("/api/v1/members")
     List<SimpleMember> getMembers(@RequestParam List<Long> ids);
 
     @GetMapping("/api/v1/hello")
