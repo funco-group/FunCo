@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import StyledComponentsRegistry from '@/lib/registry'
 import Navbar from '@/containers/HeaderContainer'
+import ScrollToTop from '@/styles/ScrollToTop'
 import RecoilRootProvider from './RecoilProvider'
 import ToastProvider from './ToastProvider'
 import RecoilSetter from './RecoilSetter'
@@ -21,12 +22,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square.css"
+        />
+      </head>
       <body>
         <RecoilRootProvider>
           <RecoilSetter>
             <ToastProvider>
               <StyledComponentsRegistry>
                 <Navbar />
+                <ScrollToTop />
                 <div style={{ padding: '6.5rem 0' }}>{children}</div>
               </StyledComponentsRegistry>
             </ToastProvider>

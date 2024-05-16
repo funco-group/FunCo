@@ -35,8 +35,7 @@ function RankTableContent({ rank, nowTabName }: RankTableContentProps) {
         <div>
           <RankTableContentUserDiv onClick={handleProfileClick}>
             <img
-              // src={rank.member.profileUrl}
-              src="/image/chuu.gif"
+              src={rank.member.profileUrl}
               alt="rank-user-profile"
               draggable={false}
             />

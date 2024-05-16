@@ -1,9 +1,8 @@
-import { AxiosResponse } from "axios";
-import localAxios from "@/utils/http-commons";
-import { StatisticsType, StartDateType } from "@/interfaces/StatisticsType";
+import { AxiosResponse } from 'axios'
+import localAxios from '@/utils/http-commons'
+import { StatisticsType, StartDateType } from '@/interfaces/StatisticsType'
 
-const domain = "statistics";
-const version = "v1";
+const domain = 'statistics'
 
 export async function getDailyStatistics(
   year: string,
@@ -11,23 +10,21 @@ export async function getDailyStatistics(
   success: (response: AxiosResponse<StatisticsType[]>) => void,
 ) {
   await localAxios
-    .get(`/${version}/${domain}/daily?year=${year}&month=${month}`)
-    .then(success);
+    .get(`/v1/${domain}/daily?year=${year}&month=${month}`)
+    .then(success)
 }
 
 export async function getMonthlyStatistics(
   year: string,
   success: (response: AxiosResponse<StatisticsType[]>) => void,
 ) {
-  await localAxios
-    .get(`/${version}/${domain}/monthly?year=${year}`)
-    .then(success);
+  await localAxios.get(`/v1/${domain}/monthly?year=${year}`).then(success)
 }
 
 export async function getStartDate(
   success: (response: AxiosResponse<StartDateType>) => void,
 ) {
-  await localAxios.get(`/${version}/${domain}/startdate`).then(success);
+  await localAxios.get(`/v1/${domain}/startdate`).then(success)
 }
 
 export async function getUserDailyStatistics(
@@ -37,8 +34,8 @@ export async function getUserDailyStatistics(
   success: (response: AxiosResponse<StatisticsType[]>) => void,
 ) {
   await localAxios
-    .get(`/${version}/${domain}/daily/${memerId}?year=${year}&month=${month}`)
-    .then(success);
+    .get(`/v1/${domain}/daily/${memerId}?year=${year}&month=${month}`)
+    .then(success)
 }
 
 export async function getUserMonthlyStatistics(
@@ -47,15 +44,13 @@ export async function getUserMonthlyStatistics(
   success: (response: AxiosResponse<StatisticsType[]>) => void,
 ) {
   await localAxios
-    .get(`/${version}/${domain}/monthly/${memerId}?year=${year}`)
-    .then(success);
+    .get(`/v1/${domain}/monthly/${memerId}?year=${year}`)
+    .then(success)
 }
 
 export async function getUserStartDate(
   memerId: number,
   success: (response: AxiosResponse<StartDateType>) => void,
 ) {
-  await localAxios
-    .get(`/${version}/${domain}/startdate/${memerId}`)
-    .then(success);
+  await localAxios.get(`/v1/${domain}/startdate/${memerId}`).then(success)
 }

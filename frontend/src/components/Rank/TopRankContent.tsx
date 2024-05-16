@@ -28,8 +28,7 @@ function TopRankContent({ topRank, nowTapName }: TopRankContentProps) {
         onClick={handleProfileClick}
       >
         <img
-          // src={topRank.member.profileUrl}
-          src="/image/chuu.gif"
+          src={topRank.member.profileUrl}
           alt="top-rank-profile"
           draggable={false}
         />

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { TabContainer, TabItemDiv } from '@/components/Crypto/Tab.styled'
+import { TabContainer, TabItemDiv } from '@/components/Common/Trade/Tab.styled'
 import { usePathname, useRouter } from 'next/navigation'
 
 function HistoryTab() {

@@ -64,7 +64,8 @@ function Navbar() {
             <LogoSVG />
           </Link>
           <NavBarLeftLinkDiv>
-            <NavLinkComponent path="/trade" name="거래소" />
+            <NavLinkComponent path="/trade/spot/KRW-BTC" name="거래소" />
+            <NavLinkComponent path="/trade/futures/KRW-BTC" name="선물거래소" />
             <AssetHistoryNav path="/history" name="투자내역" />
             <NavLinkComponent path="/rank" name="랭킹" />
             <NavLinkComponent path="/notes" name="투자노트" />
@@ -91,8 +92,7 @@ function Navbar() {
               <NavBarNotiProfileDiv onClick={handleProfileDropdown}>
                 {user.profileUrl ? (
                   <NavBarProfileImg
-                    // src={user.profileUrl}
-                    src="/image/chuu.gif"
+                    src={user.profileUrl}
                     alt="user-profile"
                     draggable={false}
                   />
