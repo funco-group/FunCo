@@ -3,8 +3,8 @@ import {
   ColumnGrid,
   ColumnTitleDiv,
 } from '@/styles/CommonStyled'
-import AssetListItem from './AssetListItem'
 import { AssetType } from '@/interfaces/AssetType'
+import AssetListItem from './AssetListItem'
 import AssetListContainer from './AssetList.styled'
 
 interface AssetListProps {
@@ -31,19 +31,17 @@ function AssetList({ assets }: AssetListProps) {
         </ColumnGrid>
       </ColumnContainer>
       <AssetListContainer>
-        {assets.map((coin: AssetType) => {
-          return (
-            <AssetListItem
-              imgSrc={coin.imgSrc}
-              name={coin.name}
-              volume={coin.volume}
-              averagePrice={coin.averagePrice}
-              price={coin.price}
-              evaluationAmount={coin.evaluationAmount}
-              evaluationProfit={coin.evaluationProfit}
-            />
-          )
-        })}
+        {assets.map((coin: AssetType) => (
+          <AssetListItem
+            imgSrc={coin.imgSrc}
+            name={coin.name}
+            volume={coin.volume}
+            averagePrice={coin.averagePrice}
+            price={coin.price}
+            evaluationAmount={coin.evaluationAmount}
+            evaluationProfit={coin.evaluationProfit}
+          />
+        ))}
       </AssetListContainer>
     </>
   )

@@ -5,16 +5,16 @@ import { usePathname } from 'next/navigation'
 import { AxiosResponse } from 'axios'
 import Tab from '@/components/Common/Trade/Tab'
 import { TradeContainer } from '@/styles/Trade.styled'
-import NormalTrade from './NormalTrade'
-import ShortTrade from './ShortTrade'
-import TradeList from './TradeList'
 import { getTickerPrice } from '@/apis/upbit'
 import { ResTickerType } from '@/interfaces/tradeHistory/follow/ResTickerType'
 import { useRecoilValue } from 'recoil'
 import { userState } from '@/recoils/user'
 import useLoginAlertModalState from '@/hooks/recoilHooks/useLoginAlertModalState'
+import TradeList from './TradeList'
+import ShortTrade from './ShortTrade'
+import NormalTrade from './NormalTrade'
 
-const Trade = React.memo(function Trade() {
+const Trade = React.memo(() => {
   const tabs = ['일반거래', '간편거래', '거래내역']
   const [activeTab, setActiveTab] = useState<string>('일반거래')
   const user = useRecoilValue(userState)

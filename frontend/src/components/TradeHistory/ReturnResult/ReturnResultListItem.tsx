@@ -1,7 +1,7 @@
 import { ListItemDiv, ColumnGrid } from '@/styles/CommonStyled'
 import { ListItemContainer } from '@/styles/ListItemContainer'
-import { ReturnResultListItemContainer } from './ReturnResultListItem.styled'
 import { StatisticsType } from '@/interfaces/StatisticsType'
+import { ReturnResultListItemContainer } from './ReturnResultListItem.styled'
 
 interface ReturnResultListItemProps {
   result: StatisticsType

@@ -12,9 +12,9 @@ import {
 import { AxiosResponse } from 'axios'
 import { getTickerPrice } from '@/apis/upbit'
 import { ResTickerType } from '@/interfaces/tradeHistory/follow/ResTickerType'
-import { ChartContainer, TotalAssetInfoContainer } from './styled'
 import MonochromePieChart from '@/components/Common/Chart/MonochromePieChart'
 import { TitleDiv } from '@/styles/TradeHistoryStyled'
+import { ChartContainer, TotalAssetInfoContainer } from './styled'
 
 function Asset() {
   const [assets, setAssets] = useState<AssetType[]>([])
@@ -22,15 +22,17 @@ function Asset() {
 
   const [investmentList, setInvestmentList] = useState<(string | number)[][]>()
 
-  const getCurPrice = async (assets: AssetResponseType) => {
+  const getCurPrice = async (assetRes: AssetResponseType) => {
     const curPrice = new Map<string, number>()
-    if (assets.holdingCoinInfos.length !== 0) {
-      const codes = assets.holdingCoinInfos.map((coin) => coin.ticker).join(',')
+    if (assetRes.holdingCoinInfos.length !== 0) {
+      const codes = assetRes.holdingCoinInfos
+        .map((coin) => coin.ticker)
+        .join(',')
       await getTickerPrice(
         codes,
         (response: AxiosResponse<ResTickerType[]>) => {
           const { data } = response
-          data.map((coin) => {
+          data.forEach((coin) => {
             curPrice.set(coin.market, coin.trade_price)
           })
         },
@@ -63,7 +65,7 @@ function Asset() {
         evaluationProfit: null,
       },
     ])
-    assetsRes.holdingCoinInfos.map((coin) => {
+    assetsRes.holdingCoinInfos.forEach((coin) => {
       const price = Math.floor(coin.volume * coin.averagePrice)
       const evaluationAmount = Math.floor(
         coin.volume * curPrice.get(coin.ticker)!,
@@ -75,8 +77,8 @@ function Asset() {
           name: coin.ticker,
           volume: coin.volume,
           averagePrice: coin.averagePrice,
-          price: price,
-          evaluationAmount: evaluationAmount,
+          price,
+          evaluationAmount,
           evaluationProfit:
             Math.floor(((evaluationAmount - price) / price) * 100 * 100) / 100,
         },
@@ -87,9 +89,11 @@ function Asset() {
       ['팔로우', assetsRes.followingInvestment],
       [
         '가상화폐',
-        assetsRes.holdingCoinInfos.reduce((acc, coin) => {
-          return acc + Math.floor(coin.volume * curPrice.get(coin.ticker)!)
-        }, 0),
+        assetsRes.holdingCoinInfos.reduce(
+          (acc, coin) =>
+            acc + Math.floor(coin.volume * curPrice.get(coin.ticker)!),
+          0,
+        ),
       ],
     ])
   }
@@ -112,15 +116,11 @@ function Asset() {
       // 총 매수금액
       const price = assets
         .filter((asset) => asset.name !== '현금')
-        .reduce((acc, item) => {
-          return acc + item.price!
-        }, 0)
+        .reduce((acc, item) => acc + item.price!, 0)
       // 총 평가금액
       const evaluationAmount = assets
         .filter((asset) => asset.name !== '현금')
-        .reduce((acc, item) => {
-          return acc + item.evaluationAmount
-        }, 0)
+        .reduce((acc, item) => acc + item.evaluationAmount, 0)
       // 총 보유자산
       const asset = cash + price
       // 총 평가손익
@@ -147,7 +147,7 @@ function Asset() {
       <TotalAssetInfoContainer>
         <TotalAsset totalAsset={totalAsset} />
         <ChartContainer>
-          <MonochromePieChart investmentList={investmentList} isLegend={true} />
+          <MonochromePieChart investmentList={investmentList} isLegend />
         </ChartContainer>
       </TotalAssetInfoContainer>
       <TitleDiv>보유자산 목록</TitleDiv>

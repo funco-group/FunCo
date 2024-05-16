@@ -5,15 +5,15 @@ import {
   ColumnGrid,
   ColumnTitleDiv,
 } from '@/styles/CommonStyled'
-import AssetChangeListItem from './AssetChangeListItem'
-import {
-  AssetChangeListContainer,
-  HistoryListContainer,
-} from './AssetChangeList.styled'
 import { useEffect, useState } from 'react'
 import { AssetHistoryType } from '@/interfaces/AssetType'
 import { AxiosResponse } from 'axios'
 import { getHistory } from '@/apis/asset'
+import {
+  AssetChangeListContainer,
+  HistoryListContainer,
+} from './AssetChangeList.styled'
+import AssetChangeListItem from './AssetChangeListItem'
 import { AssetChangeListItemContainer } from './AssetChangeListItem.styled'
 
 function AssetChangeList() {
@@ -48,9 +48,9 @@ function AssetChangeList() {
         </AssetChangeListItemContainer>
       </ColumnContainer>
       <HistoryListContainer>
-        {historyList.map((history) => {
-          return <AssetChangeListItem key={history.date} history={history} />
-        })}
+        {historyList.map((history) => (
+          <AssetChangeListItem key={history.date} history={history} />
+        ))}
       </HistoryListContainer>
     </AssetChangeListContainer>
   )

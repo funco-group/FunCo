@@ -2,16 +2,6 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { useRecoilValue } from 'recoil'
 import { AxiosResponse } from 'axios'
-
-import {
-  ToggleContainer,
-  CircleDiv,
-  ToggleDiv,
-  ToggleText,
-  TradeListContainer,
-  NoTradeData,
-} from './TradeList.styled'
-import TradeListItem from './TradeListItem'
 import {
   ColumnContainer,
   ColumnGrid,
@@ -21,6 +11,15 @@ import AlertModal from '@/components/Common/Modal/AlertModal'
 import { userState } from '@/recoils/user'
 import { TradeListType } from '@/interfaces/TradeType'
 import { cancleOrder, getOpenTradeList, getTradeList } from '@/apis/trade'
+import {
+  ToggleContainer,
+  CircleDiv,
+  ToggleDiv,
+  ToggleText,
+  TradeListContainer,
+  NoTradeData,
+} from './TradeList.styled'
+import TradeListItem from './TradeListItem'
 
 function TradeList() {
   const pathname = usePathname()
@@ -90,19 +89,17 @@ function TradeList() {
         />
       )}
       <ToggleContainer>
-        {toggles.map((toggle: string) => {
-          return (
-            <ToggleDiv key={toggle}>
-              <CircleDiv
-                $active={selected === toggle}
-                onClick={() => changeSelect(toggle)}
-              />
-              <ToggleText onClick={() => changeSelect(toggle)}>
-                {toggle}
-              </ToggleText>
-            </ToggleDiv>
-          )
-        })}
+        {toggles.map((toggle: string) => (
+          <ToggleDiv key={toggle}>
+            <CircleDiv
+              $active={selected === toggle}
+              onClick={() => changeSelect(toggle)}
+            />
+            <ToggleText onClick={() => changeSelect(toggle)}>
+              {toggle}
+            </ToggleText>
+          </ToggleDiv>
+        ))}
       </ToggleContainer>
       <ColumnContainer>
         <ColumnGrid

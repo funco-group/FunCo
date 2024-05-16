@@ -1,6 +1,7 @@
 import palette from '@/lib/palette'
 import styled from 'styled-components'
 
+// eslint-disable-next-line import/prefer-default-export
 export const FuturesTradeButton = styled.div<{ name: string }>`
   background-color: ${(props) => {
     if (props.name === 'Long') {
