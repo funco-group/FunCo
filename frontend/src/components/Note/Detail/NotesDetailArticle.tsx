@@ -5,9 +5,12 @@ import noteParseDate from '@/utils/noteParseDate'
 import useUserState from '@/hooks/recoilHooks/useUserState'
 import { useRecoilValue } from 'recoil'
 import { codeNameMapState } from '@/recoils/crypto'
-import DummyNotesDetail from '@/lib/DummyNotesDetail'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import ToastViewer from '@/components/Common/ToastUI/ToastViewer'
+import { useEffect, useRef, useState } from 'react'
+import { NoteDetailType } from '@/interfaces/note/NoteDetailType'
+import { getNotesDetail } from '@/apis/note'
+import NoData from '@/components/Common/NoData'
 import NotesDetailArticleLikeBtn from './NotesDetailArticleLikeBtn'
 import NotesDetailBtnDiv from './NotesDetailBtnDiv'
 
@@ -17,17 +20,47 @@ interface NotesDetailArticleProps {
 
 function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const coinMap = useRecoilValue(codeNameMapState)
-  const detail = DummyNotesDetail[noteId - 1]
-
+  const [detail, setDetail] = useState<NoteDetailType>()
+  const btnRef = useRef(null)
   const { user } = useUserState()
+
+  useEffect(() => {
+    getNotesDetail(noteId, (res) => {
+      const { data } = res
+      setDetail(data)
+    })
+  }, [noteId])
+
+  useEffect(() => {
+    if (!detail) return
+
+    const scroll = searchParams.get('scroll')
+
+    if (scroll) {
+      if (typeof window !== 'undefined') {
+        const scrollPoint = document.getElementById(`${scroll}`)?.offsetTop
+        if (scrollPoint !== undefined) {
+          window.scroll({
+            top: scrollPoint - 140,
+            behavior: 'smooth',
+          })
+        }
+      }
+    }
+  }, [detail])
+
+  if (!detail) {
+    return <NoData content="Loading..." />
+  }
 
   const handleClickCoinBtn = () => {
     router.push(`/notes?coin=${detail.ticker}`)
   }
 
   const handleClickProfile = () => {
-    router.push(`/member/${detail.member.memberId}`)
+    router.push(`/member/${detail.member.id}`)
   }
 
   const handleModifyArticle = () => {
@@ -66,7 +99,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
               <div className="text-brandDarkGray">
                 {noteParseDate(detail.writeDate)}
               </div>
-              {user?.memberId === detail.member.memberId ? (
+              {user?.memberId === detail.member.id ? (
                 <div className="flex gap-1 text-brandDarkGray">
                   <span
                     className="cursor-pointer"
@@ -88,7 +121,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
         <div className="my-3">
           <ToastViewer initialValue={detail.content} />
         </div>
-        <div className="mb-5 mt-8 flex justify-center">
+        <div className="mb-5 mt-8 flex justify-center" ref={btnRef}>
           <NotesDetailArticleLikeBtn
             initialIsLike={detail.liked}
             initialLikeCnt={detail.likeCount}
@@ -96,7 +129,6 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
         </div>
       </div>
       <NotesDetailBtnDiv />
-      <h2>댓글 {detail.commentCount}개</h2>
     </div>
   )
 }

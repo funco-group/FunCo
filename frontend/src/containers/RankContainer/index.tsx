@@ -1,7 +1,5 @@
 'use client'
 
-// 이 페이지는 server component로 가능할 것 같은데...
-// 쓰읍 근데 페이지 이동하려면 안 되려나?
 import { useState } from 'react'
 import { RankType } from '@/interfaces/rank/RankType'
 import TopRank from '@/components/Rank/TopRank'
