@@ -15,18 +15,9 @@ public record MemberInfo(
 	Long portfolioPrice
 ) {
 	@QueryProjection
-	public MemberInfo(Long id, String nickname, String profileUrl) {
-		this(id, nickname, profileUrl, "", null);
-	}
-
-	@QueryProjection
-	public MemberInfo(String nickname, String profileUrl, String introduction, Long cash) {
-		this(null, nickname, profileUrl, introduction, cash);
-	}
-
-	@QueryProjection
-	public MemberInfo(Long id, String nickname, String profileUrl, String introduction, Long cash) {
-		this(id, nickname, profileUrl, introduction, cash, null, null);
+	public MemberInfo(String nickname, String profileUrl, String introduction, Long cash, String portfolioStatus,
+		Long portfolioPrice) {
+		this(null, nickname, profileUrl, introduction, cash, portfolioStatus, portfolioPrice);
 	}
 
 	@QueryProjection
