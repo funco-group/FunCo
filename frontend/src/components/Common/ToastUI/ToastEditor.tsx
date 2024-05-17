@@ -16,10 +16,16 @@ const toolbarItems = [
 interface ToastEditorProps {
   editorRef: RefObject<Editor>
   imageList: ThumbnailImageType[]
+  initialValue: string
   setImageList: Dispatch<SetStateAction<ThumbnailImageType[]>>
 }
 
-function ToastEditor({ editorRef, imageList, setImageList }: ToastEditorProps) {
+function ToastEditor({
+  editorRef,
+  imageList,
+  initialValue,
+  setImageList,
+}: ToastEditorProps) {
   const onUploadImage = (file: File, callback: typeof Function) => {
     const formData = new FormData()
     formData.append('file', file)
@@ -77,7 +83,7 @@ function ToastEditor({ editorRef, imageList, setImageList }: ToastEditorProps) {
       {editorRef && (
         <Editor
           ref={editorRef}
-          initialValue=""
+          initialValue={initialValue}
           initialEditType="markdown"
           previewStyle="vertical"
           hideModeSwitch

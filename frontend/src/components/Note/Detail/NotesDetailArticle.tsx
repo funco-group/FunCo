@@ -64,8 +64,9 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
     router.push(`/member/${detail.member.id}`)
   }
 
-  const handleModifyArticle = () => {
-    console.log('modify Article')
+  const handleUpdateArticle = () => {
+    console.log('Update Article')
+    router.push(`/notes/write?noteId=${noteId}`)
   }
 
   const handleDeleteArticle = () => {
@@ -107,7 +108,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
                 <div className="flex gap-1 text-brandDarkGray">
                   <span
                     className="cursor-pointer"
-                    onClick={handleModifyArticle}
+                    onClick={handleUpdateArticle}
                   >
                     수정
                   </span>
