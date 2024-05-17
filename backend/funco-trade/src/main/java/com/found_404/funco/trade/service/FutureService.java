@@ -43,6 +43,9 @@ public class FutureService {
 
         log.info("[Long] member:{} {} 가격 {} 아래로 청산됩니다.", memberId, activeFuture.getTicker(), liquidatedPrice);
         cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.LONG, liquidatedPrice);
+
+        // [API UPDATE] 멤버 자산 감소
+        memberService.updateMemberCash(memberId, requestBuyFutures.orderCash());
     }
 
     public void buyFuturesShort(Long memberId, RequestBuyFutures requestBuyFutures) {
@@ -53,6 +56,9 @@ public class FutureService {
         long liquidatedPrice = activeFuture.getPrice() + (long) multiple(activeFuture.getPrice(), rate, CASH_SCALE);
         log.info("[Short] member:{} {} 가격 {} 위로 청산됩니다.", memberId, activeFuture.getTicker(), liquidatedPrice);
         cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.SHORT, liquidatedPrice);
+
+        // [API UPDATE] 멤버 자산 감소
+        memberService.updateMemberCash(memberId, requestBuyFutures.orderCash());
     }
 
     private ActiveFuture getActiveFuture(Long memberId, TradeType tradeType, RequestBuyFutures requestBuyFutures) {
@@ -80,7 +86,7 @@ public class FutureService {
         activeFutureRepository.delete(activeFuture);
         futureTradeRepository.save(com.found_404.funco.trade.domain.FutureTrade.fromActiveFutures(activeFuture, settlement));
 
-        // 멤버 자산 증가
+        // [API UPDATE] 멤버 자산 증가
         memberService.updateMemberCash(memberId, settlement);
     }
 
