@@ -55,11 +55,9 @@ public class NoteService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
-    // ----
-
     public ImageResponse upload(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new RuntimeException("NOT_FOUND_IMAGE");
+            throw new NoteException(NOT_FOUND_IMAGE);
         }
 
         String originName = file.getOriginalFilename();
@@ -74,25 +72,18 @@ public class NoteService {
             objectMetadata.setContentLength(file.getInputStream().available());
             amazonS3.putObject(bucketName, fileName, file.getInputStream(), objectMetadata);
         } catch (IOException e) {
-            throw new RuntimeException("IMAGE_UPLOAD_FAIL");
+            throw new NoteException(IMAGE_UPLOAD_FAIL);
         }
 
         return new ImageResponse(amazonS3.getUrl(bucketName, fileName).toString());
     }
 
     private void validationFileType(String type) {
-        switch (type){
-            case "PNG":
-            case "JPG":
-            case "JPEG":
-            case "GIF":
-                return;
-            default:
-                throw new RuntimeException("MISS_MATCH_IMAGE_TYPE");
+        switch (type) {
+            case "PNG", "JPG", "JPEG", "GIF" -> {}
+            default -> throw new NoteException(MISS_MATCH_IMAGE_TYPE);
         }
     }
-
-    // ----
 
 
     public List<NotesResponse> getNotes(Long memberId, NotesFilterRequest notesFilterRequest, Pageable pageable) {
@@ -122,7 +113,7 @@ public class NoteService {
     }
 
     public NoteResponse getNote(Long memberId, Long noteId) {
-        Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        Note note = getNote(noteId);
         Long likeCount = noteLikeRepository.countByNote(note);
 
         Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(note.getMemberId());
@@ -137,6 +128,10 @@ public class NoteService {
                 .liked(Objects.nonNull(memberId) && noteLikeRepository.existsByMemberIdAndNoteId(
                     memberId, note.getId()))
                 .build();
+    }
+
+    private Note getNote(Long noteId) {
+        return noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
     }
 
 
@@ -157,7 +152,7 @@ public class NoteService {
 
 
     public void removeNote(Long memberId, Long noteId) {
-        Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        Note note = getNote(noteId);
         checkAuthorization(memberId, note);
         noteRepository.delete(note);
     }
@@ -169,7 +164,7 @@ public class NoteService {
     }
 
     public void editNote(Long memberId, Long noteId, NoteRequest request) {
-        Note note = noteRepository.findNoteById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        Note note = getNote(noteId);
         checkAuthorization(memberId, note);
         note.editNote(request.title(), request.content(), request.ticker(), request.thumbnailImage(), getThumbnailContent(request.content(), THUMBNAIL_CONTENT_LENGTH));
     }
@@ -216,7 +211,7 @@ public class NoteService {
     }
 
     public void addComment(Long memberId, Long noteId, CommentRequest request) {
-        Note note = noteRepository.findById(noteId).orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        Note note = getNote(noteId);
 
         noteCommentRepository.save(NoteComment.builder()
                 .memberId(memberId)
@@ -224,33 +219,6 @@ public class NoteService {
                 .parentId(request.parentCommentId())
                 .content(request.content())
                 .build());
-    }
-
-    public ImageResponse uploadImage(MultipartFile file) {
-        String originalFilename = file.getOriginalFilename(); //원본 파일 명
-        String extension = Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf(".")); //확장자 명
-
-        String s3FileName = UUID.randomUUID().toString().substring(0, 10) + originalFilename; //변경된 파일 명
-
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType("image/" + extension);
-
-        try (
-            InputStream is = file.getInputStream();
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(IOUtils.toByteArray(is))) {
-
-            metadata.setContentLength(IOUtils.toByteArray(is).length);
-            PutObjectRequest putObjectRequest =
-                new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead);
-            amazonS3.putObject(putObjectRequest);
-        } catch (Exception e){
-            log.error("s3 bucket upload error msg : {}", e.getMessage());
-            throw new S3Exception(PUT_OBJECT_EXCEPTION);
-        }
-        return ImageResponse.builder()
-            .url(amazonS3.getUrl(bucketName, s3FileName).toString())
-            .build();
     }
 
     public String getThumbnailContent(String content, int length) {
@@ -261,8 +229,7 @@ public class NoteService {
     }
 
     public void addNoteLike(Long memberId, Long noteId) {
-        Note note = noteRepository.findById(noteId)
-            .orElseThrow(() -> new NoteException(NOT_FOUND_NOTE));
+        Note note = getNote(noteId);
 
         Optional<NoteLike> noteLike = noteLikeRepository.findByMemberIdAndNote(memberId, note);
 
@@ -277,5 +244,37 @@ public class NoteService {
         }
 
     }
+
+
+
+
+
+    public ImageResponse uploadImage(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename(); //원본 파일 명
+        String extension = Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf(".")); //확장자 명
+
+        String s3FileName = UUID.randomUUID().toString().substring(0, 10) + originalFilename; //변경된 파일 명
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType("image/" + extension);
+
+        try (
+                InputStream is = file.getInputStream();
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(IOUtils.toByteArray(is))) {
+
+            metadata.setContentLength(IOUtils.toByteArray(is).length);
+            PutObjectRequest putObjectRequest =
+                    new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata)
+                            .withCannedAcl(CannedAccessControlList.PublicRead);
+            amazonS3.putObject(putObjectRequest);
+        } catch (Exception e){
+            log.error("s3 bucket upload error msg : {}", e.getMessage());
+            throw new S3Exception(PUT_OBJECT_EXCEPTION);
+        }
+        return ImageResponse.builder()
+                .url(amazonS3.getUrl(bucketName, s3FileName).toString())
+                .build();
+    }
+
 
 }
