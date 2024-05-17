@@ -1,14 +1,16 @@
-import BrandButton from "./BrandButtonComponent.styled";
+import BrandButton from './BrandButtonComponent.styled'
 
 interface BrandButtonComponentProps {
-  color: string | null;
-  content: string;
-  onClick: () => void;
-  cancel: boolean;
-  disabled: boolean;
+  imgSrc: string
+  color: string | null
+  content: string
+  onClick: () => void
+  cancel: boolean
+  disabled: boolean
 }
 
 function BrandButtonComponent({
+  imgSrc,
   content,
   color,
   cancel,
@@ -23,9 +25,10 @@ function BrandButtonComponent({
       $cancel={cancel}
       disabled={disabled}
     >
+      {imgSrc && <img src={imgSrc} alt={imgSrc} width={14} />}
       {content}
     </BrandButton>
-  );
+  )
 }
 
-export default BrandButtonComponent;
+export default BrandButtonComponent
