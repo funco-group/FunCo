@@ -4,4 +4,6 @@ import com.found_404.funcomember.member.dto.MemberInfo;
 
 public interface MemberCustomRepository {
 	MemberInfo findMyInfoByMemberId(Long memberId);
+
+	MemberInfo findUserInfoByMemberId(Long memberId);
 }
