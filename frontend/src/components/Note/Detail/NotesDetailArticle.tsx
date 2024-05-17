@@ -23,7 +23,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
   const searchParams = useSearchParams()
   const coinMap = useRecoilValue(codeNameMapState)
   const [detail, setDetail] = useState<NoteDetailType>()
-  const btnRef = useRef(null)
+  const anchorRef = useRef<HTMLDivElement>(null)
   const { user } = useUserState()
 
   useEffect(() => {
@@ -49,7 +49,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
         }
       }
     }
-  }, [detail])
+  }, [detail, anchorRef.current?.offsetHeight])
 
   if (!detail) {
     return <NoData content="Loading..." />
@@ -73,7 +73,10 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
 
   return (
     <div>
-      <div className="rounded border border-solid border-deactivatedGray bg-brandWhite p-3">
+      <div
+        className="rounded border border-solid border-deactivatedGray bg-brandWhite p-3"
+        ref={anchorRef}
+      >
         <div
           className="w-fit cursor-pointer rounded bg-brandColor p-1 text-sm text-brandWhite"
           onClick={handleClickCoinBtn}
@@ -121,7 +124,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
         <div className="my-3">
           <ToastViewer initialValue={detail.content} />
         </div>
-        <div className="mb-5 mt-8 flex justify-center" ref={btnRef}>
+        <div className="mb-5 mt-8 flex justify-center">
           <NotesDetailArticleLikeBtn
             initialIsLike={detail.liked}
             initialLikeCnt={detail.likeCount}
