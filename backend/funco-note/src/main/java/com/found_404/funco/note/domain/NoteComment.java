@@ -2,16 +2,14 @@ package com.found_404.funco.note.domain;
 
 import com.found_404.funco.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import static java.lang.Boolean.FALSE;
 
 @Entity
 @Getter
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NoteComment extends BaseEntity {
 
@@ -33,12 +31,11 @@ public class NoteComment extends BaseEntity {
 	private Boolean deleted = FALSE;
 
 	@Builder
-	public NoteComment(Long memberId, Note note, Long parentId, String content, Boolean deleted) {
+	public NoteComment(Long memberId, Note note, Long parentId, String content) {
 		this.memberId = memberId;
 		this.note = note;
 		this.parentId = parentId;
 		this.content = content;
-		this.deleted = deleted;
 	}
 
 	public void editNoteComment(String content) {
