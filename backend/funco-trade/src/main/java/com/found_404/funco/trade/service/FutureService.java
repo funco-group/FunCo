@@ -3,6 +3,7 @@ package com.found_404.funco.trade.service;
 import com.found_404.funco.crypto.cryptoPrice.CryptoPrice;
 import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.trade.domain.ActiveFuture;
+import com.found_404.funco.trade.domain.FutureTrade;
 import com.found_404.funco.trade.domain.repository.ActiveFutureRepository;
 import com.found_404.funco.trade.domain.repository.FutureTradeRepository;
 import com.found_404.funco.trade.domain.type.TradeType;
@@ -104,7 +105,7 @@ public class FutureService {
         long settlement = activeFuture.getOrderCash() + result;
 
         activeFutureRepository.delete(activeFuture);
-        futureTradeRepository.save(com.found_404.funco.trade.domain.FutureTrade.fromActiveFutures(activeFuture, settlement));
+        futureTradeRepository.save(FutureTrade.fromActiveFutures(activeFuture, settlement));
 
         // [API UPDATE] 멤버 자산 증가
         memberService.updateMemberCash(memberId, settlement);
