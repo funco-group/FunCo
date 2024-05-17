@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.found_404.funco.rank.dto.response.RankResponse;
+import com.found_404.funco.rank.dto.response.RankingResponse;
 import com.found_404.funco.rank.service.RankSchedulerService;
 import com.found_404.funco.rank.service.RankService;
 
@@ -27,6 +28,11 @@ public class RankController {
 	public ResponseEntity<Page<RankResponse>> getRanking(@RequestParam String type,
 		@PageableDefault(size = 10) Pageable pageable) {
 		return ResponseEntity.ok(rankService.readRanking(type, pageable));
+	}
+
+	@GetMapping
+	public ResponseEntity<RankingResponse> getRankingInfo(@RequestParam String type, @RequestParam Long memberId) {
+		return ResponseEntity.ok(rankService.getRankingInfo(type, memberId));
 	}
 
 	@GetMapping("/test")
