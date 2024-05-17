@@ -7,10 +7,11 @@ import { useRecoilValue } from 'recoil'
 import { codeNameMapState } from '@/recoils/crypto'
 import { useRouter, useSearchParams } from 'next/navigation'
 import ToastViewer from '@/components/Common/ToastUI/ToastViewer'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NoteDetailType } from '@/interfaces/note/NoteDetailType'
 import { getNotesDetail } from '@/apis/note'
 import NoData from '@/components/Common/NoData'
+import { useResizeDetector } from 'react-resize-detector'
 import NotesDetailArticleLikeBtn from './NotesDetailArticleLikeBtn'
 import NotesDetailBtnDiv from './NotesDetailBtnDiv'
 
@@ -23,8 +24,8 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
   const searchParams = useSearchParams()
   const coinMap = useRecoilValue(codeNameMapState)
   const [detail, setDetail] = useState<NoteDetailType>()
-  const anchorRef = useRef<HTMLDivElement>(null)
   const { user } = useUserState()
+  const { height, ref } = useResizeDetector()
 
   useEffect(() => {
     getNotesDetail(noteId, (res) => {
@@ -49,7 +50,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
         }
       }
     }
-  }, [detail, anchorRef.current?.offsetHeight])
+  }, [detail, height])
 
   if (!detail) {
     return <NoData content="Loading..." />
@@ -75,7 +76,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
     <div>
       <div
         className="rounded border border-solid border-deactivatedGray bg-brandWhite p-3"
-        ref={anchorRef}
+        ref={ref}
       >
         <div
           className="w-fit cursor-pointer rounded bg-brandColor p-1 text-sm text-brandWhite"

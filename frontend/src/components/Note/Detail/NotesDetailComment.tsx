@@ -3,12 +3,13 @@ import useUserState from '@/hooks/recoilHooks/useUserState'
 import { NoteCommentType } from '@/interfaces/note/NoteCommentType'
 import noteParseDate from '@/utils/noteParseDate'
 import { useRouter } from 'next/navigation'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import NotesDetailCommentInput from './NotesDetailCommentInput'
 
 interface NotesDetailCommentProps {
   noteId: number
   commentData: NoteCommentType
+  commentList: NoteCommentType[]
   setCommentList: Dispatch<SetStateAction<NoteCommentType[]>>
   setCommentCnt: Dispatch<SetStateAction<number>>
   isParent: boolean
@@ -17,6 +18,7 @@ interface NotesDetailCommentProps {
 function NotesDetailComment({
   noteId,
   commentData,
+  commentList,
   setCommentList,
   setCommentCnt,
   isParent,
@@ -41,6 +43,12 @@ function NotesDetailComment({
   const handleReplyComment = () => {
     setOpenReply((prev) => !prev)
   }
+
+  useEffect(() => {
+    if (openReply) {
+      setOpenReply(false)
+    }
+  }, [commentList])
   return (
     <div>
       <div className="mt-3 box-border flex gap-3 ">
@@ -68,7 +76,7 @@ function NotesDetailComment({
             {commentData.content}
           </div>
           <div
-            className={`mt-1 flex select-none gap-1 text-brandDarkGray ${openReply && 'mb-1'}`}
+            className={`ml-1 mt-1 flex select-none gap-1 text-brandDarkGray ${openReply && 'mb-1'}`}
           >
             {user?.memberId === commentData.member.id ? (
               <div className="flex gap-1">
@@ -99,6 +107,7 @@ function NotesDetailComment({
                 <NotesDetailComment
                   key={childComment.commentId}
                   noteId={noteId}
+                  commentList={commentList}
                   commentData={childComment}
                   setCommentList={setCommentList}
                   setCommentCnt={setCommentCnt}
