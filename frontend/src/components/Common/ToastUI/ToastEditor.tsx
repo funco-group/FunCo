@@ -26,7 +26,6 @@ function ToastEditor({ editorRef, imageList, setImageList }: ToastEditorProps) {
 
     postImage(formData, (res) => {
       const { data } = res
-      console.log(data)
       setImageList((prev) => [
         ...prev,
         {
