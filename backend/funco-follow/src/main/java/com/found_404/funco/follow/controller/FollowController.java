@@ -3,9 +3,6 @@ package com.found_404.funco.follow.controller;
 import com.found_404.funco.follow.dto.FollowTradeDto;
 import java.util.List;
 
-import com.found_404.funco.follow.dto.request.FollowerProfitRequest;
-import com.found_404.funco.follow.dto.response.FollowerInfoResponse;
-import com.found_404.funco.follow.dto.response.InvestmentsResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.found_404.funco.follow.dto.request.FollowerProfitRequest;
 import com.found_404.funco.follow.dto.request.FollowingRequest;
+import com.found_404.funco.follow.dto.response.FollowAssetResponse;
+import com.found_404.funco.follow.dto.response.FollowStatusResponse;
+import com.found_404.funco.follow.dto.response.FollowerInfoResponse;
 import com.found_404.funco.follow.dto.response.FollowerListResponse;
 import com.found_404.funco.follow.dto.response.FollowingListResponse;
+import com.found_404.funco.follow.dto.response.InvestmentsResponse;
 import com.found_404.funco.follow.service.FollowService;
 import com.found_404.funco.global.memberIdHeader.AuthMemberId;
 
@@ -49,16 +51,16 @@ public class FollowController {
 
 	@GetMapping("/following")
 	public ResponseEntity<FollowingListResponse> getFollowingList(@AuthMemberId Long memberId,
-																  @RequestParam(required = false) Long lastFollowId) {
+		@RequestParam(required = false) Long lastFollowId) {
 		return ResponseEntity.status(HttpStatus.OK).body(followService.readFollowingList(memberId, lastFollowId));
 	}
 
 	@GetMapping("/follower")
 	public ResponseEntity<FollowerListResponse> getFollowerList(@AuthMemberId Long memberId,
-																@RequestParam String settled,
-																@RequestParam(required = false) Long lastFollowId) {
+		@RequestParam String settled,
+		@RequestParam(required = false) Long lastFollowId) {
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(followService.readFollowerList(memberId, settled, lastFollowId));
+			.body(followService.readFollowerList(memberId, settled, lastFollowId));
 	}
 
 	@GetMapping("/{followId}/trades")
@@ -67,10 +69,9 @@ public class FollowController {
 		return ResponseEntity.ok(followService.getFollowTrades(pageable, followId));
 	}
 
-
 	/*
-	* 	MSA SERVER API
-	* */
+	 * 	MSA SERVER API
+	 * */
 	@GetMapping("/investments")
 	public ResponseEntity<InvestmentsResponse> getInvestments(@RequestParam Long memberId) {
 		return ResponseEntity.ok(followService.getInvestments(memberId));
@@ -82,8 +83,26 @@ public class FollowController {
 	}
 
 	@PatchMapping("/{followingId}/followers")
-	public ResponseEntity<Void> modifyFollower(@PathVariable Long followingId, @RequestBody FollowerProfitRequest followerProfitRequest) {
+	public ResponseEntity<Void> modifyFollower(@PathVariable Long followingId,
+		@RequestBody FollowerProfitRequest followerProfitRequest) {
 		followService.updateFollower(followingId, followerProfitRequest);
 		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	/*
+	 * 	MSA SERVER API
+	 * */
+	@GetMapping("/{loginMemberId}/following/{targetMemberId}")
+	public ResponseEntity<FollowStatusResponse> getFollowStatus(@PathVariable Long loginMemberId,
+		@PathVariable Long targetMemberId) {
+		return ResponseEntity.ok(followService.getFollowStatus(loginMemberId, targetMemberId));
+	}
+
+	/*
+	 * 	MSA SERVER API
+	 * */
+	@GetMapping("/asset")
+	public ResponseEntity<FollowAssetResponse> getFollowAsset(@RequestParam Long memberId) {
+		return ResponseEntity.ok(followService.getFollowAsset(memberId));
 	}
 }

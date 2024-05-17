@@ -7,6 +7,10 @@ import static com.found_404.funco.global.util.DecimalCalculator.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.found_404.funco.feignClient.dto.CoinValuation;
 import com.found_404.funco.feignClient.dto.CoinValuationResponse;
 import com.found_404.funco.feignClient.dto.NotificationType;
@@ -33,9 +37,6 @@ import com.found_404.funco.follow.dto.response.FollowerListResponse;
 import com.found_404.funco.follow.dto.response.FollowingListResponse;
 import com.found_404.funco.follow.dto.response.InvestmentsResponse;
 import com.found_404.funco.follow.exception.FollowException;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -304,5 +305,18 @@ public class FollowService {
 	@Transactional
 	public void updateFollower(Long followingId, FollowerProfitRequest followerProfitRequest) {
 		followRepository.updateFollower(followingId, followerProfitRequest.followerId(), followerProfitRequest.cash());
+	}
+
+	public FollowStatusResponse getFollowStatus(Long loginMemberId, Long targetMemberId) {
+		return FollowStatusResponse.builder()
+			.followed(followRepository.isFollowedByMemberId(loginMemberId, targetMemberId))
+			.build();
+	}
+
+	public FollowAssetResponse getFollowAsset(Long memberId) {
+		return FollowAssetResponse.builder()
+			.followingCash(followRepository.getFollowingCashByMemberId(memberId))
+			.followerCash(followRepository.getFollowerCashByMemberId(memberId))
+			.build();
 	}
 }
