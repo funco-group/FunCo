@@ -1,7 +1,7 @@
 package com.found_404.funco.trade.controller;
 
 import com.found_404.funco.global.memberIdHeader.AuthMemberId;
-import com.found_404.funco.trade.dto.FutureTrade;
+import com.found_404.funco.trade.dto.FutureTradeDto;
 import com.found_404.funco.trade.dto.request.RequestFutures;
 import com.found_404.funco.trade.dto.request.RequestBuyFutures;
 import com.found_404.funco.trade.dto.ActiveFutureDto;
@@ -44,7 +44,7 @@ public class FuturesController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<FutureTrade>> getFutures(@AuthMemberId Long memberId, @Valid RequestFutures requestFutures) {
+    public ResponseEntity<List<FutureTradeDto>> getFutures(@AuthMemberId Long memberId, @Valid RequestFutures requestFutures) {
         return ResponseEntity.ok(futureService.getFutures(memberId, requestFutures.ticker()));
     }
 

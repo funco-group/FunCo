@@ -6,7 +6,7 @@ import com.found_404.funco.trade.domain.ActiveFuture;
 import com.found_404.funco.trade.domain.repository.ActiveFutureRepository;
 import com.found_404.funco.trade.domain.repository.FutureTradeRepository;
 import com.found_404.funco.trade.domain.type.TradeType;
-import com.found_404.funco.trade.dto.FutureTrade;
+import com.found_404.funco.trade.dto.FutureTradeDto;
 import com.found_404.funco.trade.dto.request.RequestBuyFutures;
 import com.found_404.funco.trade.dto.ActiveFutureDto;
 import com.found_404.funco.trade.exception.TradeException;
@@ -115,10 +115,10 @@ public class FutureService {
                 .orElseThrow(()->new TradeException(NOT_FOUND_TRADE)));
     }
 
-    public List<FutureTrade> getFutures(Long memberId, String ticker) {
+    public List<FutureTradeDto> getFutures(Long memberId, String ticker) {
         return futureTradeRepository.findAllByMemberIdAndTicker(memberId, ticker)
                 .stream()
-                .map(FutureTrade::fromEntity)
+                .map(FutureTradeDto::fromEntity)
                 .toList();
     }
 }

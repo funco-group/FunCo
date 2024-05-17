@@ -1,5 +1,6 @@
 package com.found_404.funco.trade.dto;
 
+import com.found_404.funco.trade.domain.FutureTrade;
 import com.found_404.funco.trade.domain.type.TradeType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,7 +8,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder(access = AccessLevel.PRIVATE)
-public record FutureTrade(
+public record FutureTradeDto(
     Long id,
     String ticker,
     TradeType tradeType,
@@ -18,8 +19,8 @@ public record FutureTrade(
     LocalDateTime tradeDate
 ) {
 
-    public static FutureTrade fromEntity(com.found_404.funco.trade.domain.FutureTrade futureTrade) {
-        return FutureTrade.builder()
+    public static FutureTradeDto fromEntity(FutureTrade futureTrade) {
+        return FutureTradeDto.builder()
                 .id(futureTrade.getId())
                 .ticker(futureTrade.getTicker())
                 .tradeType(futureTrade.getTradeType())
