@@ -3,7 +3,6 @@ package com.found_404.funcomember.member.dto.response;
 import java.util.List;
 
 import com.found_404.funcomember.feignClient.dto.RecentTradedCoin;
-import com.found_404.funcomember.member.domain.type.PortfolioStatusType;
 import com.found_404.funcomember.member.dto.MemberAssetInfo;
 
 import lombok.Builder;
@@ -26,7 +25,7 @@ public record UserInfoResponse(
 
 	Boolean isFollow,
 
-	PortfolioStatusType portfolioStatus,
+	String portfolioStatus,
 	Long portfolioPrice
 ) {
 }
