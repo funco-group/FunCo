@@ -2,6 +2,8 @@ package com.found_404.funcomember.feignClient.client;
 
 import java.util.List;
 
+import com.found_404.funcomember.feignClient.dto.FollowAssetResponse;
+import com.found_404.funcomember.feignClient.dto.FollowStatusResponse;
 import com.found_404.funcomember.feignClient.dto.FollowerInfoResponse;
 import com.found_404.funcomember.feignClient.dto.InvestmentsResponse;
 import com.found_404.funcomember.portfolio.dto.request.FollowerProfitRequest;
@@ -27,4 +29,10 @@ public interface FollowServiceClient {
 
     @PatchMapping("/api/v1/follows/{followingId}/followers")
     void modifyFollower(@PathVariable Long followingId, @RequestBody FollowerProfitRequest followerProfitRequest);
+
+	@GetMapping("/api/v1/follows/{loginMemberId}/following/{targetMemberId}")
+	FollowStatusResponse getFollowStatus(@PathVariable Long loginMemberId, @PathVariable Long targetMemberId);
+
+	@GetMapping("/api/v1/follows/asset")
+	FollowAssetResponse getFollowAsset(@RequestParam Long memberId);
 }
