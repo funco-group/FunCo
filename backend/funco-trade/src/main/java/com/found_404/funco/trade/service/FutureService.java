@@ -34,6 +34,7 @@ public class FutureService {
     private final MemberService memberService;
 
 
+    @Transactional
     public void buyFuturesLong(Long memberId, RequestBuyFutures requestBuyFutures) {
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, TradeType.LONG, requestBuyFutures));
 
@@ -48,6 +49,7 @@ public class FutureService {
         memberService.updateMemberCash(memberId, requestBuyFutures.orderCash());
     }
 
+    @Transactional
     public void buyFuturesShort(Long memberId, RequestBuyFutures requestBuyFutures) {
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, TradeType.SHORT, requestBuyFutures));
 
