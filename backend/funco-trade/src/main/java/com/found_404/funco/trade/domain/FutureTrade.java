@@ -71,4 +71,8 @@ public class FutureTrade extends BaseEntity {
 				.settlement(settlement)
 				.build();
 	}
+
+	public static FutureTrade getLiquidatedFutures(ActiveFuture activeFuture) {
+		return fromActiveFutures(activeFuture, 0L);
+	}
 }
