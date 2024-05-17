@@ -12,14 +12,16 @@ interface PostNotesReqBodyType {
   thumbnailImage: string
 }
 
+interface PostNotesCommentBodyType {
+  parentCommentId?: number
+  content: string
+}
+
 export async function getNotesList(
   query: string,
   success: (res: AxiosResponse<NotePreviewType[]>) => void,
 ) {
-  await localAxios
-    .get(`/v1/${domain}?${query}`)
-    .then(success)
-    .catch((error) => console.error(error))
+  await localAxios.get(`/v1/${domain}?${query}`).then(success)
 }
 
 export async function postNotes(
@@ -34,6 +36,24 @@ export async function getNotesDetail(
   success: (res: AxiosResponse<NoteDetailType>) => void,
 ) {
   await localAxios.get(`/v1/${domain}/${noteId}`).then(success)
+}
+
+export async function getCommentsData(noteId: number) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/v1/notes/${noteId}/comments`,
+    {
+      cache: 'no-store',
+    },
+  )
+  return res.json()
+}
+
+export async function postNotesComment(
+  noteId: number,
+  body: PostNotesCommentBodyType,
+  success: () => void,
+) {
+  await localAxios.post(`/v1/${domain}/${noteId}/comments`, body).then(success)
 }
 
 export async function postImage(

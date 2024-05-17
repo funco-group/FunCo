@@ -7,14 +7,18 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import NotesDetailCommentInput from './NotesDetailCommentInput'
 
 interface NotesDetailCommentProps {
+  noteId: number
   commentData: NoteCommentType
   setCommentList: Dispatch<SetStateAction<NoteCommentType[]>>
+  setCommentCnt: Dispatch<SetStateAction<number>>
   isParent: boolean
 }
 
 function NotesDetailComment({
+  noteId,
   commentData,
   setCommentList,
+  setCommentCnt,
   isParent,
 }: NotesDetailCommentProps) {
   const [openReply, setOpenReply] = useState(false)
@@ -23,7 +27,7 @@ function NotesDetailComment({
   const { user } = useUserState()
 
   const handleClickProfile = () => {
-    router.push(`/member/${commentData.member.memberId}`)
+    router.push(`/member/${commentData.member.id}`)
   }
 
   const handleModifyComment = () => {
@@ -66,7 +70,7 @@ function NotesDetailComment({
           <div
             className={`mt-1 flex select-none gap-1 text-brandDarkGray ${openReply && 'mb-1'}`}
           >
-            {user?.memberId === commentData.member.memberId ? (
+            {user?.memberId === commentData.member.id ? (
               <div className="flex gap-1">
                 <span className="cursor-pointer" onClick={handleModifyComment}>
                   수정
@@ -84,15 +88,20 @@ function NotesDetailComment({
           </div>
           {openReply ? (
             <NotesDetailCommentInput
+              noteId={noteId}
               parentCommentId={commentData.commentId}
               setCommentList={setCommentList}
+              setCommentCnt={setCommentCnt}
             />
           ) : null}
           {commentData.childComments
             ? commentData.childComments.map((childComment) => (
                 <NotesDetailComment
+                  key={childComment.commentId}
+                  noteId={noteId}
                   commentData={childComment}
                   setCommentList={setCommentList}
+                  setCommentCnt={setCommentCnt}
                   isParent={false}
                 />
               ))
