@@ -59,4 +59,16 @@ public class FutureTrade extends BaseEntity {
 		this.leverage = leverage;
 		this.settlement = settlement;
 	}
+
+	public static FutureTrade fromActiveFutures(ActiveFuture activeFuture, long settlement) {
+		return FutureTrade.builder()
+				.ticker(activeFuture.getTicker())
+				.leverage(activeFuture.getLeverage())
+				.memberId(activeFuture.getMemberId())
+				.orderCash(activeFuture.getOrderCash())
+				.price(activeFuture.getPrice())
+				.tradeType(activeFuture.getTradeType())
+				.settlement(settlement)
+				.build();
+	}
 }

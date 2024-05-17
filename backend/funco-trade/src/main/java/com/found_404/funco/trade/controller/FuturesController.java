@@ -29,7 +29,7 @@ public class FuturesController {
     }
 
     @PostMapping("/{futureId}/settlement")
-    public ResponseEntity<?> settleFutures(@AuthMemberId Long memberId, @PathVariable String futureId) {
+    public ResponseEntity<?> settleFutures(@AuthMemberId Long memberId, @PathVariable Long futureId) {
         futureService.settlement(memberId, futureId);
         return ResponseEntity.ok().build();
     }
