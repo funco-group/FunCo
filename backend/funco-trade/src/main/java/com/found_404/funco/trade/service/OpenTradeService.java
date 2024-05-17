@@ -37,10 +37,14 @@ public class OpenTradeService {
     private final NotificationService notificationService;
 
     @Async
+    @Transactional
     public void processTrade(List<Long> concludingTradeIds, Long tradePrice) {
 
         // 거래 처리할 미체결 거래 가져오기
         List<OpenTrade> openTrades = openTradeRepository.findAllByIdIn(concludingTradeIds);
+
+        // 미체결 데이터 삭제
+        openTradeRepository.deleteAll(openTrades);
 
         // 체결 데이터로 전환
         List<Trade> trades = openTrades.stream()
@@ -55,15 +59,12 @@ public class OpenTradeService {
             processAsset(trades.get(i), Math.abs(openTrades.get(i).getOrderCash() - trades.get(i).getOrderCash()));
         }
 
-        // 미체결 데이터 삭제
-        openTradeRepository.deleteAll(openTrades);
-
         // [API async] 알림
         trades.forEach(trade ->
                 notificationService.sendNotification(trade.getMemberId(),
                         trade.getTradeType().equals(TradeType.BUY) ? NotificationType.BUY : NotificationType.SELL, getMessage(trade)));
 
-        // 팔로우 구매
+        // [API update async ] 팔로우 구매
         followService.createFollowTrade(trades);
     }
 
