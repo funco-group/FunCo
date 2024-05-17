@@ -4,7 +4,7 @@ interface NoDataProps {
 
 function NoData({ content }: NoDataProps) {
   return (
-    <div className="flex h-96 w-full items-center justify-center text-[#999999]">
+    <div className="flex h-20 w-full items-center justify-center text-[#999999]">
       <div>{content}</div>
     </div>
   )

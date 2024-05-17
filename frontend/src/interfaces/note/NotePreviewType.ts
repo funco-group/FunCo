@@ -1,7 +1,7 @@
 export interface NotePreviewType {
   noteId: number
   member: {
-    memberId: number
+    id: number
     nickname: string
     profileUrl: string
   }
