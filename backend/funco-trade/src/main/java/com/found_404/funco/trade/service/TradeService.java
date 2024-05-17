@@ -26,6 +26,7 @@ import com.found_404.funco.trade.domain.repository.TradeRepository;
 import com.found_404.funco.trade.domain.type.TradeType;
 import com.found_404.funco.trade.dto.OpenTradeDto;
 import com.found_404.funco.trade.dto.OtherTradeDto;
+import com.found_404.funco.trade.dto.RecentTradedCoin;
 import com.found_404.funco.trade.dto.TradeDto;
 import com.found_404.funco.trade.dto.response.CoinValuation;
 import com.found_404.funco.trade.dto.response.CoinValuationResponse;
@@ -297,5 +298,20 @@ public class TradeService {
 			.coinValuations(coinValuations)
 			.totalTradeAsset(totalCoinValues + totalOpenTradeCash)
 			.build();
+	}
+
+	public List<HoldingCoinResponse> getHoldingCoinInfos(Long memberId) {
+		List<HoldingCoin> holdingCoins = holdingCoinRepository.findHoldingCoinByMemberId(memberId);
+
+		return holdingCoins.stream()
+			.map(holdingCoin -> HoldingCoinResponse.builder()
+				.ticker(holdingCoin.getTicker())
+				.volume(holdingCoin.getVolume())
+				.build())
+			.collect(Collectors.toList());
+	}
+
+	public List<RecentTradedCoin> getRecentTradedCoins(Long memberId) {
+		return tradeRepository.findRecentTradedCoinByMemberId(memberId);
 	}
 }

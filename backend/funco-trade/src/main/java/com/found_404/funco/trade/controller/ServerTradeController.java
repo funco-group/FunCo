@@ -1,5 +1,8 @@
 package com.found_404.funco.trade.controller;
 
+import java.util.List;
+
+import com.found_404.funco.trade.dto.RecentTradedCoin;
 import com.found_404.funco.trade.dto.response.CoinValuationResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinResponse;
 import com.found_404.funco.trade.service.TradeService;
@@ -23,5 +26,17 @@ public class ServerTradeController {
     @GetMapping("/coinValuations")
     public ResponseEntity<CoinValuationResponse> getCoinValuations(@RequestParam Long memberId) {
         return ResponseEntity.ok(tradeService.getCoinValuations(memberId));
+    }
+
+    /* 보유한 코인 조회 */
+    @GetMapping("/holding/coins")
+    public ResponseEntity<List<HoldingCoinResponse>> getHoldingCoinInfos(@RequestParam Long memberId) {
+        return ResponseEntity.ok(tradeService.getHoldingCoinInfos(memberId));
+    }
+
+    /* 최근 거래한 3개의 코인 조회 */
+    @GetMapping("/recent-coins")
+    public ResponseEntity<List<RecentTradedCoin>> getRecentTradedCoins(@RequestParam Long memberId) {
+        return ResponseEntity.ok(tradeService.getRecentTradedCoins(memberId));
     }
 }
