@@ -100,7 +100,7 @@ public class FutureService {
 
         // 투입금 + ( 수익(+-) * 레버리지 )
         long result = (activeFuture.getTradeType().equals(TradeType.LONG) ?
-                (activeFuture.getPrice() - currentPrice) : (currentPrice - activeFuture.getPrice())) * activeFuture.getLeverage();
+                (currentPrice - activeFuture.getPrice()) : (activeFuture.getPrice() - currentPrice)) * activeFuture.getLeverage();
         long settlement = activeFuture.getOrderCash() + result;
 
         activeFutureRepository.delete(activeFuture);
