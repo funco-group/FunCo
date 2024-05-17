@@ -24,12 +24,19 @@ function NotesDetailArticleLikeBtn({
   useEffect(() => {
     setLikeCnt((prev) => (isLike ? prev + 1 : prev - 1))
   }, [isLike])
+
+  useEffect(
+    () => () => {
+      console.log(isLike, likeCnt)
+    },
+    [],
+  )
   return (
     <div
       className="flex cursor-pointer select-none items-center gap-2 rounded-xl border border-solid px-6 py-2 outline-none"
       onClick={handleIsLikeBtn}
     >
-      <div className="mt-2">
+      <div className="mt-1">
         {isLike ? (
           <LikeSVG fill="red" />
         ) : (

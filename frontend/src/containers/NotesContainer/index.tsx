@@ -4,11 +4,16 @@ import { getNotesList } from '@/apis/note'
 import TabButton from '@/components/Common/Button/TabButton.styled'
 import NoData from '@/components/Common/NoData'
 import NotePreviewList from '@/components/Note/Notes/NotePreviewList'
-import NotesFilterBtnList from '@/components/Note/Notes/NotesFilterBtnList'
 import NotesSearch from '@/components/Note/Notes/NotesSearch'
 import { NotePreviewType } from '@/interfaces/note/NotePreviewType'
+import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+
+const NotesFilterBtnList = dynamic(
+  () => import('@/components/Note/Notes/NotesFilterBtnList'),
+  { ssr: false },
+)
 
 function Notes() {
   const [nowFilter, setNowFilter] = useState<string>('ALL')

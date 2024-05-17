@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 import { codeNameMapState } from '@/recoils/crypto'
 import { useRecoilValue } from 'recoil'
+import useUserState from '@/hooks/recoilHooks/useUserState'
 import NotesFilterBtn from './NotesFilterBtn'
 import CoinFilterModal from './CoinFilterModal'
 
@@ -19,12 +20,15 @@ function NotesFilterBtnList({
 }: NotesFilterBtnListProps) {
   const [openModal, setOpenModal] = useState(false)
   const coinMap = useRecoilValue(codeNameMapState)
+  const { user } = useUserState()
 
-  const buttonList = [
-    ['전체', 'ALL'],
-    ['작성한 글', 'MY'],
-    ['좋아요 글', 'LIKE'],
-  ]
+  const buttonList = user
+    ? [
+        ['전체', 'ALL'],
+        ['작성한 글', 'MY'],
+        ['좋아요 글', 'LIKE'],
+      ]
+    : [['전체', 'ALL']]
 
   const handleBtn = (btnName: string) => {
     setNowFilter(btnName)
