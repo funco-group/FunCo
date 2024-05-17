@@ -50,7 +50,7 @@ public class FutureService {
         cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.LONG, liquidatedPrice);
 
         // [API UPDATE] 멤버 자산 감소
-        memberService.updateMemberCash(memberId, requestBuyFutures.orderCash());
+        memberService.updateMemberCash(memberId, -requestBuyFutures.orderCash());
     }
 
     private void checkExistFutures(Long memberId, RequestBuyFutures requestBuyFutures) {
@@ -74,7 +74,7 @@ public class FutureService {
         cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.SHORT, liquidatedPrice);
 
         // [API UPDATE] 멤버 자산 감소
-        memberService.updateMemberCash(memberId, requestBuyFutures.orderCash());
+        memberService.updateMemberCash(memberId, -requestBuyFutures.orderCash());
     }
 
     private ActiveFuture getActiveFuture(Long memberId, TradeType tradeType, RequestBuyFutures requestBuyFutures) {
