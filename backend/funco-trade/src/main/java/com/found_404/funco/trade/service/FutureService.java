@@ -96,10 +96,11 @@ public class FutureService {
         ActiveFuture activeFuture = activeFutureRepository.findById(futureId)
                 .orElseThrow(() -> new TradeException(NOT_FOUND_TRADE));
 
-        long price = cryptoPrice.getTickerPrice(activeFuture.getTicker());
+        long currentPrice = cryptoPrice.getTickerPrice(activeFuture.getTicker());
 
         // 투입금 + ( 수익(+-) * 레버리지 )
-        long result = (price - activeFuture.getPrice()) * activeFuture.getLeverage();
+        long result = (activeFuture.getTradeType().equals(TradeType.LONG) ?
+                (activeFuture.getPrice() - currentPrice) : (currentPrice - activeFuture.getPrice())) * activeFuture.getLeverage();
         long settlement = activeFuture.getOrderCash() + result;
 
         activeFutureRepository.delete(activeFuture);
