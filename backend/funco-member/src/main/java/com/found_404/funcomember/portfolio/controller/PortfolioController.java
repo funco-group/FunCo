@@ -1,5 +1,6 @@
 package com.found_404.funcomember.portfolio.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,7 +24,7 @@ public class PortfolioController {
 
 	@PatchMapping
 	public ResponseEntity<Void> modifyPortfolioStatus(@AuthMemberId Long memberId,
-		@RequestBody PortfolioStatusRequest portfolioStatusRequest
+		@RequestBody @Valid PortfolioStatusRequest portfolioStatusRequest
 	) {
 		portfolioService.updatePortfolioStatus(memberId, portfolioStatusRequest);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -31,8 +32,8 @@ public class PortfolioController {
 
 	@PostMapping("/subscribe")
 	public ResponseEntity<Void> addPortfolio(
-		@AuthMemberId Long memberId,
-		@RequestBody SubscribeRequest subscribeRequest) {
+			@AuthMemberId Long memberId,
+			@RequestBody @Valid SubscribeRequest subscribeRequest) {
 		portfolioService.createPortfolio(memberId, subscribeRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
