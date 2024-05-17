@@ -1,6 +1,13 @@
 package com.found_404.funcomember.feignClient.service;
 
+import static com.found_404.funcomember.member.exception.MemberErrorCode.*;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.found_404.funcomember.feignClient.client.FollowServiceClient;
+import com.found_404.funcomember.feignClient.dto.FollowAssetResponse;
 import com.found_404.funcomember.feignClient.dto.FollowerInfoResponse;
 import com.found_404.funcomember.member.exception.MemberException;
 import com.found_404.funcomember.portfolio.dto.request.FollowerProfitRequest;
@@ -8,13 +15,6 @@ import com.found_404.funcomember.portfolio.dto.request.FollowerProfitRequest;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import static com.found_404.funcomember.member.exception.MemberErrorCode.FOLLOW_SERVER_ERROR;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -50,4 +50,21 @@ public class FollowService {
 		}
 	}
 
+	public Boolean getFollowStatus(Long loginMemberId, Long targetMemberId) {
+		try {
+			return followServiceClient.getFollowStatus(loginMemberId, targetMemberId).followed();
+		} catch (FeignException e) {
+			log.error("{} get followStatus error : {}", SERVER_NAME, e.getMessage());
+			throw new MemberException(FOLLOW_SERVER_ERROR);
+		}
+	}
+
+	public FollowAssetResponse getFollowAsset(Long memberId) {
+		try {
+			return followServiceClient.getFollowAsset(memberId);
+		} catch (FeignException e) {
+			log.error("{} get followAsset error : {}", SERVER_NAME, e.getMessage());
+			throw new MemberException(FOLLOW_SERVER_ERROR);
+		}
+	}
 }
