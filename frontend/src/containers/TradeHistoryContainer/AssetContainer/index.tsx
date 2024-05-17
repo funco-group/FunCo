@@ -135,15 +135,11 @@ function Asset() {
       // 총 평가금액
       const evaluationAmount = assets
         .filter((asset) => asset.name !== '현금')
-<<<<<<< Updated upstream
-        .reduce((acc, item) => acc + item.evaluationAmount, 0)
-=======
         .reduce((acc, item) => {
           if (item.evaluationAmount != null) {
           }
           return acc + item.evaluationAmount
         }, 0)
->>>>>>> Stashed changes
       // 총 보유자산
       const asset = cash + price
       // 총 평가손익

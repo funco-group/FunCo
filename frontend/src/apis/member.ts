@@ -15,7 +15,7 @@ export async function getMemberInfo(
   memberId: number,
   success: (res: AxiosResponse<MemberType>) => void,
 ) {
-  await localAxios.get(`/v1/${domain}/${memberId}`).then(success)
+  await localAxios.get(`/v2/${domain}/${memberId}`).then(success)
 }
 
 export async function getMyInfo(
@@ -34,4 +34,11 @@ export async function editIntroduction(introduction: string) {
   await localAxios.patch(`/v1/${domain}/introduction`, {
     introduction,
   })
+}
+export async function buyPortfolio(sellerId: number, success: () => void) {
+  await localAxios
+    .post(`/v1/${domain}/portfolio/subscribe`, {
+      sellerId,
+    })
+    .then(success)
 }

@@ -11,30 +11,27 @@ import {
   NicknameDiv,
   ProfileButtonDiv,
   ProfileDetailContainer,
+  ProfileEditButtonDiv,
   ProfileRankDiv,
   ProfileRankFlexDiv,
   ProfileRankOuterDiv,
   UserPageProfileContainer,
 } from './UserPageProfile.styled'
+import BuyPortfolioModal from './BuyPortfolioModal'
 
 interface UserPageProfileProps {
   member: MemberType
 }
-
 function UserPageProfile({ member }: UserPageProfileProps) {
-  const [nickname, setNickname] = useState(member.nickname)
-  const [introduction, setIntroduction] = useState(member.introduction)
+  const [introduction] = useState(
+    member.introduction ? member.introduction : '-',
+  )
   const { onFollowModal } = useFollowModalState()
   const [onFollowAssetModal, setOnFollowAssetModal] = useState(false)
-
-  useEffect(() => {
-    setNickname(member.nickname)
-    if (!member.introduction) {
-      setIntroduction('한 줄 소개를 입력해주세요!')
-    } else {
-      setIntroduction(member.introduction)
-    }
-  }, [member])
+  const [onBuyPortfolioModal, setOnBuyPortfolioModal] = useState(false)
+  const [portfolioStatus, setPortfolioStatus] = useState<string>(
+    member.portfolioStatus,
+  )
 
   const handleFollowClick = () => {
     onFollowModal({
@@ -46,26 +43,38 @@ function UserPageProfile({ member }: UserPageProfileProps) {
     setOnFollowAssetModal((prev) => !prev)
   }
 
+  const handleBuyPortFolioClick = () => {
+    setOnBuyPortfolioModal(!onBuyPortfolioModal)
+  }
+
   function renderButton() {
-    if (!member.isFollow) {
-      return (
+    return (
+      <ProfileEditButtonDiv>
         <BrandButtonComponent
-          content="팔로우"
+          imgSrc=""
+          content={member.isFollow ? '팔로잉' : '팔로우'}
           color={null}
-          cancel={false}
+          cancel={member.isFollow ? true : false}
           onClick={handleFollowClick}
+          disabled={member.isFollow ? true : false}
+        />
+        <BrandButtonComponent
+          imgSrc={
+            portfolioStatus === 'PRIVATE'
+              ? '/icon/lock.svg'
+              : '/icon/unlock.svg'
+          }
+          content="포트폴리오"
+          color={null}
+          cancel={portfolioStatus === 'PRIVATE' ? false : true}
+          onClick={
+            portfolioStatus === 'PRIVATE'
+              ? handleBuyPortFolioClick
+              : handlePortFolioClick
+          }
           disabled={false}
         />
-      )
-    }
-    return (
-      <BrandButtonComponent
-        content="포트폴리오 보기"
-        color={null}
-        cancel={false}
-        onClick={handlePortFolioClick}
-        disabled={false}
-      />
+      </ProfileEditButtonDiv>
     )
   }
   return (
@@ -77,10 +86,19 @@ function UserPageProfile({ member }: UserPageProfileProps) {
           handlePortFolioClick={handlePortFolioClick}
         />
       )}
+      {onBuyPortfolioModal && (
+        <BuyPortfolioModal
+          memberId={member.memberId}
+          nickname={member.nickname}
+          price={member.portfolioPrice}
+          handleBuyPortFolioClick={handleBuyPortFolioClick}
+          setPortfolioStatus={setPortfolioStatus}
+        />
+      )}
       <ComponentTitleH3>프로필</ComponentTitleH3>
       <ProfileDetailContainer>
         <img src={member.profileUrl} alt="member-profile" />
-        <NicknameDiv>{nickname}</NicknameDiv>
+        <NicknameDiv>{member.nickname}</NicknameDiv>
         <ProfileRankFlexDiv>
           <ProfileRankOuterDiv>
             <div>총 자산 랭킹</div>

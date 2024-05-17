@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { CommonComponent } from "@/styles/CommonStyled";
-import palette from "@/lib/palette";
+import styled from 'styled-components'
+import { CommonComponent } from '@/styles/CommonStyled'
+import palette from '@/lib/palette'
 
 export const UserPageProfileContainer = styled.div`
   ${CommonComponent};
@@ -8,7 +8,7 @@ export const UserPageProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-`;
+`
 
 export const ProfileDetailContainer = styled.div`
   border: none;
@@ -34,23 +34,23 @@ export const ProfileDetailContainer = styled.div`
     text-align: center;
     margin: auto;
   }
-`;
+`
 
 export const ProfileRankFlexDiv = styled.div`
   display: flex;
   gap: 1.25rem;
-`;
+`
 
 export const ProfileRankOuterDiv = styled.div`
   width: 8rem;
   text-align: center;
   font-size: 0.9rem;
   color: ${palette.brandDarkGray};
-`;
+`
 
 export const ProfileRankDiv = styled.div`
   color: black;
-  font-family: "NanumSquareBold";
+  font-family: 'NanumSquareBold';
   font-size: 1rem;
   margin-top: 0.4rem;
   display: flex;
@@ -58,12 +58,12 @@ export const ProfileRankDiv = styled.div`
   justify-content: center;
 
   span {
-    font-family: "NanumSquareBold";
+    font-family: 'NanumSquareBold';
     /* color: ${palette.brandDarkGray}; */
 
     /* font-size: 1.1rem; */
   }
-`;
+`
 
 export const ProfileInput = styled.input`
   font-size: 1rem;
@@ -77,7 +77,7 @@ export const ProfileInput = styled.input`
     border-bottom: 1px solid ${palette.brandColor};
     outline: none;
   }
-`;
+`
 
 export const ProfileTextArea = styled.textarea`
   width: 100%;
@@ -93,23 +93,23 @@ export const ProfileTextArea = styled.textarea`
   &:focus {
     outline: none;
   }
-`;
+`
 
 export const ProfileButtonDiv = styled.div`
   display: flex;
   justify-content: center;
-`;
+`
 
 export const ProfileEditButtonDiv = styled.div`
   display: flex;
   gap: 0.625rem;
-`;
+`
 
 export const NicknameDiv = styled.div`
   height: 3rem;
   font-size: 1.2rem;
-  font-family: "NanumSquareBold";
-`;
+  font-family: 'NanumSquareBold';
+`
 
 export const IntroductionDiv = styled.div`
   margin-top: 1rem;
@@ -118,4 +118,4 @@ export const IntroductionDiv = styled.div`
   align-items: center;
   width: 20rem;
   justify-content: center;
-`;
+`

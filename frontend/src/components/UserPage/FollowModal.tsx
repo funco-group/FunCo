@@ -153,6 +153,7 @@ function FollowModal({ member, setMember }: FollowModalProps) {
         </FollowModalContentDiv>
         <SettleModalContentButtonRowDiv>
           <BrandButtonComponent
+            imgSrc=""
             content="취소"
             color={null}
             cancel
