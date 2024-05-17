@@ -37,15 +37,13 @@ public class NoteCommentService {
         NoteComment comment = noteCommentRepository.findById(commentId).orElseThrow(() -> new NoteCommentException(NOT_FOUND_NOTE_COMMENT));
         checkAuthorization(memberId, comment);
 
-        boolean childExist = noteCommentRepository.existsByParentId(comment.getId());
         // 자식 댓글이 있을 경우 soft delete
-        if (childExist) {
-            comment.editNoteComment("");
-        }
-        // 자식 댓글이 없을 경우 hard delete
-        else {
-            noteCommentRepository.delete(comment);
+        if (noteCommentRepository.existsByParentId(comment.getId())) {
+            comment.softDelete();
+            return;
         }
 
+        // 자식 댓글이 없을 경우 hard delete
+        noteCommentRepository.delete(comment);
     }
 }

@@ -28,7 +28,7 @@ public class NoteComment extends BaseEntity {
 
 	@Comment("삭제 여부")
 	@Column(nullable = false)
-	private Boolean deleted = FALSE;
+	private Boolean deleted;
 
 	@Builder
 	public NoteComment(Long memberId, Note note, Long parentId, String content) {
@@ -36,9 +36,15 @@ public class NoteComment extends BaseEntity {
 		this.note = note;
 		this.parentId = parentId;
 		this.content = content;
+		this.deleted = FALSE;
 	}
 
 	public void editNoteComment(String content) {
 		this.content = content;
+	}
+
+	public void softDelete() {
+		this.content = "";
+		this.deleted = Boolean.TRUE;
 	}
 }
