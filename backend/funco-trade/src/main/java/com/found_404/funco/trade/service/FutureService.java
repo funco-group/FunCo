@@ -21,6 +21,7 @@ import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.CASH_S
 import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.NORMAL_SCALE;
 import static com.found_404.funco.global.util.DecimalCalculator.divide;
 import static com.found_404.funco.global.util.DecimalCalculator.multiple;
+import static com.found_404.funco.trade.exception.TradeErrorCode.ALREADY_FUTURES_TRADE;
 import static com.found_404.funco.trade.exception.TradeErrorCode.NOT_FOUND_TRADE;
 
 @Service
@@ -36,6 +37,9 @@ public class FutureService {
 
     @Transactional
     public void buyFuturesLong(Long memberId, RequestBuyFutures requestBuyFutures) {
+        // 이미 선물 거래 중인지 체크, 선물 거래는 코인 당 한번에 1개 가능
+        checkExistFutures(memberId, requestBuyFutures);
+
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, TradeType.LONG, requestBuyFutures));
 
         // 배율
@@ -49,8 +53,18 @@ public class FutureService {
         memberService.updateMemberCash(memberId, requestBuyFutures.orderCash());
     }
 
+    private void checkExistFutures(Long memberId, RequestBuyFutures requestBuyFutures) {
+        activeFutureRepository.findByMemberIdAndTicker(memberId, requestBuyFutures.ticker())
+                .ifPresent(activeFuture -> {
+                    throw new TradeException(ALREADY_FUTURES_TRADE);
+                });
+    }
+
     @Transactional
     public void buyFuturesShort(Long memberId, RequestBuyFutures requestBuyFutures) {
+        // 이미 선물 거래 중인지 체크, 선물 거래는 코인 당 한번에 1개 가능
+        checkExistFutures(memberId, requestBuyFutures);
+
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, TradeType.SHORT, requestBuyFutures));
 
         // 배율
