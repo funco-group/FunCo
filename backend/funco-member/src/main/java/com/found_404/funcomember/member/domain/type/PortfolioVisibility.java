@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum PortfolioVisibility {
-	PUBLIC("public"),
-	PRIVATE("private"),
-	SUBSCRIBE("subscribe");
+	PUBLIC("PUBLIC"),
+	PRIVATE("PRIVATE"),
+	SUBSCRIBE("SUBSCRIBE");
 
 	private final String value;
 }
