@@ -21,13 +21,13 @@ public class FuturesController {
     private final FutureService futureService;
 
     @PostMapping("/long")
-    public ResponseEntity<?> buyFuturesLong(@AuthMemberId Long memberId, @Valid RequestBuyFutures requestBuyFutures) {
+    public ResponseEntity<?> buyFuturesLong(@AuthMemberId Long memberId, @Valid @RequestBody RequestBuyFutures requestBuyFutures) {
         futureService.buyFuturesLong(memberId, requestBuyFutures);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/short")
-    public ResponseEntity<?> buyFuturesShort(@AuthMemberId Long memberId, @Valid RequestBuyFutures requestBuyFutures) {
+    public ResponseEntity<?> buyFuturesShort(@AuthMemberId Long memberId, @Valid @RequestBody RequestBuyFutures requestBuyFutures) {
         futureService.buyFuturesShort(memberId, requestBuyFutures);
         return ResponseEntity.ok().build();
     }
