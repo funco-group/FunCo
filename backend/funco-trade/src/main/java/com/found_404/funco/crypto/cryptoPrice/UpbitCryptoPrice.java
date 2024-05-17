@@ -111,7 +111,6 @@ public class UpbitCryptoPrice implements CryptoPrice {
     @Override
     public void addTrade(String ticker, Long id, TradeType tradeType, Long price) {
         addTicker(ticker);
-
         listener.addTrade(tradeType, ticker, id, price);
     }
 

@@ -1,5 +1,6 @@
 package com.found_404.funco.crypto.cryptoPrice;
 
+import static com.found_404.funco.trade.domain.type.TradeType.*;
 import static com.found_404.funco.trade.exception.TradeErrorCode.*;
 
 import java.nio.charset.StandardCharsets;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.found_404.funco.trade.service.LiquidateService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,7 @@ import okio.ByteString;
 public class UpbitWebSocketListener extends WebSocketListener {
     private final HttpClientUtil httpClientUtil;
     private final OpenTradeService openTradeService;
+    private final LiquidateService liquidateService;
 
     private final Map<String, Long> cryptoPrices = new HashMap<>();
     private final ConcurrentHashMap<String, PriorityQueue<ProcessingTrade>> buyTrades = new ConcurrentHashMap<>();
@@ -43,16 +46,17 @@ public class UpbitWebSocketListener extends WebSocketListener {
     static class ProcessingTrade {
         Long id;
         Long price;
+        TradeType tradeType;
     }
 
     public void addTrade(TradeType tradeType, String ticker, Long id, Long price) {
         buyTrades.putIfAbsent(ticker, new PriorityQueue<>((t1, t2) -> Long.compare(t2.price, t1.price))); // 최소힙
         sellTrades.putIfAbsent(ticker, new PriorityQueue<>((t1, t2) -> Long.compare(t1.price, t2.price))); // 최대힙
 
-        if (tradeType.equals(TradeType.BUY)) {
-            buyTrades.get(ticker).add(new ProcessingTrade(id, price));
+        if (tradeType.equals(BUY) || tradeType.equals(LONG)) {
+            buyTrades.get(ticker).add(new ProcessingTrade(id, price, tradeType));
         } else {
-            sellTrades.get(ticker).add(new ProcessingTrade(id, price));
+            sellTrades.get(ticker).add(new ProcessingTrade(id, price, tradeType));
         }
     }
 
@@ -86,26 +90,44 @@ public class UpbitWebSocketListener extends WebSocketListener {
         processTrade(code, tradePrice);
     }
 
-    public void processTrade(String code, Long tradePrice) {
+    private void processTrade(String code, Long tradePrice) {
         List<Long> concludingTradeIds = new ArrayList<>();
+        List<Long> liquidatedFuturesIds = new ArrayList<>();
 
         PriorityQueue<ProcessingTrade> buyQueue = buyTrades.get(code);
         while (!buyQueue.isEmpty() && buyQueue.peek().price >= tradePrice) {
-            concludingTradeIds.add(buyQueue.poll().id);
+            ProcessingTrade trade = buyQueue.poll();
+            if (trade.tradeType.equals(BUY)) {
+                concludingTradeIds.add(trade.id);
+            } else {
+                liquidatedFuturesIds.add(trade.id);
+            }
         }
 
         PriorityQueue<ProcessingTrade> sellQueue = sellTrades.get(code);
         while (!sellQueue.isEmpty() && sellQueue.peek().price <= tradePrice) {
-            concludingTradeIds.add(sellQueue.poll().id);
+            ProcessingTrade trade = sellQueue.poll();
+            if (trade.tradeType.equals(SELL)) {
+                concludingTradeIds.add(trade.id);
+            } else {
+                liquidatedFuturesIds.add(trade.id);
+            }
         }
 
 
         // 거래 처리
         if (!concludingTradeIds.isEmpty()) {
-            log.info("{} price:{} ,체결: {}개", code, tradePrice, concludingTradeIds.size());
+            log.info("현물 {} price:{} ,체결: {}개", code, tradePrice, concludingTradeIds.size());
 
             //int sizeSum = buyTrades.get(code).size() + sellTrades.get(code).size();
             openTradeService.processTrade(concludingTradeIds, tradePrice);
+        }
+
+        if (!liquidatedFuturesIds.isEmpty()) {
+            log.info("선물 {} price:{} ,체결: {}개", code, tradePrice, liquidatedFuturesIds.size());
+
+            //int sizeSum = buyTrades.get(code).size() + sellTrades.get(code).size();
+            liquidateService.liquidateFutures(liquidatedFuturesIds);
         }
     }
 
