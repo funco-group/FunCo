@@ -32,7 +32,6 @@ function NotesDetailCommentInput({
         { parentCommentId, content: commentText },
         async () => {
           const commentList: NoteCommentsType = await getCommentsData(noteId)
-          console.log(commentList)
           setCommentList(commentList.comments)
           setCommentCnt(commentList.commentCount)
         },
@@ -43,7 +42,6 @@ function NotesDetailCommentInput({
         setCommentList(commentList.comments)
         setCommentCnt(commentList.commentCount)
       })
-      console.log(commentText)
     }
     setCommentText('')
   }

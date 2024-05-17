@@ -17,7 +17,6 @@ function Redirect() {
 
       if (code) {
         postGoogleOAuth((res) => {
-          console.log(res)
           const { data } = res
           login(data) // Recoil 상태 업데이트
           router.push('/') // 사용자를 홈 페이지로 리디렉트
