@@ -123,6 +123,34 @@ public class QueryDslFollowRepositoryImpl implements QueryDslFollowRepository {
 			.execute();
 	}
 
+	@Override
+	public Boolean isFollowedByMemberId(Long loginId, Long memberId) {
+		return !jpaQueryFactory
+			.from(follow)
+			.where(follow.followerMemberId.eq(loginId),
+				follow.followingMemberId.eq(memberId),
+				follow.settled.isNull().or(follow.settled.isFalse()))
+			.fetch().isEmpty();
+	}
+
+	@Override
+	public Long getFollowingCashByMemberId(Long memberId) {
+		return jpaQueryFactory.select(follow.investment.sum().coalesce(0L))
+			.from(follow)
+			.where(follow.followerMemberId.eq(memberId),
+				follow.settled.isNull().or(follow.settled.isFalse()))
+			.fetchFirst();
+	}
+
+	@Override
+	public Long getFollowerCashByMemberId(Long memberId) {
+		return jpaQueryFactory.select(follow.investment.sum().coalesce(0L))
+			.from(follow)
+			.where(follow.followingMemberId.eq(memberId),
+				follow.settled.isNull().or(follow.settled.isFalse()))
+			.fetchFirst();
+	}
+
 	private BooleanExpression ltFollowId(Long followId) {
 		if (followId == null) { // 요청이 처음일 때 where 절에 null을 주면 page size만큼 반환
 			return null;

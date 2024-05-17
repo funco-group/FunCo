@@ -23,4 +23,10 @@ public interface QueryDslFollowRepository {
 	List<FollowerInfoResponse> findFollowerInfosByFollowingId(Long followingId);
 
 	void updateFollower(Long followingId, Long followerId, Long cash);
+
+	Boolean isFollowedByMemberId(Long loginId, Long memberId);
+
+	Long getFollowingCashByMemberId(Long memberId);
+
+	Long getFollowerCashByMemberId(Long memberId);
 }
