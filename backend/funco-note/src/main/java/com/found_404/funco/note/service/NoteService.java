@@ -127,6 +127,7 @@ public class NoteService {
                 .likeCount(likeCount)
                 .liked(Objects.nonNull(memberId) && noteLikeRepository.existsByMemberIdAndNoteId(
                     memberId, note.getId()))
+                .writeDate(note.getCreatedAt())
                 .build();
     }
 
