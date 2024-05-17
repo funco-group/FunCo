@@ -14,6 +14,7 @@ public enum TradeErrorCode {
     TRADE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "해당 권한이 없습니다."),
     FOLLOW_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "팔로우 서버 에러"),
     NOTIFICATION_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알림 서버 에러")
+
     ;
 
     private final HttpStatus httpStatus;
