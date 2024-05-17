@@ -41,6 +41,7 @@ function NotesDetailComments({
               key={comment.commentId}
               noteId={noteId}
               commentData={comment}
+              commentList={commentList}
               setCommentList={setCommentList}
               setCommentCnt={setCommentCnt}
               isParent
