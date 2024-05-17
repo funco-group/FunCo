@@ -90,11 +90,20 @@ function Notes() {
     setIsLoading(false)
   }, [notePreviewList])
 
-  if (isLoading) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>
+  const getNotePreviewListDiv = () => {
+    if (isLoading) {
+      return <NoData content="Loading" height={300} />
+    }
+    if (notePreviewList.length === 0) {
+      return <NoData content="게시글이 없습니다." height={300} />
+    }
+    return (
+      <NotePreviewList
+        notePreviewList={notePreviewList}
+        setCoinList={setCoinList}
+      />
+    )
   }
-
   return (
     <>
       <div className="flex justify-between">
@@ -129,14 +138,7 @@ function Notes() {
           글 작성
         </button>
       </div>
-      {notePreviewList.length === 0 ? (
-        <NoData content="게시글이 없습니다." />
-      ) : (
-        <NotePreviewList
-          notePreviewList={notePreviewList}
-          setCoinList={setCoinList}
-        />
-      )}
+      {getNotePreviewListDiv()}
     </>
   )
 }

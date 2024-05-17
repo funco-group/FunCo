@@ -32,7 +32,7 @@ function NotesDetailComment({
     router.push(`/member/${commentData.member.id}`)
   }
 
-  const handleModifyComment = () => {
+  const handleUpdateComment = () => {
     console.log('mod comment')
   }
 
@@ -80,7 +80,7 @@ function NotesDetailComment({
           >
             {user?.memberId === commentData.member.id ? (
               <div className="flex gap-1">
-                <span className="cursor-pointer" onClick={handleModifyComment}>
+                <span className="cursor-pointer" onClick={handleUpdateComment}>
                   수정
                 </span>
                 <span className="cursor-pointer" onClick={handleDeleteComment}>
