@@ -11,7 +11,7 @@ import lombok.Builder;
 public record CoinHistoryResponse(
 	LocalDateTime date,
 	String ticker,
-	AssetTradeType tradeType,
+	AssetTradeType assetTradeType,
 	Double volume,
 	Long price,
 	Long orderCash,
@@ -20,11 +20,11 @@ public record CoinHistoryResponse(
 
 
 	@QueryProjection
-	public CoinHistoryResponse(LocalDateTime date, String ticker, AssetTradeType tradeType, Double volume, Long price,
+	public CoinHistoryResponse(LocalDateTime date, String ticker, AssetTradeType assetTradeType, Double volume, Long price,
 		Long orderCash, Long endingCash) {
 		this.date = date;
 		this.ticker = ticker;
-		this.tradeType = tradeType;
+		this.assetTradeType = assetTradeType;
 		this.volume = volume;
 		this.price = price;
 		this.orderCash = orderCash;
