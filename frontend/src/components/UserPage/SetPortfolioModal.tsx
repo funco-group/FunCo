@@ -8,45 +8,67 @@ import {
 import { ContentDiv, ModalItemDiv, TitleDiv } from './BuyPortfolioModal.styled'
 import BrandButtonComponent from '../Common/Button/BrandButtonComponent'
 import { InputDiv } from './FollowModal.styled'
-import { setPortfolioPrivate, setPortfolioPublic } from '@/apis/member'
+import { setPortfolio } from '@/apis/member'
 import AlertModal from '../Common/Modal/AlertModal'
+import ToggleButton from './ToggleButton'
 
 interface SetPortfolioModalProps {
   handleSettingPortfolio: () => void
-  portfolioStatus: string
-  portfolioPrice: number
+  status: boolean
+  setStatus: React.Dispatch<React.SetStateAction<boolean>>
+  price: number
+  setPrice: React.Dispatch<React.SetStateAction<number>>
+  priceStr: string
+  setPriceStr: React.Dispatch<React.SetStateAction<string>>
 }
 
 function SetPortfolioModal({
   handleSettingPortfolio,
-  portfolioStatus,
-  portfolioPrice,
+  status,
+  setStatus,
+  price,
+  setPrice,
+  priceStr,
+  setPriceStr,
 }: SetPortfolioModalProps) {
-  const [status, setStatus] = useState<string>('')
-  const [price, setPrice] = useState<number>(0)
   const [alert, setAlert] = useState<boolean>(false)
 
-  useEffect(() => {
-    setPrice(portfolioPrice)
-    setStatus(status)
-  }, [portfolioPrice, portfolioStatus])
-
-  const setPortfolio = () => {
+  const setPortfolioFuc = async () => {
     if (price > 0) {
-      if (status === 'public') {
-        setPortfolioPublic(status, () => {
-          handleAlert()
-        })
-      } else {
-        setPortfolioPrivate(status, price, () => {
-          handleAlert()
-        })
-      }
+      await setPortfolio(
+        status ? 'private' : 'public',
+        status ? price : 0,
+        () => {
+          setAlert(true)
+
+          if (!status) {
+            setPrice(0)
+            setPriceStr('0')
+          }
+        },
+      )
     }
+  }
+
+  const handleInvestmentInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPrice = e.target.value
+    const newPriceNum = Number(newPrice.replace(/,/g, ''))
+
+    if (Number.isNaN(newPriceNum)) {
+      setPrice(0)
+      setPriceStr('0')
+    }
+    setPrice(newPriceNum)
+    setPriceStr(newPriceNum.toLocaleString('ko-KR'))
   }
 
   const handleAlert = () => {
     setAlert(!alert)
+    handleSettingPortfolio()
+  }
+
+  const clickToggle = () => {
+    setStatus(!status)
   }
 
   return (
@@ -62,8 +84,15 @@ function SetPortfolioModal({
       <SettleModalContainer width="27rem">
         <SettleModalTitleDiv>포트폴리오 설정</SettleModalTitleDiv>
         <ModalItemDiv>
-          <TitleDiv>· 공개</TitleDiv>
-          <ContentDiv>토글</ContentDiv>
+          <TitleDiv>· 유료화</TitleDiv>
+          <ContentDiv>
+            <ToggleButton
+              width="50px"
+              height="30px"
+              isToggleOn={status}
+              handleClick={clickToggle}
+            />
+          </ContentDiv>
         </ModalItemDiv>
         <ModalItemDiv>
           <TitleDiv>· 가격</TitleDiv>
@@ -71,10 +100,9 @@ function SetPortfolioModal({
             <InputDiv>
               <input
                 type="text"
-                value={price}
-                onChange={(e) => {
-                  setPrice(Number(e.target.value))
-                }}
+                value={priceStr}
+                onChange={handleInvestmentInput}
+                disabled={!status}
               />
               <span>WON</span>
             </InputDiv>
@@ -92,7 +120,7 @@ function SetPortfolioModal({
             content="확인"
             color={null}
             cancel={false}
-            onClick={setPortfolio}
+            onClick={setPortfolioFuc}
             disabled={false}
           />
         </SettleModalContentButtonRowDiv>
