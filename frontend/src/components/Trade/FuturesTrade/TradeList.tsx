@@ -6,11 +6,11 @@ import {
   ColumnGrid,
   ColumnTitleDiv,
 } from '@/styles/CommonStyled'
-import { NoTradeData, TradeListContainer } from '../SpotTrade/TradeList.styled'
 import { FuturesType } from '@/interfaces/TradeType'
 import { useRecoilValue } from 'recoil'
 import { userState } from '@/recoils/user'
 import TradeListItem from './TradeListItem'
+import { NoTradeData, TradeListContainer } from '../SpotTrade/TradeList.styled'
 
 function TradeList() {
   const user = useRecoilValue(userState)

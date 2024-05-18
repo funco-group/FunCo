@@ -1,4 +1,7 @@
 import React from 'react'
+import parseDate from '@/utils/parseDate'
+import { FuturesType } from '@/interfaces/TradeType'
+import getColorByReturnRate from '@/utils/getColorByReturnRate'
 import {
   OrderPriceDiv,
   TradeDateDiv,
@@ -7,8 +10,6 @@ import {
   TradeVolumeDiv,
   TypeColumnDiv,
 } from '../SpotTrade/TradeListItem.styled'
-import { FuturesType } from '@/interfaces/TradeType'
-import parseDate from '@/utils/parseDate'
 
 interface TradeListItemProps {
   trade: FuturesType
@@ -35,8 +36,14 @@ function TradeListItem({ trade }: TradeListItemProps) {
       <TradeItemDiv $last={false}>
         <TradeVolumeDiv>{trade.leverage} X</TradeVolumeDiv>
       </TradeItemDiv>
-      <TradeItemDiv $last={true}>
-        <TradeVolumeDiv>{trade.settlement.toLocaleString()}</TradeVolumeDiv>
+      <TradeItemDiv $last>
+        <OrderPriceDiv color={getColorByReturnRate(trade.settlement)}>
+          {trade.settlement.toLocaleString()}
+          <div>
+            {Math.ceil((trade.settlement / trade.orderCash) * 10000) / 100}
+            <span>%</span>
+          </div>
+        </OrderPriceDiv>
       </TradeItemDiv>
     </TradeListItemContainer>
   )
