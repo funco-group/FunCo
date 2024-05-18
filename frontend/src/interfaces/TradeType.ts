@@ -22,10 +22,11 @@ export interface FuturesTradeType {
 
 export interface FuturesType {
   id: number
-  ticker: string
-  tradeType: string
+  leverage: number
   orderCash: number
   price: number
+  settlement: number
+  ticker: string
   tradeDate: string
-  leverage: number
+  tradeType: string
 }
