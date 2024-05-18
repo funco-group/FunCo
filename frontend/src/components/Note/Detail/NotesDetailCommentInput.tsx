@@ -39,6 +39,7 @@ function NotesDetailCommentInput({
 
   const handleClickSubmitBtn = () => {
     if (isEdit && commentId !== null) {
+      console.log(commentText)
       updateComment(commentId, { content: commentText }, RefreshCommentList)
     } else if (parentCommentId) {
       postNotesComment(
@@ -49,7 +50,7 @@ function NotesDetailCommentInput({
     } else {
       postNotesComment(noteId, { content: commentText }, RefreshCommentList)
     }
-    setCommentText('')
+    setCommentText(initialValue)
   }
 
   return (
