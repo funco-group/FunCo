@@ -1,10 +1,7 @@
 package com.found_404.funco.note.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.util.IOUtils;
 import com.found_404.funco.feignClient.dto.SimpleMember;
 import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.note.domain.Note;
@@ -19,7 +16,6 @@ import com.found_404.funco.note.dto.request.NotesFilterRequest;
 import com.found_404.funco.note.dto.response.*;
 import com.found_404.funco.note.dto.type.PostType;
 import com.found_404.funco.note.exception.NoteException;
-import com.found_404.funco.note.exception.S3Exception;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -27,16 +23,14 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.found_404.funco.note.exception.NoteErrorCode.*;
-import static com.found_404.funco.note.exception.S3ErrorCode.PUT_OBJECT_EXCEPTION;
 
 @Service
 @Slf4j
@@ -151,7 +145,7 @@ public class NoteService {
             .build();
     }
 
-
+    @Transactional
     public void removeNote(Long memberId, Long noteId) {
         checkAuthorization(memberId, getNote(noteId));
 
@@ -166,6 +160,7 @@ public class NoteService {
         }
     }
 
+    @Transactional
     public void editNote(Long memberId, Long noteId, NoteRequest request) {
         Note note = getNote(noteId);
         checkAuthorization(memberId, note);
@@ -250,34 +245,6 @@ public class NoteService {
 
 
 
-
-
-    public ImageResponse uploadImage(MultipartFile file) {
-        String originalFilename = file.getOriginalFilename(); //원본 파일 명
-        String extension = Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf(".")); //확장자 명
-
-        String s3FileName = UUID.randomUUID().toString().substring(0, 10) + originalFilename; //변경된 파일 명
-
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType("image/" + extension);
-
-        try (
-                InputStream is = file.getInputStream();
-                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(IOUtils.toByteArray(is))) {
-
-            metadata.setContentLength(IOUtils.toByteArray(is).length);
-            PutObjectRequest putObjectRequest =
-                    new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata)
-                            .withCannedAcl(CannedAccessControlList.PublicRead);
-            amazonS3.putObject(putObjectRequest);
-        } catch (Exception e){
-            log.error("s3 bucket upload error msg : {}", e.getMessage());
-            throw new S3Exception(PUT_OBJECT_EXCEPTION);
-        }
-        return ImageResponse.builder()
-                .url(amazonS3.getUrl(bucketName, s3FileName).toString())
-                .build();
-    }
 
 
 }
