@@ -53,9 +53,9 @@ function UserPageProfile({ member }: UserPageProfileProps) {
         <BrandButtonComponent
           content={member.isFollow ? '팔로잉' : '팔로우'}
           color={null}
-          cancel={member.isFollow ? true : false}
+          cancel={member.isFollow}
           onClick={handleFollowClick}
-          disabled={member.isFollow ? true : false}
+          disabled={member.isFollow}
         />
         <BrandButtonComponent
           imgSrc={
@@ -65,7 +65,7 @@ function UserPageProfile({ member }: UserPageProfileProps) {
           }
           content="포트폴리오"
           color={null}
-          cancel={portfolioStatus === 'PRIVATE' ? false : true}
+          cancel={portfolioStatus !== 'PRIVATE'}
           onClick={
             portfolioStatus === 'PRIVATE'
               ? handleBuyPortFolioClick

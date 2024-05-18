@@ -2,7 +2,7 @@ import { useState } from 'react'
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
 
 import { MemberType } from '@/interfaces/userPage/MemberType'
-import useFollowModalState from '@/hooks/recoilHooks/useFollowModalState'
+// import useFollowModalState from '@/hooks/recoilHooks/useFollowModalState'
 import medalMap from '@/lib/medalMap'
 import { editIntroduction, editNickname } from '@/apis/member'
 import { ComponentTitleH3 } from '@/containers/UserPageContainer/styled'
@@ -33,7 +33,7 @@ function MyPageProfile({ member }: UserPageProfileProps) {
     member.introduction ? member.introduction : '한 줄 소개를 입력해주세요!',
   )
   const [isEditIntro, setIsEditIntro] = useState(false)
-  const { onFollowModal } = useFollowModalState()
+  // const { onFollowModal } = useFollowModalState()
   const [onFollowAssetModal, setOnFollowAssetModal] = useState(false)
 
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
