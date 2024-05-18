@@ -38,7 +38,7 @@ public class UpbitWebSocketListener extends WebSocketListener {
     private final ConcurrentHashMap<String, PriorityQueue<ProcessingTrade>> sellTrades = new ConcurrentHashMap<>();
 
     @AllArgsConstructor
-    static class ProcessingTrade {
+    private static class ProcessingTrade {
         Long id;
         Double price;
         TradeType tradeType;
@@ -73,11 +73,12 @@ public class UpbitWebSocketListener extends WebSocketListener {
         CryptoJson cryptoJson = httpClientUtil.parseJsonToClass(response, CryptoJson.class)
                 .orElseThrow(() -> new TradeException(PRICE_CONNECTION_FAIL));
 
-        priceUpdate(cryptoJson.getCode(), cryptoJson.getTradePrice());
+        System.out.println(cryptoJson);
+        priceUpdate(cryptoJson.getCode(), cryptoJson.getTrade_price());
     }
 
     private void priceUpdate(String code, Double tradePrice) {
-        if (tradePrice.equals(cryptoPrices.getOrDefault(code, -1D))) {
+        if (tradePrice.equals(cryptoPrices.get(code))) {
             return; // 가격이 같으면 업데이트 x
         }
         cryptoPrices.put(code, tradePrice);
@@ -90,7 +91,7 @@ public class UpbitWebSocketListener extends WebSocketListener {
         List<Long> liquidatedFuturesIds = new ArrayList<>();
 
         PriorityQueue<ProcessingTrade> buyQueue = buyTrades.get(code);
-        while (!buyQueue.isEmpty() && buyQueue.peek().price >= tradePrice) {
+        while (Objects.nonNull(buyQueue) && !buyQueue.isEmpty() && buyQueue.peek().price >= tradePrice) {
             ProcessingTrade trade = buyQueue.poll();
             if (trade.tradeType.equals(BUY)) {
                 concludingTradeIds.add(trade.id);
@@ -100,7 +101,7 @@ public class UpbitWebSocketListener extends WebSocketListener {
         }
 
         PriorityQueue<ProcessingTrade> sellQueue = sellTrades.get(code);
-        while (!sellQueue.isEmpty() && sellQueue.peek().price <= tradePrice) {
+        while (Objects.nonNull(sellQueue) && !sellQueue.isEmpty() && sellQueue.peek().price <= tradePrice) {
             ProcessingTrade trade = sellQueue.poll();
             if (trade.tradeType.equals(SELL)) {
                 concludingTradeIds.add(trade.id);
