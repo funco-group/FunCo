@@ -6,7 +6,6 @@ function useUserState() {
   const [{ user }, setUserState] = useRecoilState(userState)
   const resetUser = useResetRecoilState(userState)
   const unReadCount = useRecoilValue(userUnReadCount)
-  // console.log(user)
 
   return {
     user,

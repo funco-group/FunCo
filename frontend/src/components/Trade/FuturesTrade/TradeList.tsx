@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { futuresHistory } from '@/apis/trade'
+import { usePathname } from 'next/navigation'
 import {
   ColumnContainer,
   ColumnGrid,
@@ -8,6 +10,12 @@ import { TradeListContainer } from '../SpotTrade/TradeList.styled'
 
 function TradeList() {
   const columns = ['주문시간', '구분', '주문가격', '레버리지', '정산']
+  const pathname = usePathname()
+  const coinCode = pathname?.split('/')[3]
+
+  useEffect(() => {
+    futuresHistory(coinCode, () => {})
+  }, [])
 
   return (
     <div>
@@ -25,14 +33,7 @@ function TradeList() {
         )}
         {user.user &&
           tradeList &&
-          tradeList.map((trade) => (
-            <TradeListItem
-              key={trade.id}
-              trade={trade}
-              selected={selected}
-              clickCancle={clickCancle}
-            />
-          ))} */}
+          tradeList.map((trade) => <TradeListItem key={trade.id} />)} */}
       </TradeListContainer>
     </div>
   )
