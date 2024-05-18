@@ -42,3 +42,27 @@ export async function buyPortfolio(sellerId: number, success: () => void) {
     })
     .then(success)
 }
+
+export async function setPortfolioPublic(
+  portfolioStatus: string,
+  success: () => void,
+) {
+  await localAxios
+    .post(`/v1/${domain}/portfolio`, {
+      portfolioStatus,
+    })
+    .then(success)
+}
+
+export async function setPortfolioPrivate(
+  portfolioStatus: string,
+  portfolioPrice: number,
+  success: () => void,
+) {
+  await localAxios
+    .post(`/v1/${domain}/portfolio`, {
+      portfolioStatus,
+      portfolioPrice,
+    })
+    .then(success)
+}
