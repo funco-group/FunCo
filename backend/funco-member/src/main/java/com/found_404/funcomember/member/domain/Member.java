@@ -62,7 +62,7 @@ public class Member extends BaseEntity {
 	private LocalDateTime initCashDate;
 
 	private static final Double COMMISSION = 0.05;
-	
+
 	private static final long RE_INIT_CASH = 5_000_000;
 
 	@Builder
@@ -121,6 +121,14 @@ public class Member extends BaseEntity {
 	public void updatePortfolioStatus(PortfolioStatusType portfolioStatus, Long portfolioPrice) {
 		this.portfolioStatus = portfolioStatus;
 		this.portfolioPrice = portfolioPrice;
+	}
+
+	public void updateInitCashDate(LocalDateTime initCashDate) {
+		this.initCashDate = initCashDate;
+	}
+
+	public void updateInitCash() {
+		this.cash = RE_INIT_CASH;
 	}
 
 	public void withdraw() {

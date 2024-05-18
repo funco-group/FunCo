@@ -3,6 +3,7 @@ package com.found_404.funcomember.member.service;
 import static com.found_404.funcomember.member.domain.type.RankType.*;
 import static com.found_404.funcomember.member.exception.MemberErrorCode.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -130,6 +131,14 @@ public class MemberService {
 		totalAsset += followService.getInvestments(memberId);
 
 		return new AssetResponse(totalAsset);
+	}
+
+	@Transactional
+	public void modifyCashAndInitCashDate(Long memberId) {
+		Member member = getMember(memberId);
+
+		member.updateInitCash();
+		member.updateInitCashDate(LocalDateTime.now());
 	}
 
 	public List<SimpleMember> getMembers(List<Long> ids) {
