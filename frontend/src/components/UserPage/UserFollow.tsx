@@ -21,14 +21,18 @@ function UserFollow({ followingCash, followerCash }: UserFollowProps) {
         <UserFollowRowDiv>
           <div>총 팔로잉 금액</div>
           <div>
-            <MoneySpan>{followingCash.toLocaleString('en-US')}</MoneySpan>
+            <MoneySpan>
+              {followingCash ? followingCash.toLocaleString('en-US') : '-'}
+            </MoneySpan>
             <ColorSpan color={palette.brandDarkGray}> WON</ColorSpan>
           </div>
         </UserFollowRowDiv>
         <UserFollowRowDiv>
           <div>총 팔로워 금액</div>
           <div>
-            <MoneySpan>{followerCash.toLocaleString('en-US')}</MoneySpan>
+            <MoneySpan>
+              {followerCash ? followerCash.toLocaleString('en-US') : '-'}
+            </MoneySpan>
             <ColorSpan color={palette.brandDarkGray}> WON</ColorSpan>
           </div>
         </UserFollowRowDiv>

@@ -1,9 +1,8 @@
-import { AxiosResponse } from "axios";
-import { ResRankType } from "@/interfaces/rank/ResRankType";
-import localAxios from "@/utils/http-commons";
+import { AxiosResponse } from 'axios'
+import { ResRankType } from '@/interfaces/rank/ResRankType'
+import localAxios from '@/utils/http-commons'
 
-const domain = "rank";
-const version = "v1";
+const domain = 'rank'
 
 // eslint-disable-next-line import/prefer-default-export
 export async function getRankList(
@@ -11,7 +10,5 @@ export async function getRankList(
   page: number,
   success: (res: AxiosResponse<ResRankType>) => void,
 ) {
-  await localAxios
-    .get(`/${version}/${domain}?type=${type}&page=${page}`)
-    .then(success);
+  await localAxios.get(`/v1/${domain}?type=${type}&page=${page}`).then(success)
 }

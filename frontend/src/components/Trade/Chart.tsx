@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { PriceType } from '@/interfaces/PriceWindowType'
 import ChartGraph from './ChartGraph'
@@ -23,15 +23,14 @@ import {
 } from './Chart.styled'
 
 interface ChartProps {
-  priceList: PriceType[]
+  coin: PriceType
 }
 
-function Chart({ priceList }: ChartProps) {
+const Chart = React.memo(({ coin }: ChartProps) => {
   const pathname = usePathname()
   const router = useRouter()
 
   const coinCode = pathname?.split('/')[3]
-  const coin = priceList.find((price) => price.code === coinCode)
   const buttons = ['일봉', '주봉', '월봉', '1분봉', '5분봉', '10분봉']
   const [button, setButton] = useState<string>('일봉')
 
@@ -133,6 +132,6 @@ function Chart({ priceList }: ChartProps) {
       <ChartGraph button={button} />
     </ChartContainer>
   )
-}
+})
 
 export default Chart
