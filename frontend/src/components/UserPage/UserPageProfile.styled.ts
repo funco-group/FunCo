@@ -19,6 +19,15 @@ export const ProfileDetailContainer = styled.div`
   justify-content: center;
   align-items: center;
 
+  p {
+    width: 21.875rem;
+    word-wrap: break-word;
+    text-align: center;
+    margin: auto;
+  }
+`
+
+export const ProfileImg = styled.div`
   img {
     display: block;
     width: 3.75rem;
@@ -26,13 +35,6 @@ export const ProfileDetailContainer = styled.div`
     border-radius: 100%;
     object-fit: cover;
     margin-bottom: 1rem;
-  }
-
-  p {
-    width: 21.875rem;
-    word-wrap: break-word;
-    text-align: center;
-    margin: auto;
   }
 `
 
@@ -79,7 +81,7 @@ export const ProfileInput = styled.input`
   }
 `
 
-export const ProfileTextArea = styled.textarea`
+export const ProfileTextArea = styled.input`
   width: 100%;
   resize: none;
   outline: none;
@@ -109,6 +111,11 @@ export const NicknameDiv = styled.div`
   height: 3rem;
   font-size: 1.2rem;
   font-family: 'NanumSquareBold';
+
+  img {
+    margin-left: 0.5rem;
+    cursor: pointer;
+  }
 `
 
 export const IntroductionDiv = styled.div`
@@ -118,4 +125,9 @@ export const IntroductionDiv = styled.div`
   align-items: center;
   width: 20rem;
   justify-content: center;
+
+  img {
+    margin-left: 0.5rem;
+    cursor: pointer;
+  }
 `

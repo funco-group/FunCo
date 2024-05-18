@@ -12,6 +12,7 @@ import {
   ProfileButtonDiv,
   ProfileDetailContainer,
   ProfileEditButtonDiv,
+  ProfileImg,
   ProfileRankDiv,
   ProfileRankFlexDiv,
   ProfileRankOuterDiv,
@@ -96,7 +97,9 @@ function UserPageProfile({ member }: UserPageProfileProps) {
       )}
       <ComponentTitleH3>프로필</ComponentTitleH3>
       <ProfileDetailContainer>
-        <img src={member.profileUrl} alt="member-profile" />
+        <ProfileImg>
+          <img src={member.profileUrl} alt="member-profile" />
+        </ProfileImg>
         <NicknameDiv>{member.nickname}</NicknameDiv>
         <ProfileRankFlexDiv>
           <ProfileRankOuterDiv>
