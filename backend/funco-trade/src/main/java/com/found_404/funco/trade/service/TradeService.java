@@ -52,14 +52,14 @@ public class TradeService {
 	private final CryptoPrice cryptoPrice;
 	private final FollowService followService;
 
-	private long getPriceByTicker(String ticker) {
+	private double getPriceByTicker(String ticker) {
 		return cryptoPrice.getTickerPrice(ticker);
 	}
 
 	@Transactional
 	public MarketTradeResponse marketBuying(Long memberId, String ticker, long orderCash) {
 		// 시세 가져오기
-		long currentPrice = getPriceByTicker(ticker);
+		double currentPrice = getPriceByTicker(ticker);
 
 		// 구매 개수
 		double volume = divide(orderCash, currentPrice, VOLUME_SCALE);
@@ -105,7 +105,7 @@ public class TradeService {
 	@Transactional
 	public MarketTradeResponse marketSelling(Long memberId, String ticker, double volume) {
 		// 시세 가져오기
-		long currentPrice = getPriceByTicker(ticker);
+		double currentPrice = getPriceByTicker(ticker);
 
 		// 수수료 제외한 잔액 증가
 		long orderCash = (long)(multiple(currentPrice, volume, NORMAL_SCALE));
@@ -204,7 +204,7 @@ public class TradeService {
 	}
 
 	@Transactional
-	public void limitBuying(Long memberId, String ticker, Long price, Double volume) {
+	public void limitBuying(Long memberId, String ticker, Double price, Double volume) {
 		long orderCash = (long)(price * volume);
 
 		// 미체결 거래 등록
@@ -224,7 +224,7 @@ public class TradeService {
 	}
 
 	@Transactional
-	public void limitSelling(Long memberId, String ticker, Long price, Double volume) {
+	public void limitSelling(Long memberId, String ticker, Double price, Double volume) {
 		// 코인 확인 및 팔려고 등록한 만큼 빼기
 		Optional<HoldingCoin> optionalHoldingCoin = holdingCoinRepository.findByMemberIdAndTicker(memberId, ticker);
 		if (optionalHoldingCoin.isEmpty() || optionalHoldingCoin.get().getVolume() < volume) {
@@ -271,7 +271,7 @@ public class TradeService {
 	public CoinValuationResponse getCoinValuations(Long memberId) {
 		List<HoldingCoin> holdingCoins = holdingCoinRepository.findByMemberId(memberId);
 
-		Map<String, Long> tickerPriceMap = cryptoPrice.getTickerPriceMap(holdingCoins.stream()
+		Map<String, Double> tickerPriceMap = cryptoPrice.getTickerPriceMap(holdingCoins.stream()
 			.map(HoldingCoin::getTicker)
 			.collect(Collectors.toList()));
 

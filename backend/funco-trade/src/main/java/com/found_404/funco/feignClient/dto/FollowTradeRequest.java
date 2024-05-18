@@ -13,7 +13,7 @@ public record FollowTradeRequest(
         TradeType tradeType,
         Double volume,
         Long orderCash,
-        Long price
+        Double price
 ) {
     public static FollowTradeRequest fromEntity(Trade trade) {
         return FollowTradeRequest.builder()

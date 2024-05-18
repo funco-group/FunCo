@@ -14,6 +14,6 @@ public record MarketTradeResponse(
         Double volume,
         @NotNull
         @Positive
-        Long price
+        Double price
 ) {
 }

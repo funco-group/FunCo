@@ -38,7 +38,7 @@ public class FutureTrade extends BaseEntity {
 
 	@Comment("진입 가격")
 	@Column(nullable = false)
-	private Long price;
+	private Double price;
 
 	@Comment("배율")
 	@Column(nullable = false)
@@ -49,7 +49,7 @@ public class FutureTrade extends BaseEntity {
 	private Long settlement;
 
 	@Builder
-	public FutureTrade(Long memberId, String ticker, TradeType tradeType, Long orderCash, Long price,
+	public FutureTrade(Long memberId, String ticker, TradeType tradeType, Long orderCash, Double price,
 		Integer leverage, Long settlement) {
 		this.memberId = memberId;
 		this.ticker = ticker;

@@ -16,7 +16,7 @@ public record OtherTradeDto(
         String assetType, // COIN
         Double volume,
         TradeType tradeType, // BUY, SELL
-        Long price, // 단가
+        Double price, // 단가
         Long orderCash, // 거래 금액
         Long commission, // null
         Long settlement // null

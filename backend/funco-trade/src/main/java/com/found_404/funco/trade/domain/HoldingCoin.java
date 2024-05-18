@@ -38,17 +38,17 @@ public class HoldingCoin extends BaseEntity {
 
 	@Comment("평균단가")
 	@Column(nullable = false)
-	private Long averagePrice;
+	private Double averagePrice;
 
 	@Builder
-	public HoldingCoin(Long memberId, String ticker, Double volume, Long averagePrice) {
+	public HoldingCoin(Long memberId, String ticker, Double volume, Double averagePrice) {
 		this.memberId = memberId;
 		this.ticker = ticker;
 		this.volume = volume;
 		this.averagePrice = averagePrice;
 	}
 
-	public void increaseVolume(double volume, Long price) {
+	public void increaseVolume(double volume, Double price) {
 		recoverVolume(CommissionUtil.getVolumeWithoutCommission(volume), price);
 	}
 
@@ -59,8 +59,8 @@ public class HoldingCoin extends BaseEntity {
 		this.volume = minus(this.volume, volume, VOLUME_SCALE);
 	}
 
-	public void recoverVolume(double volume, Long price) {
-		this.averagePrice = (long) divide((multiple(this.volume, this.averagePrice, NORMAL_SCALE) + multiple(volume, price, NORMAL_SCALE)), plus(volume, this.volume, NORMAL_SCALE), CASH_SCALE);
+	public void recoverVolume(double volume, Double price) {
+		this.averagePrice = divide((multiple(this.volume, this.averagePrice, NORMAL_SCALE) + multiple(volume, price, NORMAL_SCALE)), plus(volume, this.volume, NORMAL_SCALE), PRICE_SCALE);
 		this.volume = plus(this.volume, volume, VOLUME_SCALE);
 	}
 

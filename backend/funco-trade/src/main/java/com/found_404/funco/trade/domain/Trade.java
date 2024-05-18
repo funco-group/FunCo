@@ -39,10 +39,10 @@ public class Trade extends BaseEntity {
 	private Long orderCash;
 
 	@Comment("체결 가격")
-	private Long price;
+	private Double price;
 
 	@Builder
-	public Trade(Long memberId, String ticker, TradeType tradeType, Double volume, Long orderCash, Long price) {
+	public Trade(Long memberId, String ticker, TradeType tradeType, Double volume, Long orderCash, Double price) {
 		this.memberId = memberId;
 		this.ticker = ticker;
 		this.tradeType = tradeType;

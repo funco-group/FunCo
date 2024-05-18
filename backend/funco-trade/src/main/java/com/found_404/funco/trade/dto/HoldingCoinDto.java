@@ -7,6 +7,6 @@ import lombok.Builder;
 public record HoldingCoinDto(
         String ticker,
         Double volume,
-        Long averagePrice
+        Double averagePrice
 ) {
 }

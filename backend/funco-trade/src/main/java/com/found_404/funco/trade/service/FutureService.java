@@ -19,10 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.found_404.funco.global.util.DecimalCalculator.*;
 import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.CASH_SCALE;
 import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.NORMAL_SCALE;
-import static com.found_404.funco.global.util.DecimalCalculator.divide;
-import static com.found_404.funco.global.util.DecimalCalculator.multiple;
 import static com.found_404.funco.trade.exception.TradeErrorCode.ALREADY_FUTURES_TRADE;
 import static com.found_404.funco.trade.exception.TradeErrorCode.NOT_FOUND_TRADE;
 
@@ -45,7 +44,7 @@ public class FutureService {
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, TradeType.LONG, requestBuyFutures));
 
         // 배율
-        long liquidatedPrice = activeFuture.getPrice() - getDifference(activeFuture);
+        double liquidatedPrice = activeFuture.getPrice() - getDifference(activeFuture);
         
         log.info("[Long] member:{} {} 가격 {} 아래로 청산됩니다.", memberId, activeFuture.getTicker(), liquidatedPrice);
         cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.LONG, liquidatedPrice);
@@ -74,7 +73,7 @@ public class FutureService {
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, TradeType.SHORT, requestBuyFutures));
 
         // 배율
-        long liquidatedPrice = activeFuture.getPrice() + getDifference(activeFuture);
+        double liquidatedPrice = activeFuture.getPrice() + getDifference(activeFuture);
         log.info("[Short] member:{} {} 가격 {} 위로 청산됩니다.", memberId, activeFuture.getTicker(), liquidatedPrice);
         cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.SHORT, liquidatedPrice);
 
@@ -98,11 +97,13 @@ public class FutureService {
         ActiveFuture activeFuture = activeFutureRepository.findById(futureId)
                 .orElseThrow(() -> new TradeException(NOT_FOUND_TRADE));
 
-        long currentPrice = cryptoPrice.getTickerPrice(activeFuture.getTicker());
+        double currentPrice = cryptoPrice.getTickerPrice(activeFuture.getTicker());
 
         // 투입금 + ( 수익(+-) * 레버리지 )
-        long result = (activeFuture.getTradeType().equals(TradeType.LONG) ?
-                (currentPrice - activeFuture.getPrice()) : (activeFuture.getPrice() - currentPrice)) * activeFuture.getLeverage();
+        long result = (long) multiple((activeFuture.getTradeType().equals(TradeType.LONG) ?
+                minus(currentPrice, activeFuture.getPrice(), NORMAL_SCALE) : minus(activeFuture.getPrice(), currentPrice, NORMAL_SCALE))
+                , activeFuture.getLeverage(), CASH_SCALE);
+
         long settlement = activeFuture.getOrderCash() + result;
 
         activeFutureRepository.delete(activeFuture);

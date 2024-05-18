@@ -4,11 +4,7 @@ import static com.found_404.funco.trade.domain.type.TradeType.*;
 import static com.found_404.funco.trade.exception.TradeErrorCode.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.found_404.funco.trade.service.LiquidateService;
@@ -37,21 +33,20 @@ public class UpbitWebSocketListener extends WebSocketListener {
     private final OpenTradeService openTradeService;
     private final LiquidateService liquidateService;
 
-    private final Map<String, Long> cryptoPrices = new HashMap<>();
+    private final Map<String, Double> cryptoPrices = new HashMap<>();
     private final ConcurrentHashMap<String, PriorityQueue<ProcessingTrade>> buyTrades = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, PriorityQueue<ProcessingTrade>> sellTrades = new ConcurrentHashMap<>();
-
 
     @AllArgsConstructor
     static class ProcessingTrade {
         Long id;
-        Long price;
+        Double price;
         TradeType tradeType;
     }
 
-    public void addTrade(TradeType tradeType, String ticker, Long id, Long price) {
-        buyTrades.putIfAbsent(ticker, new PriorityQueue<>((t1, t2) -> Long.compare(t2.price, t1.price))); // 최소힙
-        sellTrades.putIfAbsent(ticker, new PriorityQueue<>((t1, t2) -> Long.compare(t1.price, t2.price))); // 최대힙
+    public void addTrade(TradeType tradeType, String ticker, Long id, Double price) {
+        buyTrades.putIfAbsent(ticker, new PriorityQueue<>((t1, t2) -> Double.compare(t2.price, t1.price))); // 최소힙
+        sellTrades.putIfAbsent(ticker, new PriorityQueue<>((t1, t2) -> Double.compare(t1.price, t2.price))); // 최대힙
 
         if (tradeType.equals(BUY) || tradeType.equals(LONG)) {
             buyTrades.get(ticker).add(new ProcessingTrade(id, price, tradeType));
@@ -60,8 +55,8 @@ public class UpbitWebSocketListener extends WebSocketListener {
         }
     }
 
-    public long getCryptoPrice(String ticker) {
-        return cryptoPrices.getOrDefault(ticker, -1L);
+    public Optional<Double> getCryptoPrice(String ticker) {
+        return Optional.ofNullable(cryptoPrices.get(ticker));
     }
 
     @Override
@@ -81,8 +76,8 @@ public class UpbitWebSocketListener extends WebSocketListener {
         priceUpdate(cryptoJson.getCode(), cryptoJson.getTradePrice());
     }
 
-    private void priceUpdate(String code, Long tradePrice) {
-        if (tradePrice.equals(cryptoPrices.getOrDefault(code, -1L))) {
+    private void priceUpdate(String code, Double tradePrice) {
+        if (tradePrice.equals(cryptoPrices.getOrDefault(code, -1D))) {
             return; // 가격이 같으면 업데이트 x
         }
         cryptoPrices.put(code, tradePrice);
@@ -90,7 +85,7 @@ public class UpbitWebSocketListener extends WebSocketListener {
         processTrade(code, tradePrice);
     }
 
-    private void processTrade(String code, Long tradePrice) {
+    private void processTrade(String code, Double tradePrice) {
         List<Long> concludingTradeIds = new ArrayList<>();
         List<Long> liquidatedFuturesIds = new ArrayList<>();
 
@@ -113,7 +108,6 @@ public class UpbitWebSocketListener extends WebSocketListener {
                 liquidatedFuturesIds.add(trade.id);
             }
         }
-
 
         // 거래 처리
         if (!concludingTradeIds.isEmpty()) {
