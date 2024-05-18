@@ -42,8 +42,8 @@ public class MemberService {
 		}
 	}
 
-	public Map<Long, SimpleMember> getSimpleMember(Long id) {
-		return getSimpleMember(List.of(id));
+	public SimpleMember getSimpleMember(Long id) {
+		return getSimpleMember(List.of(id)).get(id);
 	}
 
 	public Map<Long, SimpleMember> getSimpleMember(List<Long> ids) {
