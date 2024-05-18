@@ -80,6 +80,12 @@ localAxios.interceptors.response.use(
     ) {
       return handleTokenReissue(error)
     }
+    if (
+      error.response.status === httpStatusCode.UNAUTHORIZED &&
+      error.response.data.errorCode === 'EXPIRED_REFRESH_TOKEN'
+    ) {
+      localStorage.removeItem('userInfo')
+    }
 
     return Promise.reject(error)
   },

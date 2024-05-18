@@ -84,5 +84,9 @@ export async function postImage(
   formData: FormData,
   success: (res: AxiosResponse<{ url: string }>) => void,
 ) {
-  localAxios.post(`/v1/${domain}/image`, formData).then(success)
+  await localAxios.post(`/v1/${domain}/image`, formData).then(success)
+}
+
+export async function postNoteLike(noteId: number, success: () => void) {
+  await localAxios.post(`v1/${domain}/${noteId}/like`).then(success)
 }
