@@ -70,10 +70,14 @@ export async function postNotesComment(
 
 export async function updateComment(
   commentId: number,
-  body: NotesCommentBodyType,
+  body: { content: string },
   success: () => void,
 ) {
   await localAxios.put(`/v1/comments/${commentId}`, body).then(success)
+}
+
+export async function deleteComment(commentId: number, success: () => {}) {
+  await localAxios.delete(`/v1/comments/${commentId}`).then(success)
 }
 
 export async function postImage(
