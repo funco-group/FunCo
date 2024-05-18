@@ -12,6 +12,7 @@ import com.found_404.funco.auth.dto.response.LoginResponse;
 import com.found_404.funco.auth.dto.response.TokenResponse;
 import com.found_404.funco.auth.service.AuthService;
 import com.found_404.funco.auth.type.OauthServerType;
+import com.found_404.funco.global.memberIdHeader.AuthMemberId;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +34,13 @@ public class AuthController {
 	@PostMapping("/reissue")
 	public ResponseEntity<TokenResponse> reissueToken(HttpServletRequest request, HttpServletResponse response) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(authService.reissueToken(request, response));
+	}
+
+	@PostMapping("/{provider}/signout")
+	public ResponseEntity<Void> logout(HttpServletResponse response, @PathVariable OauthServerType provider,
+		@AuthMemberId Long memberId) {
+		authService.logout(response, provider, memberId);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 }
