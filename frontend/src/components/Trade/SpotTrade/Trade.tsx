@@ -34,7 +34,7 @@ const Trade = React.memo(() => {
   const getCurPrice = () => {
     getTickerPrice(coinCode!, (response: AxiosResponse<ResTickerType[]>) => {
       const { data } = response
-      setCurPrice(Math.round(data[0].trade_price))
+      setCurPrice(data[0].trade_price)
     })
   }
 
