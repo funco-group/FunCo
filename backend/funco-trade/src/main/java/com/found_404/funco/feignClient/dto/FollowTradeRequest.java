@@ -15,7 +15,7 @@ public record FollowTradeRequest(
         Long orderCash,
         Double price
 ) {
-    public static FollowTradeRequest fromEntity(Trade trade) {
+    public static FollowTradeRequest fromTrade(Trade trade) {
         return FollowTradeRequest.builder()
                 .id(trade.getId())
                 .memberId(trade.getMemberId())
