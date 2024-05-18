@@ -43,7 +43,7 @@ function AssetListItem({
             {price != null && <span> WON</span>}
           </ListItemDiv>
           <ListItemDiv $align="right" color="black">
-            {evaluationAmount.toLocaleString('ko-KR')}
+            {evaluationAmount ? evaluationAmount.toLocaleString('ko-KR') : '-'}
             <span>WON</span>
           </ListItemDiv>
           <ListItemDiv
