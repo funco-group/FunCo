@@ -36,6 +36,12 @@ function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
     setSearchText('')
   }
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
   const focusClasses =
     'focus:border-brandColor focus:border-2 focus:text-brandColor'
 
@@ -67,6 +73,7 @@ function NotesSearch({ setSearch, setKeyword }: NotesSearchProps) {
           onFocus={handleInputFocus}
           onBlur={handleInputFocus}
           className="h-5 border-none bg-transparent text-brandDarkGray outline-none placeholder:text-brandDarkGray focus:text-brandColor focus:placeholder:text-brandColor"
+          onKeyDown={handleKeyPress}
         />
         <button
           type="button"
