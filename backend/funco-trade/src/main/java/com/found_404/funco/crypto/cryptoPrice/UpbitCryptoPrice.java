@@ -53,6 +53,19 @@ public class UpbitCryptoPrice implements CryptoPrice {
             return Collections.emptyMap();
         }
 
+        Map<String, Double> map = new HashMap<>();
+        for (String ticker : tickers) {
+            Optional<Double> optional = listener.getCryptoPrice(ticker);
+            if (optional.isEmpty()) {
+                log.info(" {}의 실시간 시세가 없어서 API 요청합니다. ", ticker);
+                break;
+            }
+            map.put(ticker, optional.get());
+        }
+        if (map.size() == tickers.size()) {
+            return map;
+        }
+
         String apiResponse = httpClientUtil.getApiResponse(getUrlWithParameters(tickers));
         if (Objects.isNull(apiResponse)) {
             throw new TradeException(PRICE_CONNECTION_FAIL);
