@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.found_404.funco.feignClient.dto.request.OAuthMemberRequest;
+import com.found_404.funco.feignClient.dto.response.MemberInitCashDate;
 import com.found_404.funco.feignClient.dto.response.OAuthMemberResponse;
 
 @FeignClient(name = "member-service")
@@ -17,4 +18,7 @@ public interface MemberServiceClient {
 
 	@PostMapping(value = "/api/v1/members")
 	OAuthMemberResponse addAuthMember(@RequestBody OAuthMemberRequest oauthMemberRequest);
+
+	@GetMapping(value = "/api/v1/members/auth/{memberId}")
+	MemberInitCashDate getInitCashDate(@PathVariable Long memberId);
 }
