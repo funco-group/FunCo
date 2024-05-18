@@ -50,8 +50,6 @@ function FollowModal({ member, setMember }: FollowModalProps) {
     }
   }, [alert])
 
-  useEffect(() => {}, [investment])
-
   if (!followModal) {
     return null
   }
