@@ -14,12 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.found_404.funco.crypto.cryptoPrice.CryptoPrice;
+import com.found_404.funco.feignClient.dto.ActiveFutureInfo;
+import com.found_404.funco.feignClient.dto.HoldingCoinInfo;
 import com.found_404.funco.feignClient.service.FollowService;
 import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.global.util.CommissionUtil;
 import com.found_404.funco.trade.domain.HoldingCoin;
 import com.found_404.funco.trade.domain.OpenTrade;
 import com.found_404.funco.trade.domain.Trade;
+import com.found_404.funco.trade.domain.repository.ActiveFutureRepository;
 import com.found_404.funco.trade.domain.repository.HoldingCoinRepository;
 import com.found_404.funco.trade.domain.repository.OpenTradeRepository;
 import com.found_404.funco.trade.domain.repository.TradeRepository;
@@ -46,6 +49,7 @@ public class TradeService {
 	private final TradeRepository tradeRepository;
 	private final HoldingCoinRepository holdingCoinRepository;
 	private final OpenTradeRepository openTradeRepository;
+	private final ActiveFutureRepository activeFutureRepository;
 
 	private final MemberService memberService;
 
@@ -329,6 +333,28 @@ public class TradeService {
 		openTradeRepository.deleteAll(openTrades);
 
 		/* 선물 거래 삭제 로직 */
-		
+
+	}
+
+	public List<HoldingCoinInfo> getAssetHoldingCoin(Long memberId) {
+		return holdingCoinRepository.findByMemberId(memberId).stream()
+			.map(holdingCoin -> HoldingCoinInfo.builder()
+				.ticker(holdingCoin.getTicker())
+				.volume(holdingCoin.getVolume())
+				.averagePrice(holdingCoin.getAveragePrice())
+				.build())
+			.toList();
+	}
+
+	public List<ActiveFutureInfo> getAssetFuture(Long memberId) {
+		return activeFutureRepository.findByMemberId(memberId).stream()
+			.map(activeFuture -> ActiveFutureInfo.builder()
+				.ticker(activeFuture.getTicker())
+				.tradeType(activeFuture.getTradeType())
+				.orderCash(activeFuture.getOrderCash())
+				.price(activeFuture.getPrice())
+				.leverage(activeFuture.getLeverage())
+				.build())
+			.toList();
 	}
 }
