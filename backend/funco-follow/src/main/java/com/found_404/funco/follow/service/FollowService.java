@@ -4,7 +4,10 @@ import static com.found_404.funco.follow.exception.FollowErrorCode.*;
 import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.*;
 import static com.found_404.funco.global.util.DecimalCalculator.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
@@ -25,16 +28,20 @@ import com.found_404.funco.follow.domain.repository.FollowRepository;
 import com.found_404.funco.follow.domain.repository.FollowTradeRepository;
 import com.found_404.funco.follow.domain.repository.FollowingCoinRepository;
 import com.found_404.funco.follow.domain.type.TradeType;
-import com.found_404.funco.follow.dto.*;
 import com.found_404.funco.follow.dto.FollowTradeDto;
+import com.found_404.funco.follow.dto.FollowerList;
+import com.found_404.funco.follow.dto.FollowingInfo;
 import com.found_404.funco.follow.dto.RatioPrice;
 import com.found_404.funco.follow.dto.SliceFollowingInfo;
 import com.found_404.funco.follow.dto.request.FollowerProfitRequest;
 import com.found_404.funco.follow.dto.request.FollowingRequest;
-import com.found_404.funco.follow.dto.response.*;
+import com.found_404.funco.follow.dto.response.FollowAssetResponse;
+import com.found_404.funco.follow.dto.response.FollowStatusResponse;
 import com.found_404.funco.follow.dto.response.FollowerInfoResponse;
 import com.found_404.funco.follow.dto.response.FollowerListResponse;
+import com.found_404.funco.follow.dto.response.FollowerResponse;
 import com.found_404.funco.follow.dto.response.FollowingListResponse;
+import com.found_404.funco.follow.dto.response.FollowingResponse;
 import com.found_404.funco.follow.dto.response.InvestmentsResponse;
 import com.found_404.funco.follow.exception.FollowException;
 
@@ -57,11 +64,10 @@ public class FollowService {
 	private static final double FOLLOW_FEE = 0.03, PERCENT = 100L;
 	private static final int PAGE_SIZE = Integer.MAX_VALUE - 1; // 임시
 
-
 	/*
-	*	부모 = 팔로우 당하는 사람, 팔로잉
-	*	자식 = 팔로우 하는 사람, 팔로워
-	* */
+	 *	부모 = 팔로우 당하는 사람, 팔로잉
+	 *	자식 = 팔로우 하는 사람, 팔로워
+	 * */
 	@Transactional
 	public void createFollow(FollowingRequest request, Long followerMemberId) {
 
@@ -89,18 +95,19 @@ public class FollowService {
 
 		// 부모의 보유 자산의 비율
 		Map<String, RatioPrice> followingAssetRatio = coinValuationResponse.coinValuations()
-				.stream()
-				.collect(Collectors.toMap(CoinValuation::ticker,
-						coinValuation -> new RatioPrice(divide(coinValuation.valuation(), followingAsset, NORMAL_SCALE), coinValuation.price())));
+			.stream()
+			.collect(Collectors.toMap(CoinValuation::ticker,
+				coinValuation -> new RatioPrice(divide(coinValuation.valuation(), followingAsset, NORMAL_SCALE),
+					coinValuation.price())));
 
 		// 팔로우 생성
 		Follow follow = Follow.builder()
-				.followingMemberId(followingMemberId)
-				.followerMemberId(followerMemberId)
-				.investment(investment)
-				.cash(investment) // 처음엔 초기 투자금
-				.settled(Boolean.FALSE)
-				.build();
+			.followingMemberId(followingMemberId)
+			.followerMemberId(followerMemberId)
+			.investment(investment)
+			.cash(investment) // 처음엔 초기 투자금
+			.settled(Boolean.FALSE)
+			.build();
 
 		/*
 		 * 팔로잉 코인 갯수 = (초기 투자금 * 부모의 전체 자산에 대해 해당 코인이 차지하는 비율) / 해당 코인의 현재 시세
@@ -110,17 +117,17 @@ public class FollowService {
 		List<FollowTrade> followTrades = new ArrayList<>();
 
 		followingAssetRatio.forEach((ticker, value) -> {
-            FollowingCoin newCoin = FollowingCoin.builder()
-                    .follow(follow)
-                    .ticker(ticker)
-                    .volume(divide(
-                            	multiple(investment, value.ratio(), NORMAL_SCALE),
-							value.price(), VOLUME_SCALE))
-                    .averagePrice(value.price())
-                    .build();
-            followingCoins.add(newCoin);
-            followTrades.add(getFollowTrade(follow, newCoin));
-        });
+			FollowingCoin newCoin = FollowingCoin.builder()
+				.follow(follow)
+				.ticker(ticker)
+				.volume(divide(
+					multiple(investment, value.ratio(), NORMAL_SCALE),
+					value.price(), VOLUME_SCALE))
+				.averagePrice(value.price())
+				.build();
+			followingCoins.add(newCoin);
+			followTrades.add(getFollowTrade(follow, newCoin));
+		});
 
 		// 엔티티 insert
 		followRepository.save(follow);
@@ -129,8 +136,8 @@ public class FollowService {
 
 		// 산 만큼 팔로우 현금 차감
 		follow.decreaseCash(followTrades.stream()
-				.map(FollowTrade::getOrderCash)
-				.reduce(0L, Long::sum));
+			.map(FollowTrade::getOrderCash)
+			.reduce(0L, Long::sum));
 
 		// [API update] 팔로워 자산 차감
 		memberService.updateMemberCash(followerMemberId, -investment);
@@ -145,8 +152,8 @@ public class FollowService {
 
 	private Long getTotalFollowInvestment(Long followingMemberId) {
 		return followRepository.findAllByFollowerMemberId(followingMemberId)
-				.stream().map(Follow::getInvestment)
-				.reduce(0L, Long::sum);
+			.stream().map(Follow::getInvestment)
+			.reduce(0L, Long::sum);
 	}
 
 	private void checkSelfFollow(FollowingRequest request, Long followerMemberId) {
@@ -157,18 +164,20 @@ public class FollowService {
 
 	private void checkDuplicatedFollow(Long followingMemberId, Long followerMemberId) {
 		followRepository.findFollowByFollowingMemberIdAndFollowerMemberIdAndSettledFalse(
-				followingMemberId, followerMemberId).ifPresent(follow -> {throw new FollowException(FOLLOW_DUPLICATED_ERROR);});
+			followingMemberId, followerMemberId).ifPresent(follow -> {
+			throw new FollowException(FOLLOW_DUPLICATED_ERROR);
+		});
 	}
 
 	private FollowTrade getFollowTrade(Follow follow, FollowingCoin coin) {
 		return FollowTrade.builder()
-				.follow(follow)
-				.ticker(coin.getTicker())
-				.tradeType(TradeType.BUY)
-				.volume(coin.getVolume())
-				.orderCash((long) multiple(coin.getAveragePrice(), coin.getVolume(), CASH_SCALE))
-				.price(coin.getAveragePrice())
-				.build();
+			.follow(follow)
+			.ticker(coin.getTicker())
+			.tradeType(TradeType.BUY)
+			.volume(coin.getVolume())
+			.orderCash((long)multiple(coin.getAveragePrice(), coin.getVolume(), CASH_SCALE))
+			.price(coin.getAveragePrice())
+			.build();
 	}
 
 	@Transactional
@@ -181,7 +190,7 @@ public class FollowService {
 
 		// [API select] 팔로잉 코인들의 현재 시세
 		Map<String, Double> cryptoPrice = tradeService.getCryptoPrice(
-				followingCoins.stream()
+			followingCoins.stream()
 				.map(FollowingCoin::getTicker)
 				.toList());
 
@@ -200,8 +209,8 @@ public class FollowService {
 
 		// 팔로잉 코인들 가격
 		long sellProfits = followTrades.stream()
-				.map(FollowTrade::getOrderCash)
-				.reduce(0L, Long::sum);
+			.map(FollowTrade::getOrderCash)
+			.reduce(0L, Long::sum);
 
 		// 수익금
 		long proceed = sellProfits + follow.getCash();
@@ -234,16 +243,17 @@ public class FollowService {
 		message.append("id:").append(follow.getFollowerMemberId()).append("님이 투자금액 ")
 			.append(String.format("%,d", follow.getInvestment())).append("원을 정산하셨습니다. ")
 			.append(String.format("%,d", commission)).append("원의 수수료를 받았습니다.");
-		notificationService.sendNotification(follow.getFollowingMemberId(), NotificationType.SETTLE, message.toString());
+		notificationService.sendNotification(follow.getFollowingMemberId(), NotificationType.SETTLE,
+			message.toString());
 	}
 
 	private static long getCommission(long proceed, Long investment) {
-		return Math.max((long) multiple(proceed - investment, FOLLOW_FEE, CASH_SCALE), 0);
+		return Math.max((long)multiple(proceed - investment, FOLLOW_FEE, CASH_SCALE), 0);
 	}
 
 	private static double getReturnRate(long proceed, Long investment) {
 		return multiple(PERCENT,
-				divide(proceed - investment, investment, NORMAL_SCALE), RETURN_RATE_SCALE);
+			divide(proceed - investment, investment, NORMAL_SCALE), RETURN_RATE_SCALE);
 	}
 
 	private Follow getFollow(Long followId) {
@@ -256,42 +266,45 @@ public class FollowService {
 			lastFollowId, PAGE_SIZE);
 
 		Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(
-				sliceFollowingInfo.followingInfoList()
-						.stream()
-						.map(FollowingInfo::followingId)
-						.toList());
+			sliceFollowingInfo.followingInfoList()
+				.stream()
+				.map(FollowingInfo::followingId)
+				.toList());
 
 		return FollowingListResponse.builder()
-				.followings(sliceFollowingInfo.followingInfoList()
-						.stream()
-						.map(followingInfo ->
-								FollowingResponse.getFollowingResponse(followingInfo, simpleMembers.get(followingInfo.followingId())))
-						.toList())
-				.last(sliceFollowingInfo.last())
-				.build();
+			.followings(sliceFollowingInfo.followingInfoList()
+				.stream()
+				.map(followingInfo ->
+					FollowingResponse.getFollowingResponse(followingInfo,
+						simpleMembers.get(followingInfo.followingId())))
+				.toList())
+			.last(sliceFollowingInfo.last())
+			.build();
 	}
 
 	public FollowerListResponse readFollowerList(Long memberId, String settled, Long lastFollowId) {
-		FollowerList followerList = followRepository.findFollowerListByMemberIdAndSettleType(memberId, settled, lastFollowId, PAGE_SIZE);
+		FollowerList followerList = followRepository.findFollowerListByMemberIdAndSettleType(memberId, settled,
+			lastFollowId, PAGE_SIZE);
 
 		Map<Long, SimpleMember> simpleMembers = memberService.getSimpleMember(followerList
-				.follows().stream()
-				.map(Follow::getFollowerMemberId)
-				.toList());
+			.follows().stream()
+			.map(Follow::getFollowerMemberId)
+			.toList());
 
 		return new FollowerListResponse(followerList.last(),
-				followerList.follows().stream()
-						.map(follow -> FollowerResponse.getFollowerResponse(follow, simpleMembers.get(follow.getFollowingMemberId())))
-						.toList());
+			followerList.follows().stream()
+				.map(follow -> FollowerResponse.getFollowerResponse(follow,
+					simpleMembers.get(follow.getFollowingMemberId())))
+				.toList());
 	}
 
 	public List<FollowTradeDto> getFollowTrades(Pageable pageable, Long followId) {
 		Follow follow = followRepository.getReferenceById(followId);
 
 		return followTradeRepository.findByFollow(pageable, follow)
-				.stream()
-				.map(FollowTradeDto::fromEntity)
-				.toList();
+			.stream()
+			.map(FollowTradeDto::fromEntity)
+			.toList();
 	}
 
 	public InvestmentsResponse getInvestments(Long memberId) {
@@ -318,5 +331,20 @@ public class FollowService {
 			.followingCash(followRepository.getFollowingCashByMemberId(memberId))
 			.followerCash(followRepository.getFollowerCashByMemberId(memberId))
 			.build();
+	}
+
+	@Transactional
+	public void modifyFollowingAndFollower(Long memberId) {
+		// 팔로잉 : 내가 팔로우하는 사람들 정산
+		List<Follow> followingList = followRepository.findAllByFollowerMemberIdAndSettledFalse(memberId);
+		for (Follow following : followingList) {
+			deleteFollow(following.getId());
+		}
+
+		// 팔로워 : 나를 팔로우하는 사람들 정산
+		List<Follow> followerList = followRepository.findAllByFollowingMemberIdAndSettledFalse(memberId);
+		for (Follow follower : followerList) {
+			deleteFollow(follower.getId());
+		}
 	}
 }

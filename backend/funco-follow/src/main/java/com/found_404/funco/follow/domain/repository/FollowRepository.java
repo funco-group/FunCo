@@ -14,12 +14,15 @@ public interface FollowRepository extends JpaRepository<Follow, Long>, QueryDslF
 
 	List<Follow> findAllByFollowerMemberId(Long followerMemberId);
 
-	@EntityGraph(attributePaths = {"following","follower"})
+	@EntityGraph(attributePaths = {"following", "follower"})
 	List<Follow> findAllByFollowerMemberIdAndSettled(Long followerMemberId, Boolean settled);
 
 	List<Follow> findAllByFollowerMemberIdAndSettledFalse(Long followerMemberId);
 
-    List<Follow> findAllByFollowerMemberIdAndSettledTrue(Long followerMemberId);
+	List<Follow> findAllByFollowerMemberIdAndSettledTrue(Long followerMemberId);
+
+	List<Follow> findAllByFollowingMemberIdAndSettledFalse(Long followingMemberId);
 
 	List<Follow> findAllByFollowingMemberIdAndSettledTrue(Long followingMemberId);
+
 }
