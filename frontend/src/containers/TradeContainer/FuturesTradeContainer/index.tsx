@@ -5,7 +5,6 @@ import PriceWindow from '@/components/Common/PriceWindow/PriceWindow'
 import Chart from '@/components/Trade/Chart'
 import Position from '@/components/Trade/FuturesTrade/Position'
 import Trade from '@/components/Trade/FuturesTrade/Trade'
-import WideLayout from '@/components/layout/WideLayout'
 import {
   BottomContainer,
   CryptoPageContainer,
@@ -39,31 +38,29 @@ function FuturesTrade() {
   }, [isTrade])
 
   return (
-    <WideLayout>
-      <CryptoPageContainer>
-        <div>
-          <Chart coin={priceList.find((price) => price.code === coinCode)!} />
-          <BottomContainer>
-            <Position
-              isTrade={isTrade}
-              setIsTrade={setIsTrade}
-              coin={
-                isTrade
-                  ? priceList.find((price) => price.code === coinCode)!
-                  : null
-              }
-              trade={trade}
-            />
-            <Trade
-              isTrade={isTrade}
-              setIsTrade={setIsTrade}
-              futureId={isTrade && trade ? trade.id : 0}
-            />
-          </BottomContainer>
-        </div>
-        <PriceWindow priceList={priceList} setPriceList={setPriceList} />
-      </CryptoPageContainer>
-    </WideLayout>
+    <CryptoPageContainer>
+      <div>
+        <Chart coin={priceList.find((price) => price.code === coinCode)!} />
+        <BottomContainer>
+          <Position
+            isTrade={isTrade}
+            setIsTrade={setIsTrade}
+            coin={
+              isTrade
+                ? priceList.find((price) => price.code === coinCode)!
+                : null
+            }
+            trade={trade}
+          />
+          <Trade
+            isTrade={isTrade}
+            setIsTrade={setIsTrade}
+            futureId={isTrade && trade ? trade.id : 0}
+          />
+        </BottomContainer>
+      </div>
+      <PriceWindow priceList={priceList} setPriceList={setPriceList} />
+    </CryptoPageContainer>
   )
 }
 
