@@ -84,6 +84,7 @@ function Asset() {
         },
       ])
     })
+
     assetsRes.activeFutureInfos.forEach((coin) => {
       setAssets((asset) => [
         ...asset,
