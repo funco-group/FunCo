@@ -1,6 +1,5 @@
 package com.found_404.funco.follow.controller;
 
-import com.found_404.funco.follow.dto.FollowTradeDto;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.found_404.funco.follow.dto.FollowTradeDto;
 import com.found_404.funco.follow.dto.request.FollowerProfitRequest;
 import com.found_404.funco.follow.dto.request.FollowingRequest;
 import com.found_404.funco.follow.dto.response.FollowAssetResponse;
@@ -28,7 +28,6 @@ import com.found_404.funco.global.memberIdHeader.AuthMemberId;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 
 @RequestMapping("/v1/follows")
 @RequiredArgsConstructor
@@ -98,11 +97,14 @@ public class FollowController {
 		return ResponseEntity.ok(followService.getFollowStatus(loginMemberId, targetMemberId));
 	}
 
-	/*
-	 * 	MSA SERVER API
-	 * */
 	@GetMapping("/asset")
 	public ResponseEntity<FollowAssetResponse> getFollowAsset(@RequestParam Long memberId) {
 		return ResponseEntity.ok(followService.getFollowAsset(memberId));
+	}
+
+	@PatchMapping("/asset")
+	public ResponseEntity<Void> modifyFollowingAndFollower(@RequestParam Long memberId) {
+		followService.modifyFollowingAndFollower(memberId);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 }
