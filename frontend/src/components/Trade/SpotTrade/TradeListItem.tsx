@@ -1,4 +1,4 @@
-import { TradeListType } from "@/interfaces/TradeType";
+import { TradeListType } from '@/interfaces/TradeType'
 import {
   TradeListItemContainer,
   TradeItemDiv,
@@ -7,26 +7,31 @@ import {
   OrderPriceDiv,
   TradeVolumeDiv,
   TradeDateDiv,
-} from "./TradeListItem.styled";
+} from './TradeListItem.styled'
+import parseDate from '@/utils/parseDate'
 
 interface TradeListItemProps {
-  trade: TradeListType;
-  selected: string;
-  clickCancle: (id: number) => void;
+  trade: TradeListType
+  selected: string
+  clickCancle: (id: number) => void
 }
 
 function TradeListItem({ trade, selected, clickCancle }: TradeListItemProps) {
-  const concluded = selected === "체결";
+  const concluded = selected === '체결'
 
   return (
-    <TradeListItemContainer $concluded={concluded}>
+    <TradeListItemContainer
+      $column={
+        concluded ? `6rem 6rem 9rem 8rem` : `5.8rem 5.7rem 7.2rem 7.1rem 3.5rem`
+      }
+    >
       <TradeItemDiv $last={false}>
-        <TradeDateDiv>{trade.tradeDate}</TradeDateDiv>
+        <TradeDateDiv>{parseDate(trade.tradeDate)}</TradeDateDiv>
       </TradeItemDiv>
       <TradeItemDiv $last={false}>
         <TypeColumnDiv type={trade.tradeType}>
           {trade.ticker}
-          <div>{trade.tradeType === "BUY" ? "매수" : "매도"}</div>
+          <div>{trade.tradeType === 'BUY' ? '매수' : '매도'}</div>
         </TypeColumnDiv>
       </TradeItemDiv>
       <TradeItemDiv $last={false}>
@@ -42,7 +47,7 @@ function TradeListItem({ trade, selected, clickCancle }: TradeListItemProps) {
         <TradeItemDiv $last>
           <CancleButton
             onClick={() => {
-              clickCancle(trade.id);
+              clickCancle(trade.id)
             }}
           >
             취소
@@ -50,7 +55,7 @@ function TradeListItem({ trade, selected, clickCancle }: TradeListItemProps) {
         </TradeItemDiv>
       )}
     </TradeListItemContainer>
-  );
+  )
 }
 
-export default TradeListItem;
+export default TradeListItem
