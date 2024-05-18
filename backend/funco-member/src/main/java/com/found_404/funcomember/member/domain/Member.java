@@ -2,6 +2,8 @@ package com.found_404.funcomember.member.domain;
 
 import static com.found_404.funcomember.member.exception.MemberErrorCode.*;
 
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.Comment;
 
 import com.found_404.funcomember.global.entity.BaseEntity;
@@ -56,12 +58,17 @@ public class Member extends BaseEntity {
 	@Comment("포트폴리오 가격")
 	private Long portfolioPrice;
 
+	@Comment("마지막 원 초기화 날짜")
+	private LocalDateTime initCashDate;
+
 	private static final Double COMMISSION = 0.05;
+	
+	private static final long RE_INIT_CASH = 5_000_000;
 
 	@Builder
 	public Member(OauthId oauthId, String nickname, String profileUrl, String introduction, Long cash,
 		MemberStatus status,
-		PortfolioStatusType portfolioStatus, Long portfolioPrice) {
+		PortfolioStatusType portfolioStatus, Long portfolioPrice, LocalDateTime initCashDate) {
 		this.oauthId = oauthId;
 		this.nickname = nickname;
 		this.profileUrl = profileUrl;
@@ -70,6 +77,7 @@ public class Member extends BaseEntity {
 		this.status = status;
 		this.portfolioStatus = portfolioStatus;
 		this.portfolioPrice = portfolioPrice;
+		this.initCashDate = initCashDate;
 	}
 
 	public void updateCash(long updateCash) {
