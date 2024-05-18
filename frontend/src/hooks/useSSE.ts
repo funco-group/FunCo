@@ -52,7 +52,7 @@ function useSSE() {
         console.log('Error', e)
         eventSource.close()
         // 재연결 로직: 1초 후에 다시 시도
-        // setTimeout(fetchSSE, 1000);
+        setTimeout(fetchSSE, 1000)
       }
     }
 

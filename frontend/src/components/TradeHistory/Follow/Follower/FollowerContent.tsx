@@ -18,7 +18,7 @@ function FollowerContent({ content }: { content: FollowerContentType }) {
             {followedAt}
           </ListItemDiv>
           <ListItemDiv $align="" color="black">
-            {content.nickname}
+            {content.member.nickname}
           </ListItemDiv>
           <ListItemDiv $align="right" color="black">
             {content.investment.toLocaleString('ko-KR')} <span>WON</span>
