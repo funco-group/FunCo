@@ -23,4 +23,5 @@ public class FollowTradeController {
         followTradeService.followTrade(tradeList);
         return ResponseEntity.ok().build();
     }
+
 }
