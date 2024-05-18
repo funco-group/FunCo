@@ -73,7 +73,6 @@ public class UpbitWebSocketListener extends WebSocketListener {
         CryptoJson cryptoJson = httpClientUtil.parseJsonToClass(response, CryptoJson.class)
                 .orElseThrow(() -> new TradeException(PRICE_CONNECTION_FAIL));
 
-        System.out.println(cryptoJson);
         priceUpdate(cryptoJson.getCode(), cryptoJson.getTrade_price());
     }
 
