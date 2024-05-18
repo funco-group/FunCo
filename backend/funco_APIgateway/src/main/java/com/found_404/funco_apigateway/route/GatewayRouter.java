@@ -33,7 +33,9 @@ public class GatewayRouter {
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes()
-			.route(r -> r.path("/api/v1/auth/*/signin").uri(EUREKA_AUTH))
+			.route(r -> r.path("/api/v1/auth/*/signin", "/api/v1/auth/reissue").uri(EUREKA_AUTH))
+			.route(r -> getJwtFilterRoute(r, "/api/v1/auth/*/signout", EUREKA_AUTH))
+
 			.route(r -> r.path("/api/v1/rank/**").uri(EUREKA_RANK))
 
 			.route(r -> getJwtFilterRoute(r, "/api/v1/members/**", EUREKA_MEMBER))
