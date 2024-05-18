@@ -50,7 +50,7 @@ public class RankSchedulerService {
 		// redis 비우는 작업
 		clearRankingZSets();
 		// 코인 및 가격 정보 조회
-		Map<String, Long> tickerPrice = tradeService.getCryptoPrice(tradeService.getHoldingCoinList());
+		Map<String, Double> tickerPrice = tradeService.getCryptoPrice(tradeService.getHoldingCoinList());
 		// 코인 자산 및 팔로워 자산 계산 및 랭킹 업데이트
 		calculateAndSetRanking(tickerPrice);
 
@@ -64,7 +64,7 @@ public class RankSchedulerService {
 	}
 
 	// 코인 자산 및 팔로워 자산 계산 및 랭킹 업데이트
-	private void calculateAndSetRanking(Map<String, Long> tickerPrice) {
+	private void calculateAndSetRanking(Map<String, Double> tickerPrice) {
 		// 멤버 별 보유 코인 금액
 		Map<Long, Long> holdingCoins = calculateHoldingCoins(tickerPrice);
 
@@ -85,7 +85,7 @@ public class RankSchedulerService {
 		// 랭킹 업데이트
 		rankMemberInfoList.forEach(info -> {
 			// 총 자산 = 가용 현금 + 총 보유 코인 가격 + 팔로우 투자금 + 지정가 거래 주문 금액
-			Long totalAsset = info.cash() + (holdingCoins.getOrDefault(info.id(), 0L)) +
+			long totalAsset = info.cash() + (holdingCoins.getOrDefault(info.id(), 0L)) +
 				followingInvestmentMap.getOrDefault(info.id(), 0L) + openTradeOrderCashMap.getOrDefault(info.id(), 0L);
 
 			updateRankingInRedis(RankResponse.builder()
@@ -99,7 +99,7 @@ public class RankSchedulerService {
 	}
 
 	// 코인 자산 계산
-	private Map<Long, Long> calculateHoldingCoins(Map<String, Long> tickerPrice) {
+	private Map<Long, Long> calculateHoldingCoins(Map<String, Double> tickerPrice) {
 		if (CollectionUtils.isEmpty(tickerPrice)) {
 			return Collections.emptyMap();
 		}

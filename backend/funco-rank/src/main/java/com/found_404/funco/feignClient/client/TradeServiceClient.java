@@ -12,7 +12,7 @@ import com.found_404.funco.rank.dto.HoldingCoinInfo;
 @FeignClient(name = "trade-service")
 public interface TradeServiceClient {
 	@GetMapping(value = "/api/crypto")
-	Map<String, Long> getCryptoPrice(@RequestParam List<String> tickers);
+	Map<String, Double> getCryptoPrice(@RequestParam List<String> tickers);
 
 	@GetMapping("/api/v1/batch/holdings")
 	List<HoldingCoinInfo> getHoldingCoinInfoList();
