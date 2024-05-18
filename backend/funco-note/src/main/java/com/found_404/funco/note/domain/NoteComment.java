@@ -23,7 +23,6 @@ public class NoteComment extends BaseEntity {
 	private Long parentId;
 
 	@Comment("내용")
-	@Column(nullable = false)
 	private String content;
 
 	@Comment("삭제 여부")
