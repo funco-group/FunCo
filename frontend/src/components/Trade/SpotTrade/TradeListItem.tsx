@@ -1,4 +1,5 @@
 import { TradeListType } from '@/interfaces/TradeType'
+import parseDate from '@/utils/parseDate'
 import {
   TradeListItemContainer,
   TradeItemDiv,
@@ -8,7 +9,6 @@ import {
   TradeVolumeDiv,
   TradeDateDiv,
 } from './TradeListItem.styled'
-import parseDate from '@/utils/parseDate'
 
 interface TradeListItemProps {
   trade: TradeListType

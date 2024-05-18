@@ -38,11 +38,27 @@ export const CancleButton = styled.div`
   cursor: pointer;
 `
 
-export const OrderPriceDiv = styled.div`
+export const OrderPriceDiv = styled.div<{ color?: string }>`
   text-align: right;
+
+  color: ${(props) => {
+    if (props.color === 'red') {
+      return palette.brandRed
+    }
+    if (props.color === 'blue') {
+      return palette.brandBlue
+    }
+    return palette.brandBlack
+  }};
 
   div {
     margin-top: 0.4rem;
+  }
+
+  span {
+    font-size: 0.75rem;
+    color: ${palette.brandDarkGray};
+    margin-left: 0.2rem;
   }
 `
 
