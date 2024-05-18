@@ -54,7 +54,7 @@ public class FutureService {
     }
 
     private static double getDifference(ActiveFuture activeFuture) {
-        return divide(activeFuture.getLeverage(), 100, NORMAL_SCALE);
+        return multiple(activeFuture.getPrice(), divide(activeFuture.getLeverage(), 100, NORMAL_SCALE), NORMAL_SCALE);
     }
 
     private void checkExistFutures(Long memberId, RequestBuyFutures requestBuyFutures) {
