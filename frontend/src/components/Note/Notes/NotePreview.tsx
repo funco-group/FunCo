@@ -5,9 +5,10 @@ import noteParseDate from '@/utils/noteParseDate'
 import LikeSVG from '@/../public/icon/like.svg'
 import MsgSVG from '@/../public/icon/message-text-alt.svg'
 import { useRouter } from 'next/navigation'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { codeNameMapState } from '@/recoils/crypto'
+import { postNoteLike } from '@/apis/note'
 
 interface NotePreviewProps {
   notePreviewData: NotePreviewType
@@ -17,6 +18,8 @@ interface NotePreviewProps {
 function NotePreview({ notePreviewData, setCoinList }: NotePreviewProps) {
   const router = useRouter()
   const coinMap = useRecoilValue(codeNameMapState)
+  const [liked, setLiked] = useState(notePreviewData.liked)
+  const [likeCnt, setLikeCnt] = useState(notePreviewData.likeCount)
 
   const buttonDivClasses =
     'flex items-center gap-2 border-solid border-transparent px-2 hover:rounded hover:border-brandColor cursor-pointer'
@@ -31,6 +34,18 @@ function NotePreview({ notePreviewData, setCoinList }: NotePreviewProps) {
 
   const handleClickMemberDiv = () => {
     router.push(`/member/${notePreviewData.member.id}`)
+  }
+
+  const handleClickLikeDiv = () => {
+    postNoteLike(notePreviewData.noteId, () => {
+      if (liked) {
+        setLiked(false)
+        setLikeCnt((prev) => prev - 1)
+      } else {
+        setLiked(true)
+        setLikeCnt((prev) => prev + 1)
+      }
+    })
   }
 
   const handleClickMsgDiv = () => {
@@ -83,15 +98,15 @@ function NotePreview({ notePreviewData, setCoinList }: NotePreviewProps) {
         </div>
       </div>
       <div className="flex justify-end">
-        <div className={`${buttonDivClasses}`}>
+        <div className={`${buttonDivClasses}`} onClick={handleClickLikeDiv}>
           <div className="mt-1.5">
-            {notePreviewData.liked ? (
+            {liked ? (
               <LikeSVG fill="red" />
             ) : (
               <LikeSVG fill="transparent" stroke="black" />
             )}
           </div>
-          <div>{notePreviewData.likeCount}</div>
+          <div>{likeCnt}</div>
         </div>
         <div className={`${buttonDivClasses}`} onClick={handleClickMsgDiv}>
           <div className="mt-1.5">
