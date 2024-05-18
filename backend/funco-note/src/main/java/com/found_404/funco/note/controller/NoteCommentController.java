@@ -20,7 +20,7 @@ public class NoteCommentController {
     public ResponseEntity<Void> editComment(
         @AuthMemberId Long memberId,
         @PathVariable Long commentId,
-        @Valid EditNoteCommentRequest request
+        @Valid @RequestBody EditNoteCommentRequest request
     ) {
         noteCommentService.editComment(memberId, commentId, request);
         return ResponseEntity.ok().build();
