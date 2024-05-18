@@ -4,10 +4,11 @@ interface NoDataProps {
   height?: number
 }
 
-function NoData({ content, height = 80 }: NoDataProps) {
+function NoData({ content, height = 20 }: NoDataProps) {
+  const heightClass = `h-${height}`
   return (
     <div
-      className={`flex  h-[${height}px] w-full items-center justify-center text-[#999999]`}
+      className={`flex ${heightClass} w-full items-center justify-center text-[#999999]`}
     >
       <div>{content}</div>
     </div>
