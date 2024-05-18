@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react'
 import useFollowModalState from '@/hooks/recoilHooks/useFollowModalState'
 import useUserState from '@/hooks/recoilHooks/useUserState'
 import { MemberType } from '@/interfaces/userPage/MemberType'
-import { getMemberInfo } from '@/apis/member'
+import { getMemberInfo, getMyInfo } from '@/apis/member'
 import FollowModal from '@/components/UserPage/FollowModal'
 import UserPageProfile from '@/components/UserPage/UserPageProfile'
-import AssetGraph from '@/components/UserPage/AssetGraph'
-import RecentInvestment from '@/components/UserPage/RecentInvestment'
-import UserFollow from '@/components/UserPage/UserFollow'
-import ReturnRateGraph from '@/components/UserPage/ReturnRateGraph'
+// import AssetGraph from '@/components/UserPage/AssetGraph'
+// import RecentInvestment from '@/components/UserPage/RecentInvestment'
+// import UserFollow from '@/components/UserPage/UserFollow'
+// import ReturnRateGraph from '@/components/UserPage/ReturnRateGraph'
+import MyPageProfile from '@/components/UserPage/MyPageProfile'
 import { UserLayoutRowDiv } from './styled'
 
 function UserPageContainer({ memberId }: { memberId: number }) {
@@ -18,37 +19,53 @@ function UserPageContainer({ memberId }: { memberId: number }) {
   const [member, setMember] = useState<MemberType>()
   const { followModal } = useFollowModalState()
 
+  const isCurrentUser = user?.memberId === +memberId
+
   useEffect(() => {
-    if (memberId) {
-      getMemberInfo(+memberId, (res) => {
+    if (isCurrentUser) {
+      getMyInfo((res) => {
+        const { data } = res
+        setMember({
+          ...data,
+          memberId: user.memberId,
+          nickname: user.nickname,
+          profileUrl: user.profileUrl,
+        })
+      })
+    } else {
+      getMemberInfo(memberId, (res) => {
         const { data } = res
         setMember(data)
       })
     }
-  }, [memberId])
+  }, [])
 
   if (!memberId || !user || !member) {
-    return <div>존재하지 않는 회원입니다.</div>
+    return null
   }
 
-  const isCurrentUser = user?.memberId === +memberId
   return (
     <div>
       {followModal && member && (
         <FollowModal member={member} setMember={setMember} />
       )}
       <UserLayoutRowDiv>
-        <UserPageProfile isCurrentUser={isCurrentUser} member={member} />
-        <AssetGraph member={member} />
+        {isCurrentUser ? (
+          <MyPageProfile member={member} />
+        ) : (
+          <UserPageProfile member={member} />
+        )}
+
+        {/* <AssetGraph member={member} /> */}
       </UserLayoutRowDiv>
-      <UserLayoutRowDiv>
+      {/* <UserLayoutRowDiv>
         <RecentInvestment topCoins={member.topCoins} />
         <UserFollow
           followingCash={member.followingCash}
           followerCash={member.followerCash}
         />
       </UserLayoutRowDiv>
-      <ReturnRateGraph memberId={member.memberId} />
+      <ReturnRateGraph memberId={member.memberId} /> */}
     </div>
   )
 }

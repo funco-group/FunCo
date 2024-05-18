@@ -7,9 +7,10 @@ import CoinSelect from '@/components/Note/Write/CoinSelect'
 import { ThumbnailImageType } from '@/interfaces/note/ThumbnailImageType'
 import { Editor } from '@toast-ui/react-editor'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/navigation'
-import { ChangeEvent, useRef, useState } from 'react'
-import { postNotes } from '@/apis/note'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { getNotesDetail, postNotes, updateNotes } from '@/apis/note'
+import getMarkdownFromHTML from '@/utils/getMarkdownFromHTML'
 
 const ToastEditor = dynamic(
   () => import('@/components/Common/ToastUI/ToastEditor'),
@@ -20,8 +21,22 @@ function NotesWrite() {
   const [coin, setCoin] = useState<string>('')
   const [titleText, setTitleText] = useState<string>('')
   const [imageList, setImageList] = useState<ThumbnailImageType[]>([])
+  const [initialData, setInitialData] = useState<string>('')
   const editorRef = useRef<Editor>(null)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const noteId = searchParams.get('noteId')
+
+  useEffect(() => {
+    if (noteId) {
+      getNotesDetail(+noteId, (res) => {
+        const { data } = res
+        setInitialData(getMarkdownFromHTML(data.content))
+        setTitleText(data.title)
+        setCoin(data.ticker)
+      })
+    }
+  }, [])
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTitleText(e.target.value)
@@ -45,6 +60,25 @@ function NotesWrite() {
       (res) => {
         const { data } = res
         router.push(`/notes/${data.noteId}`)
+      },
+    )
+  }
+
+  const handleUpdateBtn = () => {
+    if (!noteId) return
+    const htmlContent = editorRef.current?.getInstance().getHTML()
+    const thumbnailImage = imageList.find((image) => image.thumbnail)?.src
+    if (!thumbnailImage) return
+    updateNotes(
+      +noteId,
+      {
+        title: titleText,
+        content: htmlContent,
+        ticker: coin,
+        thumbnailImage,
+      },
+      () => {
+        router.push(`/notes/${+noteId}`)
       },
     )
   }
@@ -80,6 +114,8 @@ function NotesWrite() {
         className={`mt-3 h-9 w-2/4 rounded border-solid outline-none focus:border-2 focus:border-brandColor ${filledTitleClasses}`}
       />
       <ToastEditor
+        key={initialData}
+        initialValue={initialData}
         editorRef={editorRef}
         imageList={imageList}
         setImageList={setImageList}
@@ -118,9 +154,9 @@ function NotesWrite() {
             disabled={false}
           />
           <BrandButtonComponent
-            content="저장"
+            content={noteId ? '수정' : '저장'}
             color={null}
-            onClick={handleSaveBtn}
+            onClick={noteId ? handleUpdateBtn : handleSaveBtn}
             cancel={false}
             disabled={!coin || !titleText || imageList.length === 0}
           />

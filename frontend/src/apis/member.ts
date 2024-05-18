@@ -3,13 +3,12 @@ import { MemberType } from '@/interfaces/userPage/MemberType'
 import localAxios from '@/utils/http-commons'
 import { CashType } from '@/interfaces/common/AssetType'
 
-const version = 'v1'
 const domain = 'members'
 
 export async function getCash(
   success: (response: AxiosResponse<CashType>) => void,
 ) {
-  await localAxios.get(`/${version}/${domain}/cash`).then(success);
+  await localAxios.get(`/v1/${domain}/cash`).then(success)
 }
 
 export async function getMemberInfo(
@@ -19,14 +18,27 @@ export async function getMemberInfo(
   await localAxios.get(`/v2/${domain}/${memberId}`).then(success)
 }
 
+export async function getMyInfo(
+  success: (res: AxiosResponse<MemberType>) => void,
+) {
+  await localAxios.get(`/v1/${domain}/mypage`).then(success)
+}
+
 export async function editNickname(nickname: string) {
-  await localAxios.patch(`/${version}/${domain}/nickname`, {
+  await localAxios.patch(`/v1/${domain}/nickname`, {
     nickname,
   })
 }
 
 export async function editIntroduction(introduction: string) {
-  await localAxios.patch(`/${version}/${domain}/introduction`, {
+  await localAxios.patch(`/v1/${domain}/introduction`, {
     introduction,
   })
+}
+export async function buyPortfolio(sellerId: number, success: () => void) {
+  await localAxios
+    .post(`/v1/${domain}/portfolio/subscribe`, {
+      sellerId,
+    })
+    .then(success)
 }
