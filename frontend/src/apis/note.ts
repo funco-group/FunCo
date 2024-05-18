@@ -12,7 +12,7 @@ interface NotesReqBodyType {
   thumbnailImage: string
 }
 
-interface PostNotesCommentBodyType {
+interface NotesCommentBodyType {
   parentCommentId?: number
   content: string
 }
@@ -62,10 +62,18 @@ export async function getCommentsData(noteId: number) {
 
 export async function postNotesComment(
   noteId: number,
-  body: PostNotesCommentBodyType,
+  body: NotesCommentBodyType,
   success: () => void,
 ) {
   await localAxios.post(`/v1/${domain}/${noteId}/comments`, body).then(success)
+}
+
+export async function updateComment(
+  commentId: number,
+  body: NotesCommentBodyType,
+  success: () => void,
+) {
+  await localAxios.put(`/v1/comments/${commentId}`, body).then(success)
 }
 
 export async function postImage(
