@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
 
-import { MemberType, MyType } from '@/interfaces/userPage/MemberType'
+import { MemberType } from '@/interfaces/userPage/MemberType'
 import useFollowModalState from '@/hooks/recoilHooks/useFollowModalState'
 import medalMap from '@/lib/medalMap'
 import { editIntroduction, editNickname } from '@/apis/member'
@@ -20,7 +20,7 @@ import {
   ProfileTextArea,
   UserPageProfileContainer,
 } from './UserPageProfile.styled'
-import useUserState from '@/hooks/recoilHooks/useUserState'
+// import useUserState from '@/hooks/recoilHooks/useUserState'
 
 interface UserPageProfileProps {
   member: MemberType
@@ -58,11 +58,11 @@ function MyPageProfile({ member }: UserPageProfileProps) {
     setIsEditIntro((prev) => !prev)
   }
 
-  const handleFollowClick = () => {
-    onFollowModal({
-      memberId: member.memberId,
-    })
-  }
+  // const handleFollowClick = () => {
+  //   onFollowModal({
+  //     memberId: member.memberId,
+  //   })
+  // }
 
   const handlePortFolioClick = () => {
     setOnFollowAssetModal((prev) => !prev)

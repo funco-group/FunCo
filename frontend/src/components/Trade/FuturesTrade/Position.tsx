@@ -2,15 +2,15 @@
 
 import React, { useEffect, useState } from 'react'
 import { ContentDiv, TradeItem } from '@/styles/Trade.styled'
+import { PriceType } from '@/interfaces/PriceWindowType'
+import { FuturesType } from '@/interfaces/TradeType'
+import AlertModal from '@/components/Common/Modal/AlertModal'
+import { PositionTitleDiv, PositionTitleContainer } from './Position.styled'
 import {
   ContentContainer,
   OrderBookContainer,
   TitleDiv,
 } from '../SpotTrade/OrderBook.styled'
-import { PriceType } from '@/interfaces/PriceWindowType'
-import { FuturesType } from '@/interfaces/TradeType'
-import AlertModal from '@/components/Common/Modal/AlertModal'
-import { PositionTitleDiv, PositionTitleContainer } from './Position.styled'
 
 function parseDate(date: string) {
   const parsedDate = new Date(date)
