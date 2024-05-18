@@ -1,6 +1,7 @@
 package com.found_404.funco.follow.controller;
 
 import com.found_404.funco.follow.dto.Trade;
+import com.found_404.funco.follow.dto.request.FuturesTrade;
 import com.found_404.funco.follow.service.FollowTradeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,12 @@ public class FollowTradeController {
     @PostMapping()
     public ResponseEntity<?> createFollowTrade(@RequestBody List<Trade> tradeList) {
         followTradeService.followTrade(tradeList);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/futures")
+    public ResponseEntity<?> createFollowTradeByFutures(@RequestBody FuturesTrade futures) {
+        followTradeService.followTradeByFutures(futures);
         return ResponseEntity.ok().build();
     }
 
