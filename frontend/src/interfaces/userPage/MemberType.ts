@@ -21,4 +21,23 @@ export interface MemberType {
   followerCash: number
   isFollow: boolean
   topCoins: TopCoinsType[]
+  portfolioStatus: string
+  portfolioPrice: number
+}
+
+export interface MyType {
+  introduction: string
+  assetRank: number | null
+  followingCashRank: number | null
+  memberAssetInfo: {
+    cash: number
+    coins: {
+      ticker: string
+      volume: number
+    }[]
+  }
+  followingCash: number
+  followerCash: number
+  isFollow: boolean
+  topCoins: TopCoinsType[]
 }

@@ -7,7 +7,9 @@ interface BrandButtonProps {
 }
 
 const BrandButton = styled.button<BrandButtonProps>`
-  display: block;
+  display: flex;
+  justify-content: center;
+  vertical-align: bottom;
   border: none;
   border-radius: 0.3125rem;
   min-width: 6.25rem;
@@ -37,6 +39,10 @@ const BrandButton = styled.button<BrandButtonProps>`
   padding: 0.7rem 2rem;
   &:disabled {
     cursor: not-allowed !important;
+  }
+
+  img {
+    margin-right: 0.3rem;
   }
 `
 
