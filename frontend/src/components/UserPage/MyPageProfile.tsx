@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
 
-import { MemberType } from '@/interfaces/userPage/MemberType'
+import { MemberType, MyType } from '@/interfaces/userPage/MemberType'
 import useFollowModalState from '@/hooks/recoilHooks/useFollowModalState'
 import medalMap from '@/lib/medalMap'
 import { editIntroduction, editNickname } from '@/apis/member'
@@ -20,6 +20,7 @@ import {
   ProfileTextArea,
   UserPageProfileContainer,
 } from './UserPageProfile.styled'
+import useUserState from '@/hooks/recoilHooks/useUserState'
 
 interface UserPageProfileProps {
   member: MemberType
@@ -28,19 +29,12 @@ interface UserPageProfileProps {
 function MyPageProfile({ member }: UserPageProfileProps) {
   const [nickname, setNickname] = useState(member.nickname)
   const [isEditNickname, setIsEditNickname] = useState(false)
-  const [introduction, setIntroduction] = useState(member.introduction)
+  const [introduction, setIntroduction] = useState(
+    member.introduction ? member.introduction : '한 줄 소개를 입력해주세요!',
+  )
   const [isEditIntro, setIsEditIntro] = useState(false)
   const { onFollowModal } = useFollowModalState()
   const [onFollowAssetModal, setOnFollowAssetModal] = useState(false)
-
-  useEffect(() => {
-    setNickname(member.nickname)
-    if (!member.introduction) {
-      setIntroduction('한 줄 소개를 입력해주세요!')
-    } else {
-      setIntroduction(member.introduction)
-    }
-  }, [member])
 
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value)
@@ -51,8 +45,6 @@ function MyPageProfile({ member }: UserPageProfileProps) {
       await editNickname(nickname)
     }
     setIsEditNickname((prev) => !prev)
-
-    // 여기에 recoil에 저장된 닉네임 바꾸는 것도 넣어줘야돼요!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
   const handleIntroInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

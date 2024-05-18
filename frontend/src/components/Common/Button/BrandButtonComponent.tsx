@@ -1,7 +1,7 @@
 import BrandButton from './BrandButtonComponent.styled'
 
 interface BrandButtonComponentProps {
-  imgSrc: string
+  imgSrc?: string
   color: string | null
   content: string
   onClick: () => void
@@ -32,3 +32,7 @@ function BrandButtonComponent({
 }
 
 export default BrandButtonComponent
+
+BrandButtonComponent.defaultProps = {
+  imgSrc: null,
+}

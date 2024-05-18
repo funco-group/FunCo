@@ -29,8 +29,8 @@ export interface AssetType {
   name: string
   volume: number | null
   averagePrice: number | null
-  price: number | string | null
-  evaluationAmount: number | null
+  price: number | null
+  evaluationAmount: number
   evaluationProfit: number | null
 }
 

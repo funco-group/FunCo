@@ -1,7 +1,11 @@
 import { AxiosResponse } from 'axios'
 import localAxios from '@/utils/http-commons'
 import { HoldingCoinResponseType } from '@/interfaces/PriceWindowType'
-import { TradeResultType, TradeListType } from '@/interfaces/TradeType'
+import {
+  TradeResultType,
+  TradeListType,
+  FuturesType,
+} from '@/interfaces/TradeType'
 import { AssetHistoryType, CoinVolumeType } from '@/interfaces/AssetType'
 
 const domain = 'trade'
@@ -128,4 +132,58 @@ export async function getUserTradeList(
   await localAxios
     .get(`/v1/${domain}/orders/${memberId}?&page=${page}&size=${size}`)
     .then(success)
+}
+export async function futuresLong(
+  ticker: string,
+  orderCash: number,
+  leverage: number,
+  success: () => void,
+  error: (response: any) => void,
+) {
+  await localAxios
+    .post(`/v1/${domain}/futures/long`, {
+      ticker,
+      orderCash,
+      leverage,
+    })
+    .then(success)
+    .catch(error)
+}
+
+export async function futuresShort(
+  ticker: string,
+  orderCash: number,
+  leverage: number,
+  success: () => void,
+  error: (response: any) => void,
+) {
+  await localAxios
+    .post(`/v1/${domain}/futures/short`, {
+      ticker,
+      orderCash,
+      leverage,
+    })
+    .then(success)
+    .catch(error)
+}
+
+export async function settlement(futureId: number, success: () => void) {
+  await localAxios
+    .post(`/v1/${domain}/futures/${futureId}/settlement`)
+    .then(success)
+}
+
+export async function getActiveFutures(
+  ticker: string,
+  success: (response: AxiosResponse<FuturesType>) => void,
+) {
+  await localAxios
+    .get(`/v1/${domain}/futures/active?ticker=${ticker}`)
+    .then(success)
+}
+export async function futuresHistory(
+  ticker: string,
+  success: (response: AxiosResponse<FuturesType>) => void,
+) {
+  await localAxios.get(`/v1/${domain}/futures?ticker=${ticker}`).then(success)
 }

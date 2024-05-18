@@ -40,10 +40,26 @@ export const TitleDiv = styled.div`
   color: ${palette.brandBlack};
 `
 
-export const ContentDiv = styled.div`
+export const ContentDiv = styled.div<{ color?: string; $bold?: boolean }>`
   font-size: 0.9rem;
   display: flex;
+  align-items: end;
+  font-family: ${(props) => {
+    if (props.$bold) {
+      return 'NanumSquareBold'
+    }
+    return 'NanumSquare'
+  }};
 
+  color: ${(props) => {
+    if (props.color === 'red') {
+      return palette.brandRed
+    }
+    if (props.color === 'blue') {
+      return palette.brandBlue
+    }
+    return ''
+  }};
   div {
     font-size: 0.7rem;
     color: ${palette.brandDarkGray};
@@ -52,9 +68,10 @@ export const ContentDiv = styled.div`
     text-align: right;
   }
 
-  input {
-    /* accent-color: ${palette.mainColor}; */
-    /* background-color: ${palette.brandWhite}; */
+  span {
+    font-size: 0.7rem;
+    color: ${palette.brandDarkGray};
+    margin-left: 0.3rem;
   }
 `
 

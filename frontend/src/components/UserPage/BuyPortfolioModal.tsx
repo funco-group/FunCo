@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { buyPortfolio, getCash } from '@/apis/member'
 import {
   SettleModalBackgroundContainer,
   SettleModalContainer,
@@ -8,7 +9,6 @@ import {
 import BrandButtonComponent from '../Common/Button/BrandButtonComponent'
 import { ContentDiv, ModalItemDiv, TitleDiv } from './BuyPortfolioModal.styled'
 import { CashDiv } from './FollowModal.styled'
-import { buyPortfolio, getCash } from '@/apis/member'
 import AlertModal from '../Common/Modal/AlertModal'
 
 interface BuyPortfolioModalProps {
@@ -85,7 +85,7 @@ function BuyPortfolioModal({
         />
       )}
       <SettleModalContainer width="27rem">
-        <SettleModalTitleDiv>{nickname}'s 포트폴리오</SettleModalTitleDiv>
+        <SettleModalTitleDiv>{nickname}&apos;s 포트폴리오</SettleModalTitleDiv>
         <ModalItemDiv>
           <TitleDiv>· 포트폴리오 확인 기간</TitleDiv>
           <ContentDiv>
@@ -105,7 +105,6 @@ function BuyPortfolioModal({
         </CashDiv>
         <SettleModalContentButtonRowDiv>
           <BrandButtonComponent
-            imgSrc=""
             content="취소"
             color={null}
             cancel
@@ -113,7 +112,6 @@ function BuyPortfolioModal({
             disabled={false}
           />
           <BrandButtonComponent
-            imgSrc=""
             content="구독"
             color={null}
             cancel={false}
