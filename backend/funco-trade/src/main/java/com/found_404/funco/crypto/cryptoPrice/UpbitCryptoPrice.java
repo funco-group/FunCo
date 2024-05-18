@@ -3,6 +3,7 @@ package com.found_404.funco.crypto.cryptoPrice;
 import static com.found_404.funco.trade.exception.TradeErrorCode.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,18 +25,18 @@ import okhttp3.WebSocket;
 public class UpbitCryptoPrice implements CryptoPrice {
     private static final String WEBSOCKET_URL = "wss://api.upbit.com/websocket/v1";
     private static final String PRICE_API_URL = "https://api.upbit.com/v1/ticker?markets=";
+    private static final String MARKET_URL = "https://api.upbit.com/v1/market/all";
     // 설정으로 뺄 예정
 
-    private final Set<String> markets = new HashSet<>();
     private final UpbitWebSocketListener listener;
     private final HttpClientUtil httpClientUtil;
     private WebSocket webSocket;
-    private final String DEFAULT_TICKER = "KRW-BTC";
 
     @Autowired
     public UpbitCryptoPrice(UpbitWebSocketListener listener, HttpClientUtil httpClientUtil) {
         this.listener = listener;
         this.httpClientUtil = httpClientUtil;
+
 
         connectWebSocket();
     }
@@ -43,10 +44,7 @@ public class UpbitCryptoPrice implements CryptoPrice {
     private void connectWebSocket() {
         Request request = new Request.Builder().url(WEBSOCKET_URL).build();
         this.webSocket = httpClientUtil.getWebSocket(request, listener);
-
-        addTicker(DEFAULT_TICKER);
-        // 웹소켓 연결이 끊어지지 않도록 사지지 않을 더미 거래 데이터 등록
-        listener.addTrade(TradeType.BUY, DEFAULT_TICKER, 0L, 0D);
+        sendWebSocketAllMarkets();
     }
 
     @Override
@@ -59,12 +57,10 @@ public class UpbitCryptoPrice implements CryptoPrice {
         if (Objects.isNull(apiResponse)) {
             throw new TradeException(PRICE_CONNECTION_FAIL);
         }
-        CryptoJson[] cryptoJsons = httpClientUtil.parseJsonToClass(apiResponse, CryptoJson[].class)
-                .orElseThrow(() -> new TradeException(PRICE_CONNECTION_FAIL));
 
-        Map<String, Double> tickerPriceMap = new HashMap<>();
-        Arrays.stream(cryptoJsons).forEach(crypto -> tickerPriceMap.put(crypto.getMarket(), crypto.getTradePrice()));
-        return tickerPriceMap;
+        return Arrays.stream(httpClientUtil.parseJsonToClass(apiResponse, CryptoJson[].class)
+                        .orElseThrow(() -> new TradeException(PRICE_CONNECTION_FAIL)))
+                .collect(Collectors.toMap(CryptoJson::getMarket, CryptoJson::getTrade_price));
     }
 
     @Override
@@ -82,20 +78,12 @@ public class UpbitCryptoPrice implements CryptoPrice {
 
         CryptoJson[] cryptoJsons = httpClientUtil.parseJsonToClass(apiResponse, CryptoJson[].class)
                 .orElseThrow(() -> new TradeException(PRICE_CONNECTION_FAIL));
-        return cryptoJsons[0].getTradePrice();
-    }
-
-    private void addTicker(String ticker) {
-        if (!markets.contains(ticker)) {
-            markets.add(ticker);
-            updateListenerMarkets();
-        }
+        return cryptoJsons[0].getTrade_price();
     }
 
     // 감지될 예약 거래 등록
     @Override
     public void addTrade(String ticker, Long id, TradeType tradeType, Double price) {
-        addTicker(ticker);
         listener.addTrade(tradeType, ticker, id, price);
     }
 
@@ -109,11 +97,21 @@ public class UpbitCryptoPrice implements CryptoPrice {
         return PRICE_API_URL + stringBuilder;
     }
 
-    private void updateListenerMarkets() {
-        String message = httpClientUtil.toJson(List.of(new Ticket(),
-                new TypeCodes(markets.stream().toList()),
-                new Format()));
+    private void sendWebSocketAllMarkets() {
+        String apiResponse = httpClientUtil.getApiResponse(MARKET_URL);
+        if (Objects.isNull(apiResponse)) {
+            throw new TradeException(PRICE_CONNECTION_FAIL);
+        }
+        CryptoJson[] cryptoJsons = httpClientUtil.parseJsonToClass(apiResponse, CryptoJson[].class)
+                .orElseThrow(() -> new TradeException(PRICE_CONNECTION_FAIL));
 
+        List<String> markets = Arrays.stream(cryptoJsons).map(CryptoJson::getMarket)
+                .filter(market -> market.startsWith("KRW")).toList();
+
+        String message = httpClientUtil.toJson(List.of(new Ticket(),
+                new TypeCodes(markets),
+                new Format()));
+        log.info("[upbit API] {}개의 코인 시세 웹소켓으로 받기 시작합니다.",markets.size());
         log.info("[websocket] send message: {}", message);
         webSocket.send(message);
     }

@@ -9,8 +9,4 @@ public class CryptoJson {
     private String code;
     private String market;
     private Double trade_price;
-
-    public Double getTradePrice() {
-        return trade_price;
-    }
 }
