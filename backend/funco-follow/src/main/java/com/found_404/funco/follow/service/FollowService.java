@@ -144,7 +144,7 @@ public class FollowService {
 
 		// [API] async 팔로우 알림
 		StringBuilder message = new StringBuilder();
-		message.append("id:").append(followerMemberId).append("님에게 ")
+		message.append(memberService.getSimpleMember(followerMemberId).nickname()).append("님에게 ")
 			.append(String.format("%,d", investment)).append("원을 투자 받으셨습니다.");
 
 		notificationService.sendNotification(followingMemberId, NotificationType.FOLLOW, message.toString());
@@ -239,10 +239,15 @@ public class FollowService {
 		}
 
 		/* [API async] 정산 알림 */
+		sendSettlementNotification(memberService.getSimpleMember(follow.getFollowingMemberId()).nickname(), follow);
+	}
+
+	private void sendSettlementNotification(String nickname, Follow follow) {
 		StringBuilder message = new StringBuilder();
-		message.append("id:").append(follow.getFollowerMemberId()).append("님이 투자금액 ")
+		message.append(nickname).append("님이 투자금액 ")
 			.append(String.format("%,d", follow.getInvestment())).append("원을 정산하셨습니다. ")
-			.append(String.format("%,d", commission)).append("원의 수수료를 받았습니다.");
+			.append(String.format("%,d", follow.getCommission())).append("원의 수수료를 받았습니다.");
+
 		notificationService.sendNotification(follow.getFollowingMemberId(), NotificationType.SETTLE,
 			message.toString());
 	}
@@ -294,7 +299,7 @@ public class FollowService {
 		return new FollowerListResponse(followerList.last(),
 			followerList.follows().stream()
 				.map(follow -> FollowerResponse.getFollowerResponse(follow,
-					simpleMembers.get(follow.getFollowingMemberId())))
+					simpleMembers.get(follow.getFollowerMemberId())))
 				.toList());
 	}
 
@@ -340,6 +345,7 @@ public class FollowService {
 		for (Follow following : followingList) {
 			deleteFollow(following.getId());
 		}
+
 
 		// 팔로워 : 나를 팔로우하는 사람들 정산
 		List<Follow> followerList = followRepository.findAllByFollowingMemberIdAndSettledFalse(memberId);
