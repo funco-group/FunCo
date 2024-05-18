@@ -107,4 +107,9 @@ public class FollowController {
 		followService.modifyFollowingAndFollower(memberId);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
+
+	@GetMapping("/following/investments")
+	public ResponseEntity<InvestmentsResponse> getFollowingInvestment(@RequestParam Long memberId) {
+		return ResponseEntity.ok(followService.getFollowingInvestment(memberId));
+	}
 }

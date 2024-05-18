@@ -353,4 +353,10 @@ public class FollowService {
 			deleteFollow(follower.getId());
 		}
 	}
+
+	public InvestmentsResponse getFollowingInvestment(Long memberId) {
+		return new InvestmentsResponse(followRepository.findAllByFollowerMemberIdAndSettledFalse(memberId).stream()
+			.map(Follow::getInvestment)
+			.reduce(0L, Long::sum));
+	}
 }
