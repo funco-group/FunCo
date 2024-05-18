@@ -86,7 +86,7 @@ function NotesDetailComment({
           src={
             commentData.member
               ? commentData.member.profileUrl
-              : '/icon/user-default'
+              : '/icon/user-default.svg'
           }
           className={`block h-12 w-12 rounded-full ${commentData.member ? 'cursor-pointer' : 'cursor-default'}`}
           alt="profile"
@@ -95,7 +95,7 @@ function NotesDetailComment({
         <div className="flex w-[calc(100%-3.75rem)] flex-col justify-center  text-xs">
           <div className="mb-3">
             <div
-              className="w-fit cursor-pointer font-NSB text-sm"
+              className={`w-fit ${commentData.member ? 'cursor-pointer' : 'cursor-default'} font-NSB text-sm`}
               onClick={handleClickProfile}
             >
               {commentData.member

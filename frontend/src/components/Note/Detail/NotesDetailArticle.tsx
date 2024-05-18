@@ -144,6 +144,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
         </div>
         <div className="mb-5 mt-8 flex justify-center">
           <NotesDetailArticleLikeBtn
+            noteId={noteId}
             initialIsLike={detail.liked}
             initialLikeCnt={detail.likeCount}
           />
