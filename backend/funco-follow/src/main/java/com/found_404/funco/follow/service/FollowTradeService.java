@@ -4,7 +4,6 @@ import static com.found_404.funco.follow.domain.type.TradeType.*;
 import static com.found_404.funco.global.util.DecimalCalculator.*;
 import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +16,7 @@ import com.found_404.funco.follow.domain.repository.FollowRepository;
 import com.found_404.funco.follow.domain.repository.FollowTradeRepository;
 import com.found_404.funco.follow.domain.repository.FollowingCoinRepository;
 import com.found_404.funco.follow.dto.Trade;
+import com.found_404.funco.follow.dto.request.FuturesTrade;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +46,6 @@ public class FollowTradeService {
     }
 
     public FollowTrade getFollowTrade(Trade trade, Follow follow) {
-
         double volume;
         long orderCash;
 
@@ -95,7 +94,7 @@ public class FollowTradeService {
             }
         }
 
-        log.info("[{}] member: {} -> follower: {}, {}가 {}원에 {}만큼 {}원어치 거래 체결.", LocalDateTime.now(), follow.getFollowingMemberId(), follow.getFollowerMemberId(),
+        log.info("member: {} -> follower: {}, {}가 {}원에 {}만큼 {}원어치 거래 체결.", follow.getFollowingMemberId(), follow.getFollowerMemberId(),
                 trade.ticker(), trade.price(), volume, orderCash);
 
         return FollowTrade.builder()
@@ -112,4 +111,32 @@ public class FollowTradeService {
         trades.forEach(this::followTrade);
     }
 
+    public void followTradeByFutures(FuturesTrade futures) {
+        List<Follow> followerList = followRepository.findAllByFollowingMemberIdAndSettledFalse(futures.memberId());
+
+        followTradeRepository.saveAll(followerList.stream()
+                .map(follow -> getFollowTrade(futures, follow))
+                .toList());
+    }
+
+    private FollowTrade getFollowTrade(FuturesTrade futures, Follow follow) {
+        long prevCash = memberService.getMemberCash(follow.getFollowingMemberId()) - futures.settlement(); // 정산 전 자산
+
+        double ratio = divide(futures.settlement(), prevCash, NORMAL_SCALE); // 얼마 비율을 벌거나 잃었는가
+
+        // 팔로우의 자산 증가 또는 감소
+        follow.decreaseCash((long) multiple(follow.getCash(), ratio, CASH_SCALE));
+
+        log.info("부모{}에 의해 자식: {} 거래\n => {} 선물 {} 거래 정산 결과:{}", follow.getFollowingMemberId(), follow.getFollowerMemberId(),
+                futures.ticker(), futures.tradeType(), futures.settlement());
+
+        return FollowTrade.builder()
+                .follow(follow)
+                .tradeType(futures.tradeType())
+                .price(futures.price())
+                .ticker(futures.ticker())
+                .volume(futures.settlement().doubleValue()) // 세틀
+                .orderCash(futures.orderCash())
+                .build();
+    }
 }
