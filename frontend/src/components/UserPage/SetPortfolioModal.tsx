@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { setPortfolio } from '@/apis/member'
 import {
   SettleModalBackgroundContainer,
   SettleModalContainer,
@@ -8,7 +9,6 @@ import {
 import { ContentDiv, ModalItemDiv, TitleDiv } from './BuyPortfolioModal.styled'
 import BrandButtonComponent from '../Common/Button/BrandButtonComponent'
 import { InputDiv } from './FollowModal.styled'
-import { setPortfolio } from '@/apis/member'
 import AlertModal from '../Common/Modal/AlertModal'
 import ToggleButton from './ToggleButton'
 

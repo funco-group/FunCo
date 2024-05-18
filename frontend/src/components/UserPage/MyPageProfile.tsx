@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
 
 import { MemberType } from '@/interfaces/userPage/MemberType'
+import useUserState from '@/hooks/recoilHooks/useUserState'
 import medalMap from '@/lib/medalMap'
 import { editIntroduction, editNickname } from '@/apis/member'
 import { ComponentTitleH3 } from '@/containers/UserPageContainer/styled'
+import SetPortfolioModal from './SetPortfolioModal'
 import {
   IntroductionDiv,
   NicknameDiv,
@@ -18,10 +20,6 @@ import {
   UserPageProfileContainer,
   ProfileImg,
 } from './UserPageProfile.styled'
-import SetPortfolioModal from './SetPortfolioModal'
-import { useRecoilState } from 'recoil'
-import { userState } from '@/recoils/user'
-import useUserState from '@/hooks/recoilHooks/useUserState'
 
 interface UserPageProfileProps {
   member: MemberType

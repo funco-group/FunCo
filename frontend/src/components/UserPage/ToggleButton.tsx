@@ -11,12 +11,12 @@ interface ToggleButtonProps {
   handleClick: () => void
 }
 
-const ToggleButton = ({
+function ToggleButton({
   width,
   height,
   isToggleOn,
   handleClick,
-}: ToggleButtonProps) => {
+}: ToggleButtonProps) {
   useEffect(() => {
     console.log(isToggleOn)
   }, [isToggleOn])
