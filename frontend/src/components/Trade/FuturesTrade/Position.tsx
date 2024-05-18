@@ -116,7 +116,7 @@ const Position = React.memo(
           },
           {
             title: '정산금',
-            data: Math.ceil(trade.orderCash - profit).toLocaleString('ko-KR'),
+            data: Math.ceil(trade.orderCash + profit).toLocaleString('ko-KR'),
             unit: 'WON',
             color: priceChange > 0 ? 'red' : 'blue',
           },
