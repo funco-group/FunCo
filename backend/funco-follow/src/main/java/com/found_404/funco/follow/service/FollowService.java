@@ -294,7 +294,7 @@ public class FollowService {
 		return new FollowerListResponse(followerList.last(),
 			followerList.follows().stream()
 				.map(follow -> FollowerResponse.getFollowerResponse(follow,
-					simpleMembers.get(follow.getFollowingMemberId())))
+					simpleMembers.get(follow.getFollowerMemberId())))
 				.toList());
 	}
 
