@@ -99,8 +99,13 @@ public class FutureService {
 
         double currentPrice = cryptoPrice.getTickerPrice(activeFuture.getTicker());
 
-        // 투입금 + ( 수익(+-) * 레버리지 )
-        long settlement = (long) multiple(minus(currentPrice, activeFuture.getPrice(), NORMAL_SCALE), activeFuture.getLeverage(), CASH_SCALE);
+
+        // 수익 = (현재시세 - 가격 ) / 진입가격 * 주문금액 * 레버리지
+        long settlement = (long) multiple(multiple(divide(minus(currentPrice, activeFuture.getPrice(), NORMAL_SCALE),
+                                activeFuture.getPrice(), NORMAL_SCALE),
+                        activeFuture.getOrderCash(), NORMAL_SCALE),
+                activeFuture.getLeverage(), CASH_SCALE);
+
         if (activeFuture.getTradeType().equals(SHORT)) {
             settlement = -settlement;
         }
