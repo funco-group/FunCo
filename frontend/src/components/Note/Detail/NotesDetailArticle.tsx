@@ -7,10 +7,12 @@ import { useRecoilValue } from 'recoil'
 import { codeNameMapState } from '@/recoils/crypto'
 import { useRouter, useSearchParams } from 'next/navigation'
 import ToastViewer from '@/components/Common/ToastUI/ToastViewer'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NoteDetailType } from '@/interfaces/note/NoteDetailType'
-import { getNotesDetail } from '@/apis/note'
+import { deleteNotes, getNotesDetail } from '@/apis/note'
 import NoData from '@/components/Common/NoData'
+import { useResizeDetector } from 'react-resize-detector'
+import AlertWithCancelModal from '@/components/Common/Modal/AlertWithCancelModal'
 import NotesDetailArticleLikeBtn from './NotesDetailArticleLikeBtn'
 import NotesDetailBtnDiv from './NotesDetailBtnDiv'
 
@@ -23,8 +25,9 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
   const searchParams = useSearchParams()
   const coinMap = useRecoilValue(codeNameMapState)
   const [detail, setDetail] = useState<NoteDetailType>()
-  const btnRef = useRef(null)
   const { user } = useUserState()
+  const { height, ref } = useResizeDetector()
+  const [onDeleteModal, setOnDeleteModal] = useState(false)
 
   useEffect(() => {
     getNotesDetail(noteId, (res) => {
@@ -49,7 +52,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
         }
       }
     }
-  }, [detail])
+  }, [detail, height])
 
   if (!detail) {
     return <NoData content="Loading..." />
@@ -63,17 +66,35 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
     router.push(`/member/${detail.member.id}`)
   }
 
-  const handleModifyArticle = () => {
-    console.log('modify Article')
+  const handleUpdateArticle = () => {
+    router.push(`/notes/write?noteId=${noteId}`)
   }
 
   const handleDeleteArticle = () => {
-    console.log('delete Article')
+    setOnDeleteModal(true)
   }
 
   return (
     <div>
-      <div className="rounded border border-solid border-deactivatedGray bg-brandWhite p-3">
+      {onDeleteModal && (
+        <AlertWithCancelModal
+          title="알림"
+          content="게시글을 삭제하시겠습니까?"
+          cancelAlert={() => {
+            setOnDeleteModal(false)
+          }}
+          confirmAlert={() => {
+            deleteNotes(noteId, () => {
+              setOnDeleteModal(false)
+              router.push('/notes')
+            })
+          }}
+        />
+      )}
+      <div
+        className="rounded border border-solid border-deactivatedGray bg-brandWhite p-3"
+        ref={ref}
+      >
         <div
           className="w-fit cursor-pointer rounded bg-brandColor p-1 text-sm text-brandWhite"
           onClick={handleClickCoinBtn}
@@ -103,7 +124,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
                 <div className="flex gap-1 text-brandDarkGray">
                   <span
                     className="cursor-pointer"
-                    onClick={handleModifyArticle}
+                    onClick={handleUpdateArticle}
                   >
                     수정
                   </span>
@@ -119,10 +140,11 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
           </div>
         </div>
         <div className="my-3">
-          <ToastViewer initialValue={detail.content} />
+          <ToastViewer key={detail.content} initialValue={detail.content} />
         </div>
-        <div className="mb-5 mt-8 flex justify-center" ref={btnRef}>
+        <div className="mb-5 mt-8 flex justify-center">
           <NotesDetailArticleLikeBtn
+            noteId={noteId}
             initialIsLike={detail.liked}
             initialLikeCnt={detail.likeCount}
           />
