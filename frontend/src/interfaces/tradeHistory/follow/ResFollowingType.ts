@@ -1,7 +1,6 @@
-import { FollowingType } from "./FollowingTyps";
+import { FollowingType } from './FollowingTyps'
 
 export interface ResFollowingType {
-  last: boolean;
-  totalAsset: number;
-  followings: FollowingType[];
+  last: boolean
+  followings: FollowingType[]
 }
