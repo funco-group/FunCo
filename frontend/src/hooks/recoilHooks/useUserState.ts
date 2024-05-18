@@ -21,6 +21,11 @@ function useUserState() {
         setUserState({ user: { ...user, unReadCount: num } })
       }
     },
+    updateNickname: (newNickname: string) => {
+      if (user) {
+        setUserState({ user: { ...user, nickname: newNickname } })
+      }
+    },
   }
 }
 
