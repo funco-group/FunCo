@@ -30,7 +30,7 @@ function NotePreview({ notePreviewData, setCoinList }: NotePreviewProps) {
   }
 
   const handleClickMemberDiv = () => {
-    router.push(`/member/${notePreviewData.member.memberId}`)
+    router.push(`/member/${notePreviewData.member.id}`)
   }
 
   const handleClickMsgDiv = () => {

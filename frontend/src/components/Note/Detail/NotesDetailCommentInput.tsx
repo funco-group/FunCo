@@ -1,15 +1,22 @@
+import { getCommentsData, postNotesComment } from '@/apis/note'
+import NoData from '@/components/Common/NoData'
 import useUserState from '@/hooks/recoilHooks/useUserState'
 import { NoteCommentType } from '@/interfaces/note/NoteCommentType'
+import { NoteCommentsType } from '@/interfaces/note/NoteCommentsType'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 
 interface NotesDetailCommentInputProps {
+  noteId: number
   parentCommentId: number | null
   setCommentList: Dispatch<SetStateAction<NoteCommentType[]>>
+  setCommentCnt: Dispatch<SetStateAction<number>>
 }
 
 function NotesDetailCommentInput({
+  noteId,
   parentCommentId,
   setCommentList,
+  setCommentCnt,
 }: NotesDetailCommentInputProps) {
   const [commentText, setCommentText] = useState('')
   const { user } = useUserState()
@@ -20,53 +27,22 @@ function NotesDetailCommentInput({
 
   const handleClickSubmitBtn = () => {
     if (parentCommentId) {
-      setCommentList((prev) => {
-        const newList = [...prev]
-        const idx = newList.findIndex(
-          (cmt) => cmt.commentId === parentCommentId,
-        )
-        if (newList[idx].childComments) {
-          newList[idx].childComments?.push({
-            commentId: 7,
-            member: {
-              memberId: 6,
-              nickname: '슈퍼 민희언',
-              profileUrl: '/image/chuu.gif',
-            },
-            content: commentText,
-            date: '2024-01-20T15:00:00',
-          })
-        } else {
-          newList[idx].childComments = [
-            {
-              commentId: 7,
-              member: {
-                memberId: 6,
-                nickname: '슈퍼 민희언',
-                profileUrl: '/image/chuu.gif',
-              },
-              content: commentText,
-              date: '2024-01-20T15:00:00',
-            },
-          ]
-        }
-        return newList
-      })
-      console.log(commentText, parentCommentId)
-    } else {
-      setCommentList((prev) => [
-        ...prev,
-        {
-          commentId: 7,
-          member: {
-            memberId: 6,
-            nickname: '슈퍼 민희언',
-            profileUrl: '/image/chuu.gif',
-          },
-          content: commentText,
-          date: '2024-01-20T15:00:00',
+      postNotesComment(
+        noteId,
+        { parentCommentId, content: commentText },
+        async () => {
+          const commentList: NoteCommentsType = await getCommentsData(noteId)
+          console.log(commentList)
+          setCommentList(commentList.comments)
+          setCommentCnt(commentList.commentCount)
         },
-      ])
+      )
+    } else {
+      postNotesComment(noteId, { content: commentText }, async () => {
+        const commentList: NoteCommentsType = await getCommentsData(noteId)
+        setCommentList(commentList.comments)
+        setCommentCnt(commentList.commentCount)
+      })
       console.log(commentText)
     }
     setCommentText('')
@@ -86,14 +62,15 @@ function NotesDetailCommentInput({
           />
           <button
             type="button"
-            className="ml-auto mr-0 block h-7 rounded border-none bg-brandColor px-2 font-NSB text-xs text-brandWhite"
+            className={`ml-auto mr-0 block h-7 rounded border-none bg-brandColor px-2 font-NSB text-xs text-brandWhite ${!commentText.trim() && 'bg-deactivatedGray'}`}
+            disabled={!commentText.trim()}
             onClick={handleClickSubmitBtn}
           >
             등록
           </button>
         </div>
       ) : (
-        <div>로그인 후 댓글을 작성할 수 있습니다.</div>
+        <NoData content="로그인 후 댓글을 작성할 수 있습니다." />
       )}
     </div>
   )
