@@ -2,7 +2,6 @@ package com.found_404.funco.trade.controller;
 
 import java.util.List;
 
-import com.found_404.funco.trade.dto.response.HoldingCoinResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.found_404.funco.global.memberIdHeader.AuthMemberId;
@@ -23,7 +21,7 @@ import com.found_404.funco.trade.dto.request.LimitSellingRequest;
 import com.found_404.funco.trade.dto.request.MarketBuyingRequest;
 import com.found_404.funco.trade.dto.request.MarketSellingRequest;
 import com.found_404.funco.trade.dto.request.TradeRequest;
-import com.found_404.funco.trade.dto.response.CoinValuationResponse;
+import com.found_404.funco.trade.dto.response.HoldingCoinResponse;
 import com.found_404.funco.trade.dto.response.HoldingCoinsResponse;
 import com.found_404.funco.trade.dto.response.MarketTradeResponse;
 import com.found_404.funco.trade.service.TradeService;
@@ -88,7 +86,7 @@ public class TradeController {
 	// 남의 체결 코인 거래 내역
 	@GetMapping("/orders/{memberId}")
 	public ResponseEntity<List<OtherTradeDto>> getOtherOrders(@PathVariable Long memberId,
-															  Pageable pageable) {
+		Pageable pageable) {
 
 		return ResponseEntity.ok(tradeService.getOtherOrders(memberId, pageable));
 	}
@@ -112,7 +110,8 @@ public class TradeController {
 
 	/* 보유중인 코인 조회 */
 	@GetMapping("/holding/{ticker}")
-	public ResponseEntity<HoldingCoinResponse> getMemberHoldingCoin(@AuthMemberId Long memberId, @PathVariable String ticker) {
+	public ResponseEntity<HoldingCoinResponse> getMemberHoldingCoin(@AuthMemberId Long memberId,
+		@PathVariable String ticker) {
 		return ResponseEntity.ok(tradeService.getHoldingCoin(memberId, ticker));
 	}
 
