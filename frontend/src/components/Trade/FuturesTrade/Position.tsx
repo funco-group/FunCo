@@ -29,7 +29,7 @@ interface PositionProps {
   isTrade: boolean
   setIsTrade: React.Dispatch<React.SetStateAction<boolean>>
   coin: PriceType | null
-  trade?: FuturesType
+  trade: FuturesType | null
 }
 
 interface PositionType {
@@ -144,7 +144,7 @@ const Position = React.memo(
         {alert && (
           <AlertModal
             title="알림"
-            content={'주문이 강제 청산되었습니다.'}
+            content="주문이 강제 청산되었습니다."
             closeAlert={closeAlert}
           />
         )}
@@ -152,16 +152,14 @@ const Position = React.memo(
           <PositionTitleDiv>포지션 현황</PositionTitleDiv>
         </PositionTitleContainer>
         <ContentContainer>
-          {positions.map((position) => {
-            return (
-              <TradeItem key={position.title}>
-                <TitleDiv>{position.title}</TitleDiv>
-                <ContentDiv color={position.color} $bold={true}>
-                  {position.data} <span>{position.unit}</span>
-                </ContentDiv>
-              </TradeItem>
-            )
-          })}
+          {positions.map((position) => (
+            <TradeItem key={position.title}>
+              <TitleDiv>{position.title}</TitleDiv>
+              <ContentDiv color={position.color} $bold>
+                {position.data} <span>{position.unit}</span>
+              </ContentDiv>
+            </TradeItem>
+          ))}
         </ContentContainer>
       </OrderBookContainer>
     )

@@ -20,7 +20,7 @@ import priceListState from '@/recoils/crypto/atoms'
 function FuturesTrade() {
   const pathname = usePathname()
 
-  const [trade, setTrade] = useState<FuturesType>()
+  const [trade, setTrade] = useState<FuturesType | null>(null)
   const [isTrade, setIsTrade] = useState<boolean>(false)
   const coinCode = pathname?.split('/')[3]
 
