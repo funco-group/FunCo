@@ -44,7 +44,9 @@ public class NoteComment extends BaseEntity {
 	}
 
 	public void softDelete() {
-		this.content = "";
+		this.parentId = null;
+		this.memberId = null;
+		this.content = null;
 		this.deleted = Boolean.TRUE;
 	}
 }
