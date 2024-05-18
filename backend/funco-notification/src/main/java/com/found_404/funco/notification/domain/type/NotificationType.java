@@ -19,6 +19,11 @@ public enum NotificationType {
 	FOLLOW,
 	// 포트폴리오가 팔렸다는 알림
 
-	SELL_PORTFOLIO
+	SELL_PORTFOLIO,
 
+	// 댓글 알림
+	NOTE_COMMENT,
+
+	// 대댓글 알림
+	COMMENT_ANSWER
 }
