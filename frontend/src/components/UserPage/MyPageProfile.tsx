@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
 
 import { MemberType } from '@/interfaces/userPage/MemberType'
@@ -19,6 +19,9 @@ import {
   ProfileImg,
 } from './UserPageProfile.styled'
 import SetPortfolioModal from './SetPortfolioModal'
+import { useRecoilState } from 'recoil'
+import { userState } from '@/recoils/user'
+import useUserState from '@/hooks/recoilHooks/useUserState'
 
 interface UserPageProfileProps {
   member: MemberType
@@ -32,6 +35,16 @@ function MyPageProfile({ member }: UserPageProfileProps) {
     member.introduction ? member.introduction : '한 줄 소개를 입력해주세요!',
   )
   const [isEditIntro, setIsEditIntro] = useState(false)
+  const [status, setStatus] = useState<boolean>(false) // private = true, public = false
+  const [price, setPrice] = useState<number>(0)
+  const [priceStr, setPriceStr] = useState<string>('')
+  const { updateNickname } = useUserState()
+
+  useEffect(() => {
+    setPrice(member.portfolioPrice)
+    setPriceStr(member.portfolioPrice.toLocaleString('ko-KR'))
+    setStatus(member.portfolioStatus !== 'PUBLIC')
+  }, [])
 
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value)
@@ -41,7 +54,9 @@ function MyPageProfile({ member }: UserPageProfileProps) {
     setIsEditNickname(!isEditNickname)
 
     if (isEditNickname) {
-      await editNickname(nickname)
+      await editNickname(nickname, () => {
+        updateNickname(nickname)
+      })
     }
   }
 
@@ -66,8 +81,12 @@ function MyPageProfile({ member }: UserPageProfileProps) {
       {settingPortfolio && (
         <SetPortfolioModal
           handleSettingPortfolio={handleSettingPortfolio}
-          portfolioStatus={member.portfolioStatus}
-          portfolioPrice={member.portfolioPrice ? member.portfolioPrice : 0}
+          status={status}
+          setStatus={setStatus}
+          price={price}
+          setPrice={setPrice}
+          priceStr={priceStr}
+          setPriceStr={setPriceStr}
         />
       )}
       <ComponentTitleH3>프로필</ComponentTitleH3>
