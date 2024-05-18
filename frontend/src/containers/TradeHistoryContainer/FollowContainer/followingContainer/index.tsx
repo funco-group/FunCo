@@ -14,6 +14,7 @@ import { codeListState } from '@/recoils/crypto'
 import FollowStatistics from '@/components/TradeHistory/Follow/Following/FollowStatistics'
 import FollowingUser from '@/components/TradeHistory/Follow/Following/FollowingUser'
 import SettleModal from '@/components/TradeHistory/Follow/Following/SettleModal'
+import { getTotalAsset } from '@/apis/member'
 import FollowingUserListContainer from './styled'
 
 function Following() {
@@ -50,9 +51,12 @@ function Following() {
 
     setIsLoading(true)
     fetchTickerPrice()
+    getTotalAsset((res) => {
+      const { data } = res
+      setTotalAsset(data.asset)
+    })
     getFollowingList((res: AxiosResponse<ResFollowingType>) => {
       const { data } = res
-      setTotalAsset(data.totalAsset)
       setFollowings(data.followings)
     })
   }, [tickerList])
@@ -77,7 +81,7 @@ function Following() {
 
       return {
         followId: following.followId,
-        nickname: following.nickname,
+        nickname: following.member.nickname,
         date: following.followedAt,
         investment: following.investment,
         estimatedValue: Math.round(estimatedValue),
@@ -104,7 +108,7 @@ function Following() {
     followings.forEach((following) => {
       const computedFollowing = computeFollowingInfo(following)
       newComputedFollowings.push(computedFollowing)
-      newInvestmentList.push([following.nickname, following.investment])
+      newInvestmentList.push([following.member.nickname, following.investment])
       newTotalInvestment += following.investment
       newTotalEstimatedValue += computedFollowing.estimatedValue
     })

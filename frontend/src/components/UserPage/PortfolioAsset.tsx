@@ -90,6 +90,22 @@ function PortfolioAsset({ memberId }: PortfolioAssetProps) {
         },
       ])
     })
+
+    assetsRes.activeFutureInfos.forEach((coin) => {
+      setAssets((asset) => [
+        ...asset,
+        {
+          imgSrc: `https://static.upbit.com/logos/${coin.ticker.split('-')[1]}.png`,
+          name: `${coin.ticker} (${coin.tradeType})`,
+          volume: null,
+          averagePrice: coin.price,
+          price: `${coin.orderCash} (X ${coin.leverage})`,
+          evaluationAmount: null,
+          evaluationProfit: null,
+        },
+      ])
+    })
+
     setInvestmentList([
       ['현금', assetsRes.cash],
       ['팔로우', assetsRes.followingInvestment],
@@ -117,16 +133,30 @@ function PortfolioAsset({ memberId }: PortfolioAssetProps) {
   useEffect(() => {
     if (assets.length !== 0) {
       // 보유
-      const cash = assets.filter((asset) => asset.name === '현금')[0]
-        .evaluationAmount
+      const cash =
+        assets.filter((asset) => asset.name === '현금')[0].evaluationAmount ?? 0
       // 총 매수금액
       const price = assets
         .filter((asset) => asset.name !== '현금')
-        .reduce((acc, item) => acc + item.price!, 0)
+        // .reduce((acc, item) => acc + item.price!, 0)
+        .reduce((acc, item) => {
+          if (item.price) {
+            if (typeof item.price === 'number') {
+              return acc + item.price
+            }
+            return acc + +item.price.split(' (')[0]
+          }
+          return acc
+        }, 0)
       // 총 평가금액
       const evaluationAmount = assets
         .filter((asset) => asset.name !== '현금')
-        .reduce((acc, item) => acc + item.evaluationAmount, 0)
+        .reduce((acc, item) => {
+          if (item.evaluationAmount) {
+            return acc + item.evaluationAmount
+          }
+          return acc
+        }, 0)
       // 총 보유자산
       const asset = cash + price
       // 총 평가손익

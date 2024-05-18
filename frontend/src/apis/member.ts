@@ -57,3 +57,9 @@ export async function setPortfolio(
     })
     .then(success)
 }
+
+export async function getTotalAsset(
+  success: (res: AxiosResponse<{ asset: number }>) => void,
+) {
+  await localAxios.get(`/v1/${domain}/asset`).then(success)
+}

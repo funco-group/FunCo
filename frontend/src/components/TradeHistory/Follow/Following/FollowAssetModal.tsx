@@ -18,11 +18,15 @@ import {
 } from '@/styles/CommonStyled'
 import { AssetChangeListItemContainer } from '@/components/TradeHistory/AssetChange/AssetChangeListItem.styled'
 import AssetChangeListItem from '@/components/TradeHistory/AssetChange/AssetChangeListItem'
-import { TotalAssetInfoContainer } from '@/containers/TradeHistoryContainer/AssetContainer/styled'
+import {
+  ChartContainer,
+  TotalAssetInfoContainer,
+} from '@/containers/TradeHistoryContainer/AssetContainer/styled'
 import TotalAsset from '@/components/TradeHistory/Asset/TotalAsset'
 import AssetList from '@/components/TradeHistory/Asset/AssetList'
 import { getTickerPrice } from '@/apis/upbit'
 import { ResTickerType } from '@/interfaces/tradeHistory/follow/ResTickerType'
+import MonochromePieChart from '@/components/Common/Chart/MonochromePieChart'
 import cashIcon from '@/assets/icon/cash-icon.png'
 import followIcon from '@/assets/icon/follow-icon.png'
 import FollowingModal from './FollowingModal'
@@ -35,6 +39,8 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
   // 보유자산
   const [assets, setAssets] = useState<AssetType[]>([])
   const [totalAsset, setTotalAsset] = useState<TotalAssetType>()
+
+  const [investmentList, setInvestmentList] = useState<(string | number)[][]>()
 
   const getCurPrice = async (asset: AssetResponseType) => {
     const curPrice = new Map<string, number>()
@@ -96,16 +102,18 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
         },
       ])
     })
-    // setInvestmentList([
-    //   ["현금", assetsRes.cash],
-    //   ["팔로우", assetsRes.followingInvestment],
-    //   [
-    //     "가상화폐",
-    //     assetsRes.holdingCoinInfos.reduce((acc, coin) => {
-    //       return acc + Math.floor(coin.volume * curPrice.get(coin.ticker)!);
-    //     }, 0),
-    //   ],
-    // ]);
+    setInvestmentList([
+      ['현금', assetsRes.cash],
+      ['팔로우', assetsRes.followingInvestment],
+      [
+        '가상화폐',
+        assetsRes.holdingCoinInfos.reduce(
+          (acc, coin) =>
+            acc + Math.floor(coin.volume * curPrice.get(coin.ticker)!),
+          0,
+        ),
+      ],
+    ])
   }
 
   useEffect(() => {
@@ -121,16 +129,30 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
   useEffect(() => {
     if (assets.length !== 0) {
       // 보유
-      const cash = assets.filter((asset) => asset.name === '현금')[0]
-        .evaluationAmount
+      const cash =
+        assets.filter((asset) => asset.name === '현금')[0].evaluationAmount ?? 0
       // 총 매수금액
       const price = assets
         .filter((asset) => asset.name !== '현금')
-        .reduce((acc, item) => acc + item.price!, 0)
+        // .reduce((acc, item) => acc + item.price!, 0)
+        .reduce((acc, item) => {
+          if (item.price) {
+            if (typeof item.price === 'number') {
+              return acc + item.price
+            }
+            return acc + +item.price.split(' (')[0]
+          }
+          return acc
+        }, 0)
       // 총 평가금액
       const evaluationAmount = assets
         .filter((asset) => asset.name !== '현금')
-        .reduce((acc, item) => acc + item.evaluationAmount, 0)
+        .reduce((acc, item) => {
+          if (item.evaluationAmount) {
+            return acc + item.evaluationAmount
+          }
+          return acc
+        }, 0)
       // 총 보유자산
       const asset = cash + price
       // 총 평가손익
@@ -175,12 +197,11 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
       <div>
         <TotalAssetInfoContainer>
           <TotalAsset totalAsset={totalAsset} />
-          {/* <ChartContainer>
-            <MonochromePieChart
-              investmentList={investmentList}
-              isLegend={true}
-            />
-          </ChartContainer> */}
+          <ChartContainer>
+            {investmentList && (
+              <MonochromePieChart investmentList={investmentList} isLegend />
+            )}
+          </ChartContainer>
         </TotalAssetInfoContainer>
         <AssetList assets={assets} />
       </div>
