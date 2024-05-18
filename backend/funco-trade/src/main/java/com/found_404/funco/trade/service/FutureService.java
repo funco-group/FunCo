@@ -22,6 +22,7 @@ import java.util.List;
 import static com.found_404.funco.global.util.DecimalCalculator.*;
 import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.CASH_SCALE;
 import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.NORMAL_SCALE;
+import static com.found_404.funco.trade.domain.type.TradeType.SHORT;
 import static com.found_404.funco.trade.exception.TradeErrorCode.ALREADY_FUTURES_TRADE;
 import static com.found_404.funco.trade.exception.TradeErrorCode.NOT_FOUND_TRADE;
 
@@ -69,12 +70,12 @@ public class FutureService {
         // 이미 선물 거래 중인지 체크, 선물 거래는 코인 당 한번에 1개 가능
         checkExistFutures(memberId, requestBuyFutures);
 
-        ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, TradeType.SHORT, requestBuyFutures));
+        ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, SHORT, requestBuyFutures));
 
         // 배율
         double liquidatedPrice = activeFuture.getPrice() + getDifference(activeFuture);
         log.info("[Short] member:{} {} 가격 {} 위로 청산됩니다.", memberId, activeFuture.getTicker(), liquidatedPrice);
-        cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.SHORT, liquidatedPrice);
+        cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), SHORT, liquidatedPrice);
 
         // [API UPDATE] 멤버 자산 감소
         memberService.updateMemberCash(memberId, -requestBuyFutures.orderCash());
@@ -99,17 +100,16 @@ public class FutureService {
         double currentPrice = cryptoPrice.getTickerPrice(activeFuture.getTicker());
 
         // 투입금 + ( 수익(+-) * 레버리지 )
-        long result = (long) multiple((activeFuture.getTradeType().equals(TradeType.LONG) ?
-                minus(currentPrice, activeFuture.getPrice(), NORMAL_SCALE) : minus(activeFuture.getPrice(), currentPrice, NORMAL_SCALE))
-                , activeFuture.getLeverage(), CASH_SCALE);
-
-        long settlement = activeFuture.getOrderCash() + result;
+        long settlement = (long) multiple(minus(currentPrice, activeFuture.getPrice(), NORMAL_SCALE), activeFuture.getLeverage(), CASH_SCALE);
+        if (activeFuture.getTradeType().equals(SHORT)) {
+            settlement = -settlement;
+        }
 
         activeFutureRepository.delete(activeFuture);
         futureTradeRepository.save(FutureTrade.fromActiveFutures(activeFuture, settlement));
 
         // [API UPDATE] 멤버 자산 증가
-        memberService.updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(settlement));
+        memberService.updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(activeFuture.getOrderCash() + settlement));
     }
 
     public ActiveFutureDto getActiveFutures(Long memberId, String ticker) {

@@ -73,6 +73,7 @@ public class FutureTrade extends BaseEntity {
 	}
 
 	public static FutureTrade getLiquidatedFutures(ActiveFuture activeFuture) {
-		return fromActiveFutures(activeFuture, 0L);
+		return fromActiveFutures(activeFuture, -activeFuture.getOrderCash());
 	}
+
 }
