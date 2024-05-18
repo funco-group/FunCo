@@ -115,7 +115,7 @@ function Asset() {
           volume: null,
           averagePrice: coin.price,
           price: coin.orderCash,
-          evaluationAmount: evaluationAmount,
+          evaluationAmount: Math.ceil(evaluationAmount),
           evaluationProfit: Math.ceil(rate * 10000) / 100,
         },
       ])
