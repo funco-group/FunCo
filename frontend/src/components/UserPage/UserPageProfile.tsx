@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
 
 import { MemberType } from '@/interfaces/userPage/MemberType'
@@ -51,7 +51,6 @@ function UserPageProfile({ member }: UserPageProfileProps) {
     return (
       <ProfileEditButtonDiv>
         <BrandButtonComponent
-          imgSrc=""
           content={member.isFollow ? '팔로잉' : '팔로우'}
           color={null}
           cancel={member.isFollow ? true : false}

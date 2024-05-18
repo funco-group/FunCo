@@ -84,20 +84,20 @@ function Asset() {
         },
       ])
     })
-    assetsRes.activeFutureInfos.map((coin) => {
-      setAssets((asset) => [
-        ...asset,
-        {
-          imgSrc: `https://static.upbit.com/logos/${coin.ticker.split('-')[1]}.png`,
-          name: coin.ticker + ' (' + coin.tradeType + ')',
-          volume: null,
-          averagePrice: coin.price,
-          price: coin.orderCash + ' (X ' + coin.leverage + ')',
-          evaluationAmount: null,
-          evaluationProfit: null,
-        },
-      ])
-    })
+    // assetsRes.activeFutureInfos.map((coin) => {
+    //   setAssets((asset) => [
+    //     ...asset,
+    //     {
+    //       imgSrc: `https://static.upbit.com/logos/${coin.ticker.split('-')[1]}.png`,
+    //       name: coin.ticker + ' (' + coin.tradeType + ')',
+    //       volume: null,
+    //       averagePrice: coin.price,
+    //       price: coin.orderCash + ' (X ' + coin.leverage + ')',
+    //       evaluationAmount: null,
+    //       evaluationProfit: null,
+    //     },
+    //   ])
+    // })
 
     setInvestmentList([
       ['현금', assetsRes.cash],
