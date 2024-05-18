@@ -7,5 +7,5 @@ import com.found_404.funco.trade.domain.FutureTrade;
 import java.util.List;
 
 public interface FutureTradeRepository extends JpaRepository<FutureTrade, Long> {
-    List<FutureTrade> findAllByMemberIdAndTicker(Long memberId, String ticker);
+    List<FutureTrade> findAllByMemberIdAndTickerOrderByIdDesc(Long memberId, String ticker);
 }

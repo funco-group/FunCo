@@ -114,11 +114,11 @@ public class FutureService {
 
     public ActiveFutureDto getActiveFutures(Long memberId, String ticker) {
         return ActiveFutureDto.fromEntity(activeFutureRepository.findByMemberIdAndTicker(memberId, ticker)
-                .orElseThrow(()->new TradeException(NOT_FOUND_TRADE)));
+                .orElseThrow(() -> new TradeException(NOT_FOUND_TRADE)));
     }
 
     public List<FutureTradeDto> getFutures(Long memberId, String ticker) {
-        return futureTradeRepository.findAllByMemberIdAndTicker(memberId, ticker)
+        return futureTradeRepository.findAllByMemberIdAndTickerOrderByIdDesc(memberId, ticker)
                 .stream()
                 .map(FutureTradeDto::fromEntity)
                 .toList();
