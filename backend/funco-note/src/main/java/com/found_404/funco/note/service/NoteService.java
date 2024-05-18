@@ -2,8 +2,10 @@ package com.found_404.funco.note.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.found_404.funco.feignClient.dto.NotificationType;
 import com.found_404.funco.feignClient.dto.SimpleMember;
 import com.found_404.funco.feignClient.service.MemberService;
+import com.found_404.funco.feignClient.service.NotificationService;
 import com.found_404.funco.note.domain.Note;
 import com.found_404.funco.note.domain.NoteComment;
 import com.found_404.funco.note.domain.NoteLike;
@@ -44,6 +46,7 @@ public class NoteService {
     private final NoteLikeRepository noteLikeRepository;
 
     private final MemberService memberService;
+    private final NotificationService notificationService;
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -217,6 +220,14 @@ public class NoteService {
                 .parentId(request.parentCommentId())
                 .content(request.content())
                 .build());
+
+        // [API 알림]
+        notificationService.sendNotification(note.getMemberId(), NotificationType.NOTE_COMMENT, note.getTitle().substring(0, Math.min(20, note.getTitle().length())) + "... 게시글에 댓글이 달렸어요.");
+        if (Objects.nonNull(request.parentCommentId())) {
+            noteCommentRepository.findById(request.parentCommentId())
+                    .ifPresent(noteComment -> notificationService.sendNotification(noteComment.getMemberId(), NotificationType.COMMENT_ANSWER,
+                            note.getTitle().substring(0, Math.min(20, note.getTitle().length())) + "... 게시글에 내 댓글에 답글이 달렸어요."));
+        }
     }
 
     public String getThumbnailContent(String content, int length) {
