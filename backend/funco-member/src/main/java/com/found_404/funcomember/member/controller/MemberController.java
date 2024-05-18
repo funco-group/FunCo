@@ -1,23 +1,34 @@
 package com.found_404.funcomember.member.controller;
 
-import com.found_404.funcomember.member.dto.response.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.found_404.funcomember.feignClient.dto.MemberInitCashDate;
+import com.found_404.funcomember.feignClient.dto.OAuthIdResponse;
 import com.found_404.funcomember.global.memberIdHeader.AuthMemberId;
 import com.found_404.funcomember.member.dto.RequestIntroduction;
 import com.found_404.funcomember.member.dto.RequestNickName;
 import com.found_404.funcomember.member.dto.request.OAuthMemberRequest;
 import com.found_404.funcomember.member.dto.request.UpdateCash;
+import com.found_404.funcomember.member.dto.response.AssetResponse;
 import com.found_404.funcomember.member.dto.response.CashResponse;
+import com.found_404.funcomember.member.dto.response.MyInfoResponse;
 import com.found_404.funcomember.member.dto.response.OAuthMemberResponse;
+import com.found_404.funcomember.member.dto.response.SimpleMember;
 import com.found_404.funcomember.member.service.MemberService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -72,8 +83,8 @@ public class MemberController {
 	}
 
 	/*
-	*	MSA server 용 API [로그인 header X]
-	*/
+	 *	MSA server 용 API [로그인 header X]
+	 */
 	@GetMapping("/{memberId}/cash")
 	public ResponseEntity<CashResponse> getCash(@PathVariable Long memberId) {
 		return ResponseEntity.ok(memberService.getCash(memberId));
@@ -85,8 +96,8 @@ public class MemberController {
 	}
 
 	/*
-	* 	id 주면 멤버 정보 리스트 조회
-	* */
+	 * 	id 주면 멤버 정보 리스트 조회
+	 * */
 	@GetMapping()
 	public ResponseEntity<List<SimpleMember>> getMembers(@RequestParam List<Long> ids) {
 		return ResponseEntity.ok(memberService.getMembers(ids));
@@ -102,5 +113,15 @@ public class MemberController {
 	@PostMapping
 	public ResponseEntity<OAuthMemberResponse> addAuthMember(@RequestBody OAuthMemberRequest OAuthMemberRequest) {
 		return ResponseEntity.ok(memberService.createAuthMember(OAuthMemberRequest));
+	}
+
+	@GetMapping("/auth/{memberId}")
+	public ResponseEntity<MemberInitCashDate> getInitCashDate(@PathVariable Long memberId) {
+		return ResponseEntity.ok(memberService.readInitCashDate(memberId));
+	}
+
+	@GetMapping("/auth/oauthid/{memberId}")
+	public ResponseEntity<OAuthIdResponse> getOAuthId(@PathVariable Long memberId) {
+		return ResponseEntity.ok(memberService.readOAuthId(memberId));
 	}
 }
