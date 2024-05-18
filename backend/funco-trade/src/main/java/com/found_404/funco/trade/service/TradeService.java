@@ -301,7 +301,7 @@ public class TradeService {
 	}
 
 	public List<HoldingCoinResponse> getHoldingCoinInfos(Long memberId) {
-		List<HoldingCoin> holdingCoins = holdingCoinRepository.findHoldingCoinByMemberId(memberId);
+		List<HoldingCoin> holdingCoins = holdingCoinRepository.findByMemberId(memberId);
 
 		return holdingCoins.stream()
 			.map(holdingCoin -> HoldingCoinResponse.builder()

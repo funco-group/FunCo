@@ -11,6 +11,4 @@ public interface HoldingCoinRepository extends JpaRepository<HoldingCoin, Long>,
 	Optional<HoldingCoin> findByMemberIdAndTicker(Long memberId, String ticker);
 
 	List<HoldingCoin> findByMemberId(Long memberId);
-
-	List<HoldingCoin> findHoldingCoinByMemberId(Long memberId);
 }
