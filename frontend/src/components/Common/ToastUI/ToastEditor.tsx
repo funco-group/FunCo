@@ -1,6 +1,6 @@
 import { ThumbnailImageType } from '@/interfaces/note/ThumbnailImageType'
 import { Editor } from '@toast-ui/react-editor'
-import { Dispatch, RefObject, SetStateAction } from 'react'
+import { Dispatch, RefObject, SetStateAction, useEffect } from 'react'
 import '@toast-ui/editor/dist/toastui-editor.css'
 import { postImage } from '@/apis/note'
 
@@ -77,6 +77,10 @@ function ToastEditor({
 
     setImageList(newImageList)
   }
+
+  useEffect(() => {
+    handleChangeEditor()
+  }, [])
 
   return (
     <div className="mt-4">

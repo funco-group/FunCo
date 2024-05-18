@@ -9,7 +9,7 @@ import { Editor } from '@toast-ui/react-editor'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { getNotesDetail, postNotes } from '@/apis/note'
+import { getNotesDetail, postNotes, updateNotes } from '@/apis/note'
 import getMarkdownFromHTML from '@/utils/getMarkdownFromHTML'
 
 const ToastEditor = dynamic(
@@ -60,6 +60,25 @@ function NotesWrite() {
       (res) => {
         const { data } = res
         router.push(`/notes/${data.noteId}`)
+      },
+    )
+  }
+
+  const handleUpdateBtn = () => {
+    if (!noteId) return
+    const htmlContent = editorRef.current?.getInstance().getHTML()
+    const thumbnailImage = imageList.find((image) => image.thumbnail)?.src
+    if (!thumbnailImage) return
+    updateNotes(
+      +noteId,
+      {
+        title: titleText,
+        content: htmlContent,
+        ticker: coin,
+        thumbnailImage,
+      },
+      () => {
+        router.push(`/notes/${+noteId}`)
       },
     )
   }
@@ -135,9 +154,9 @@ function NotesWrite() {
             disabled={false}
           />
           <BrandButtonComponent
-            content="저장"
+            content={noteId ? '수정' : '저장'}
             color={null}
-            onClick={handleSaveBtn}
+            onClick={noteId ? handleUpdateBtn : handleSaveBtn}
             cancel={false}
             disabled={!coin || !titleText || imageList.length === 0}
           />

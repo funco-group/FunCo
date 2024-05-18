@@ -5,7 +5,7 @@ import { AxiosResponse } from 'axios'
 
 const domain = 'notes'
 
-interface PostNotesReqBodyType {
+interface NotesReqBodyType {
   title: string
   content: string
   ticker: string
@@ -25,7 +25,7 @@ export async function getNotesList(
 }
 
 export async function postNotes(
-  body: PostNotesReqBodyType,
+  body: NotesReqBodyType,
   success: (res: AxiosResponse<{ noteId: number }>) => void,
 ) {
   await localAxios.post(`/v1/${domain}`, body).then(success)
@@ -36,6 +36,18 @@ export async function getNotesDetail(
   success: (res: AxiosResponse<NoteDetailType>) => void,
 ) {
   await localAxios.get(`/v1/${domain}/${noteId}`).then(success)
+}
+
+export async function updateNotes(
+  noteId: number,
+  body: NotesReqBodyType,
+  success: () => void,
+) {
+  await localAxios.put(`/v1/${domain}/${noteId}`, body).then(success)
+}
+
+export async function deleteNotes(noteId: number, success: () => void) {
+  await localAxios.delete(`/v1/${domain}/${noteId}`).then(success)
 }
 
 export async function getCommentsData(noteId: number) {

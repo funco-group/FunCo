@@ -9,9 +9,10 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import ToastViewer from '@/components/Common/ToastUI/ToastViewer'
 import { useEffect, useState } from 'react'
 import { NoteDetailType } from '@/interfaces/note/NoteDetailType'
-import { getNotesDetail } from '@/apis/note'
+import { deleteNotes, getNotesDetail } from '@/apis/note'
 import NoData from '@/components/Common/NoData'
 import { useResizeDetector } from 'react-resize-detector'
+import AlertWithCancelModal from '@/components/Common/Modal/AlertWithCancelModal'
 import NotesDetailArticleLikeBtn from './NotesDetailArticleLikeBtn'
 import NotesDetailBtnDiv from './NotesDetailBtnDiv'
 
@@ -26,6 +27,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
   const [detail, setDetail] = useState<NoteDetailType>()
   const { user } = useUserState()
   const { height, ref } = useResizeDetector()
+  const [onDeleteModal, setOnDeleteModal] = useState(false)
 
   useEffect(() => {
     getNotesDetail(noteId, (res) => {
@@ -65,16 +67,30 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
   }
 
   const handleUpdateArticle = () => {
-    console.log('Update Article')
     router.push(`/notes/write?noteId=${noteId}`)
   }
 
   const handleDeleteArticle = () => {
-    console.log('delete Article')
+    setOnDeleteModal(true)
   }
 
   return (
     <div>
+      {onDeleteModal && (
+        <AlertWithCancelModal
+          title="알림"
+          content="게시글을 삭제하시겠습니까?"
+          cancelAlert={() => {
+            setOnDeleteModal(false)
+          }}
+          confirmAlert={() => {
+            deleteNotes(noteId, () => {
+              setOnDeleteModal(false)
+              router.push('/notes')
+            })
+          }}
+        />
+      )}
       <div
         className="rounded border border-solid border-deactivatedGray bg-brandWhite p-3"
         ref={ref}
@@ -124,7 +140,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
           </div>
         </div>
         <div className="my-3">
-          <ToastViewer initialValue={detail.content} />
+          <ToastViewer key={detail.content} initialValue={detail.content} />
         </div>
         <div className="mb-5 mt-8 flex justify-center">
           <NotesDetailArticleLikeBtn
