@@ -7,10 +7,10 @@ import { MemberType } from '@/interfaces/userPage/MemberType'
 import { getMemberInfo, getMyInfo } from '@/apis/member'
 import FollowModal from '@/components/UserPage/FollowModal'
 import UserPageProfile from '@/components/UserPage/UserPageProfile'
-// import AssetGraph from '@/components/UserPage/AssetGraph'
-// import RecentInvestment from '@/components/UserPage/RecentInvestment'
-// import UserFollow from '@/components/UserPage/UserFollow'
-// import ReturnRateGraph from '@/components/UserPage/ReturnRateGraph'
+import AssetGraph from '@/components/UserPage/AssetGraph'
+import RecentInvestment from '@/components/UserPage/RecentInvestment'
+import UserFollow from '@/components/UserPage/UserFollow'
+import ReturnRateGraph from '@/components/UserPage/ReturnRateGraph'
 import MyPageProfile from '@/components/UserPage/MyPageProfile'
 import { UserLayoutRowDiv } from './styled'
 
@@ -56,16 +56,16 @@ function UserPageContainer({ memberId }: { memberId: number }) {
           <UserPageProfile member={member} />
         )}
 
-        {/* <AssetGraph member={member} /> */}
+        <AssetGraph member={member} />
       </UserLayoutRowDiv>
-      {/* <UserLayoutRowDiv>
+      <UserLayoutRowDiv>
         <RecentInvestment topCoins={member.topCoins} />
         <UserFollow
           followingCash={member.followingCash}
           followerCash={member.followerCash}
         />
       </UserLayoutRowDiv>
-      <ReturnRateGraph memberId={member.memberId} /> */}
+      <ReturnRateGraph memberId={member.memberId} />
     </div>
   )
 }
