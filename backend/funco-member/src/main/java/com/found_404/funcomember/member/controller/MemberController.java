@@ -34,7 +34,7 @@ public class MemberController {
 
 	// 닉네임 변경
 	@PatchMapping("/nickname")
-	public ResponseEntity<?> updateNickname(Long loginMemberId,
+	public ResponseEntity<?> updateNickname(@AuthMemberId Long loginMemberId,
 		@RequestBody @Valid RequestNickName requestNickName) {
 		memberService.updateNickname(loginMemberId, requestNickName.nickname());
 		return ResponseEntity.ok().build();
@@ -42,7 +42,7 @@ public class MemberController {
 
 	// 소개 수정
 	@PatchMapping("/introduction")
-	public ResponseEntity<?> updateNickname(Long loginMemberId,
+	public ResponseEntity<?> updateNickname(@AuthMemberId Long loginMemberId,
 		@RequestBody @Valid RequestIntroduction requestIntroduction) {
 		memberService.updateIntroduce(loginMemberId, requestIntroduction.introduction());
 		return ResponseEntity.ok().build();
@@ -50,7 +50,7 @@ public class MemberController {
 
 	// 회원 탈퇴
 	@PatchMapping("/withdraw")
-	public ResponseEntity<?> withdraw(Long loginMemberId) {
+	public ResponseEntity<?> withdraw(@AuthMemberId Long loginMemberId) {
 		memberService.withdraw(loginMemberId);
 		return ResponseEntity.ok().build();
 	}
