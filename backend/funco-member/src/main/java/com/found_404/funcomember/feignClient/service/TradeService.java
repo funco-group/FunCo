@@ -33,7 +33,7 @@ public class TradeService {
 		}
 	}
 
-	public Map<String, Long> getCryptoPrice(List<String> tickers) {
+	public Map<String, Double> getCryptoPrice(List<String> tickers) {
 		try {
 			return tradeServiceClient.getCryptoPrice(tickers);
 		} catch (FeignException e) {
