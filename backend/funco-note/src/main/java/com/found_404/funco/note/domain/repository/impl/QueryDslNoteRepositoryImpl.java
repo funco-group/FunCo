@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.found_404.funco.note.domain.QNote.note;
+import static com.found_404.funco.note.domain.QNoteComment.noteComment;
 import static com.found_404.funco.note.domain.QNoteLike.noteLike;
 
 @RequiredArgsConstructor
@@ -43,6 +44,18 @@ public class QueryDslNoteRepositoryImpl implements QueryDslNoteRepository {
             .offset(pageable.getOffset())
             .fetch();
 
+    }
+
+    @Override
+    public boolean deleteNoteWithComments(Long noteId) {
+        jpaQueryFactory
+                .delete(noteComment)
+                .where(noteComment.note.id.eq(noteId))
+                .execute();
+
+        return jpaQueryFactory.delete(note)
+                .where(note.id.eq(noteId))
+                .execute() > 0;
     }
 
     private JPAQuery<Note> allPost() {

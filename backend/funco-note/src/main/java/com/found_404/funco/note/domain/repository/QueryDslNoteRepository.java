@@ -9,4 +9,7 @@ import java.util.List;
 public interface QueryDslNoteRepository {
 
     List<Note> getNotesWithFilter(Long memberId, NotesFilterRequest notesFilterRequest, Pageable pageable);
+
+    boolean deleteNoteWithComments(Long noteId);
+
 }
