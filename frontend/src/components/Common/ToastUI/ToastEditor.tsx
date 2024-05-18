@@ -1,6 +1,6 @@
 import { ThumbnailImageType } from '@/interfaces/note/ThumbnailImageType'
 import { Editor } from '@toast-ui/react-editor'
-import { Dispatch, RefObject, SetStateAction } from 'react'
+import { Dispatch, RefObject, SetStateAction, useEffect } from 'react'
 import '@toast-ui/editor/dist/toastui-editor.css'
 import { postImage } from '@/apis/note'
 
@@ -16,17 +16,22 @@ const toolbarItems = [
 interface ToastEditorProps {
   editorRef: RefObject<Editor>
   imageList: ThumbnailImageType[]
+  initialValue: string
   setImageList: Dispatch<SetStateAction<ThumbnailImageType[]>>
 }
 
-function ToastEditor({ editorRef, imageList, setImageList }: ToastEditorProps) {
+function ToastEditor({
+  editorRef,
+  imageList,
+  initialValue,
+  setImageList,
+}: ToastEditorProps) {
   const onUploadImage = (file: File, callback: typeof Function) => {
     const formData = new FormData()
     formData.append('file', file)
 
     postImage(formData, (res) => {
       const { data } = res
-      console.log(data)
       setImageList((prev) => [
         ...prev,
         {
@@ -73,12 +78,16 @@ function ToastEditor({ editorRef, imageList, setImageList }: ToastEditorProps) {
     setImageList(newImageList)
   }
 
+  useEffect(() => {
+    handleChangeEditor()
+  }, [])
+
   return (
     <div className="mt-4">
       {editorRef && (
         <Editor
           ref={editorRef}
-          initialValue=""
+          initialValue={initialValue}
           initialEditType="markdown"
           previewStyle="vertical"
           hideModeSwitch

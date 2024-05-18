@@ -1,14 +1,17 @@
 'use client'
 
 import LikeSVG from '@/../public/icon/like.svg'
+import { postNoteLike } from '@/apis/note'
 import { useEffect, useState } from 'react'
 
 interface NotesDetailArticleLikeBtnProps {
+  noteId: number
   initialIsLike: boolean
   initialLikeCnt: number
 }
 
 function NotesDetailArticleLikeBtn({
+  noteId,
   initialIsLike,
   initialLikeCnt,
 }: NotesDetailArticleLikeBtnProps) {
@@ -18,19 +21,21 @@ function NotesDetailArticleLikeBtn({
   )
 
   const handleIsLikeBtn = () => {
-    setIsLike((prev) => !prev)
+    postNoteLike(noteId, () => {
+      setIsLike((prev) => !prev)
+    })
   }
 
   useEffect(() => {
     setLikeCnt((prev) => (isLike ? prev + 1 : prev - 1))
   }, [isLike])
 
-  useEffect(
-    () => () => {
-      console.log(isLike, likeCnt)
-    },
-    [],
-  )
+  // useEffect(
+  //   () => () => {
+  //     console.log(isLike, likeCnt)
+  //   },
+  //   [],
+  // )
   return (
     <div
       className="flex cursor-pointer select-none items-center gap-2 rounded-xl border border-solid px-6 py-2 outline-none"
