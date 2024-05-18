@@ -2,6 +2,7 @@ package com.found_404.funcomember.member.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -124,5 +125,11 @@ public class MemberController {
 	@GetMapping("/asset/init-cash")
 	public ResponseEntity<MemberInitCashDate> getInitCashDate(@RequestParam Long memberId) {
 		return ResponseEntity.ok(memberService.readInitCashDate(memberId));
+	}
+
+	@PatchMapping("/asset/init-cash")
+	public ResponseEntity<Void> modifyCashAndInitCashDate(@RequestParam Long memberId) {
+		memberService.modifyCashAndInitCashDate(memberId);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 }
