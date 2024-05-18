@@ -15,8 +15,25 @@ import {
 } from './AssetChangeList.styled'
 import AssetChangeListItem from './AssetChangeListItem'
 import { AssetChangeListItemContainer } from './AssetChangeListItem.styled'
+import { AssetTabType } from '@/interfaces/tradeHistory/follow/AssetChangeType'
 
-function AssetChangeList() {
+interface AssetChangeListProps {
+  periodTab: AssetTabType[]
+  tradeTypeTab: AssetTabType[][]
+  assetTypeTab: AssetTabType[]
+  periodActive: number
+  tradeActive: number
+  assetActive: number
+}
+
+function AssetChangeList({
+  periodTab,
+  tradeTypeTab,
+  assetTypeTab,
+  periodActive,
+  tradeActive,
+  assetActive,
+}: AssetChangeListProps) {
   const [historyList, setHistoryList] = useState<AssetHistoryType[]>([])
   const columns = [
     '체결시간',
@@ -30,11 +47,17 @@ function AssetChangeList() {
   ]
 
   useEffect(() => {
-    getHistory((response: AxiosResponse<AssetHistoryType[]>) => {
-      const { data } = response
-      setHistoryList(data)
-    })
-  }, [])
+    getHistory(
+      periodTab[periodActive].type,
+      assetTypeTab[assetActive].type,
+      tradeTypeTab[assetActive][tradeActive].type,
+      (response: AxiosResponse<AssetHistoryType[]>) => {
+        const { data } = response
+        console.log(data)
+        // setHistoryList(data)
+      },
+    )
+  }, [periodActive, assetActive, tradeActive])
 
   return (
     <AssetChangeListContainer>
@@ -47,11 +70,11 @@ function AssetChangeList() {
           </ColumnGrid>
         </AssetChangeListItemContainer>
       </ColumnContainer>
-      <HistoryListContainer>
+      {/* <HistoryListContainer>
         {historyList.map((history) => (
           <AssetChangeListItem key={history.date} history={history} />
         ))}
-      </HistoryListContainer>
+      </HistoryListContainer> */}
     </AssetChangeListContainer>
   )
 }
