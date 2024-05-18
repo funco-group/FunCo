@@ -34,6 +34,7 @@ function AssetList({ assets }: AssetListProps) {
         {assets.map((coin: AssetType) => (
           <AssetListItem
             imgSrc={coin.imgSrc}
+            type={coin.type}
             name={coin.name}
             volume={coin.volume}
             averagePrice={coin.averagePrice}

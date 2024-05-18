@@ -7,6 +7,7 @@ import { ListItemContainerDiv } from './AssetListItem.styled'
 
 function AssetListItem({
   imgSrc,
+  type,
   name,
   volume,
   averagePrice,
@@ -29,6 +30,7 @@ function AssetListItem({
           <ListItemDiv $align="left" color="black">
             <img src={imgSrc} alt={name} width={20} />
             {name !== '현금' && name !== '팔로우' ? nameMap.get(name) : name}
+            {(type === 'LONG' || type === 'SHORT') && ` (${type})`}
           </ListItemDiv>
           <ListItemDiv $align={volume ? 'right' : ''} color="black">
             {volume || '-'}
@@ -44,7 +46,9 @@ function AssetListItem({
           </ListItemDiv>
           <ListItemDiv $align="right" color="black">
             {evaluationAmount ? evaluationAmount.toLocaleString('ko-KR') : '-'}
-            <span>WON</span>
+            {evaluationAmount !== null && evaluationAmount !== 0 && (
+              <span> WON</span>
+            )}
           </ListItemDiv>
           <ListItemDiv
             $align={evaluationProfit ? '' : ''}

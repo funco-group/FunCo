@@ -66,6 +66,7 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
     setAssets([
       {
         imgSrc: cashIcon.src,
+        type: 'cash',
         name: '현금',
         volume: null,
         averagePrice: null,
@@ -75,6 +76,7 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
       },
       {
         imgSrc: followIcon.src,
+        type: 'follow',
         name: '팔로우',
         volume: null,
         averagePrice: null,
@@ -92,6 +94,7 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
         ...asset,
         {
           imgSrc: `https://static.upbit.com/logos/${coin.ticker.split('-')[1]}.png`,
+          type: 'coin',
           name: coin.ticker,
           volume: coin.volume,
           averagePrice: coin.averagePrice,
