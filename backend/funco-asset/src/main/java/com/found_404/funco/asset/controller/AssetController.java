@@ -2,6 +2,7 @@ package com.found_404.funco.asset.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,9 +39,8 @@ public class AssetController {
 	@PatchMapping("/init-cash")
 	public ResponseEntity<Void> initializeMemberCash(@AuthMemberId Long memberId){
 		assetService.initializeMemberCash(memberId);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
-
 
 	@GetMapping("/history")
 	public ResponseEntity<List<? extends AssetHistoryResponse>> getMemberHistory(@AuthMemberId Long memberId,
