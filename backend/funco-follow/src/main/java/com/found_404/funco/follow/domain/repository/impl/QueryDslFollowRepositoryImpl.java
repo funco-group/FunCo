@@ -78,7 +78,9 @@ public class QueryDslFollowRepositoryImpl implements QueryDslFollowRepository {
 		String settleType, Long lastFollowId, int pageSize) {
 
 		List<Follow> followList = jpaQueryFactory.selectFrom(follow)
-				.where(follow.followerMemberId.eq(memberId), checkSettleType(settleType), ltFollowId(lastFollowId))
+				.where(follow.followingMemberId.eq(memberId),
+						checkSettleType(settleType),
+						ltFollowId(lastFollowId))
 				.orderBy(follow.id.desc())
 				.limit(pageSize + 1)
 				.fetch();
