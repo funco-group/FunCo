@@ -24,10 +24,12 @@ export async function getMyInfo(
   await localAxios.get(`/v1/${domain}/mypage`).then(success)
 }
 
-export async function editNickname(nickname: string) {
-  await localAxios.patch(`/v1/${domain}/nickname`, {
-    nickname,
-  })
+export async function editNickname(nickname: string, success: () => void) {
+  await localAxios
+    .patch(`/v1/${domain}/nickname`, {
+      nickname,
+    })
+    .then(success)
 }
 
 export async function editIntroduction(introduction: string) {
@@ -39,6 +41,19 @@ export async function buyPortfolio(sellerId: number, success: () => void) {
   await localAxios
     .post(`/v1/${domain}/portfolio/subscribe`, {
       sellerId,
+    })
+    .then(success)
+}
+
+export async function setPortfolio(
+  portfolioStatus: string,
+  portfolioPrice: number,
+  success: () => void,
+) {
+  await localAxios
+    .patch(`/v1/${domain}/portfolio`, {
+      portfolioStatus,
+      portfolioPrice,
     })
     .then(success)
 }

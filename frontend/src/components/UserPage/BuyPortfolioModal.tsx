@@ -71,6 +71,7 @@ function BuyPortfolioModal({
         setAlert(true)
         setAlertContent('포트폴리오 구독을 시작합니다.')
         setPortfolioStatus('SUBSCRIBE')
+        handleBuyPortFolioClick()
       })
     }
   }
@@ -95,8 +96,7 @@ function BuyPortfolioModal({
         <ModalItemDiv>
           <TitleDiv>· 포트폴리오 가격</TitleDiv>
           <ContentDiv>
-            {/* {price.toLocaleString('ko-KR')}  */}
-            100,300
+            {price.toLocaleString('ko-KR')}
             <span>WON</span>
           </ContentDiv>
         </ModalItemDiv>

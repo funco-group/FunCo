@@ -91,17 +91,16 @@ function NormalTradeItem({ name, curPrice }: NormalTradeItemProps) {
   }, [curPrice, coinCode, name, user.user])
 
   const priceUp = () => {
-    setOrderPrice(Math.round(orderPrice + curPrice * 0.01))
-    setFormattedOrderPrice(
-      Math.round(orderPrice + curPrice * 0.01).toLocaleString('ko-KR'),
-    )
+    const newPrice = Math.ceil((orderPrice - curPrice * 0.01) * 10) / 10
+    setOrderPrice(newPrice)
+    setFormattedOrderPrice(newPrice.toLocaleString('ko-KR'))
   }
 
   const priceDown = () => {
-    const newPrice = orderPrice - curPrice * 0.01
+    const newPrice = Math.ceil((orderPrice - curPrice * 0.01) * 10) / 10
     if (newPrice > 0) {
-      setOrderPrice(Math.round(newPrice))
-      setFormattedOrderPrice(Math.round(newPrice).toLocaleString('ko-KR'))
+      setOrderPrice(newPrice)
+      setFormattedOrderPrice(newPrice.toLocaleString('ko-KR'))
     }
   }
 
@@ -245,7 +244,6 @@ function NormalTradeItem({ name, curPrice }: NormalTradeItemProps) {
                 inputDecimalFormat(
                   e,
                   setFormattedOrderPrice,
-
                   setOrderPrice,
                   '매수',
                 )
