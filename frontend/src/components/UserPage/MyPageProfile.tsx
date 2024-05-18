@@ -1,26 +1,25 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import BrandButtonComponent from '@/components/Common/Button/BrandButtonComponent'
 
 import { MemberType } from '@/interfaces/userPage/MemberType'
-// import useFollowModalState from '@/hooks/recoilHooks/useFollowModalState'
+import useUserState from '@/hooks/recoilHooks/useUserState'
 import medalMap from '@/lib/medalMap'
 import { editIntroduction, editNickname } from '@/apis/member'
 import { ComponentTitleH3 } from '@/containers/UserPageContainer/styled'
-import PortfolioModal from './PortfolioModal'
+import SetPortfolioModal from './SetPortfolioModal'
 import {
   IntroductionDiv,
   NicknameDiv,
   ProfileButtonDiv,
   ProfileDetailContainer,
-  ProfileEditButtonDiv,
   ProfileInput,
   ProfileRankDiv,
   ProfileRankFlexDiv,
   ProfileRankOuterDiv,
   ProfileTextArea,
   UserPageProfileContainer,
+  ProfileImg,
 } from './UserPageProfile.styled'
-// import useUserState from '@/hooks/recoilHooks/useUserState'
 
 interface UserPageProfileProps {
   member: MemberType
@@ -29,77 +28,70 @@ interface UserPageProfileProps {
 function MyPageProfile({ member }: UserPageProfileProps) {
   const [nickname, setNickname] = useState(member.nickname)
   const [isEditNickname, setIsEditNickname] = useState(false)
+  const [settingPortfolio, setSettingPortfolio] = useState<boolean>(false)
   const [introduction, setIntroduction] = useState(
     member.introduction ? member.introduction : '한 줄 소개를 입력해주세요!',
   )
   const [isEditIntro, setIsEditIntro] = useState(false)
-  // const { onFollowModal } = useFollowModalState()
-  const [onFollowAssetModal, setOnFollowAssetModal] = useState(false)
+  const [status, setStatus] = useState<boolean>(false) // private = true, public = false
+  const [price, setPrice] = useState<number>(0)
+  const [priceStr, setPriceStr] = useState<string>('')
+  const { updateNickname } = useUserState()
+
+  useEffect(() => {
+    setPrice(member.portfolioPrice)
+    setPriceStr(member.portfolioPrice.toLocaleString('ko-KR'))
+    setStatus(member.portfolioStatus !== 'PUBLIC')
+  }, [])
 
   const handleNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value)
   }
 
   const handleNicknameEditClick = async () => {
+    setIsEditNickname(!isEditNickname)
+
     if (isEditNickname) {
-      await editNickname(nickname)
+      await editNickname(nickname, () => {
+        updateNickname(nickname)
+      })
     }
-    setIsEditNickname((prev) => !prev)
   }
 
-  const handleIntroInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleIntroInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIntroduction(e.target.value)
   }
 
   const handleIntroEditClick = async () => {
+    setIsEditIntro((prev) => !prev)
+
     if (isEditIntro) {
       await editIntroduction(introduction)
     }
-    setIsEditIntro((prev) => !prev)
   }
 
-  // const handleFollowClick = () => {
-  //   onFollowModal({
-  //     memberId: member.memberId,
-  //   })
-  // }
-
-  const handlePortFolioClick = () => {
-    setOnFollowAssetModal((prev) => !prev)
+  const handleSettingPortfolio = () => {
+    setSettingPortfolio(!settingPortfolio)
   }
 
-  function renderButton() {
-    return (
-      <ProfileEditButtonDiv>
-        <BrandButtonComponent
-          content={isEditNickname ? '닉네임 저장' : '닉네임 수정'}
-          color={null}
-          cancel={false}
-          onClick={handleNicknameEditClick}
-          disabled={false}
-        />
-        <BrandButtonComponent
-          content={isEditIntro ? '한 줄 소개 저장' : '한 줄 소개 수정'}
-          color={null}
-          cancel={false}
-          onClick={handleIntroEditClick}
-          disabled={false}
-        />
-      </ProfileEditButtonDiv>
-    )
-  }
   return (
     <UserPageProfileContainer>
-      {onFollowAssetModal && (
-        <PortfolioModal
-          memberId={member.memberId}
-          nickname={member.nickname}
-          handlePortFolioClick={handlePortFolioClick}
+      {settingPortfolio && (
+        <SetPortfolioModal
+          handleSettingPortfolio={handleSettingPortfolio}
+          status={status}
+          setStatus={setStatus}
+          price={price}
+          setPrice={setPrice}
+          priceStr={priceStr}
+          setPriceStr={setPriceStr}
         />
       )}
       <ComponentTitleH3>프로필</ComponentTitleH3>
       <ProfileDetailContainer>
-        <img src={member.profileUrl} alt="member-profile" />
+        <ProfileImg>
+          <img src={member.profileUrl} alt="member-profile" />
+        </ProfileImg>
         <NicknameDiv>
           {isEditNickname ? (
             <ProfileInput
@@ -111,6 +103,12 @@ function MyPageProfile({ member }: UserPageProfileProps) {
           ) : (
             nickname
           )}
+          <img
+            src="/icon/pencil.png"
+            onClick={handleNicknameEditClick}
+            width={15}
+            alt="pencil"
+          />
         </NicknameDiv>
         <ProfileRankFlexDiv>
           <ProfileRankOuterDiv>
@@ -145,6 +143,7 @@ function MyPageProfile({ member }: UserPageProfileProps) {
         <IntroductionDiv>
           {isEditIntro ? (
             <ProfileTextArea
+              type="text"
               value={introduction}
               onChange={handleIntroInput}
               maxLength={21}
@@ -152,9 +151,23 @@ function MyPageProfile({ member }: UserPageProfileProps) {
           ) : (
             <div>{introduction}</div>
           )}
+          <img
+            src="/icon/pencil.png"
+            onClick={handleIntroEditClick}
+            width={15}
+            alt="pencil"
+          />
         </IntroductionDiv>
       </ProfileDetailContainer>
-      <ProfileButtonDiv>{renderButton()}</ProfileButtonDiv>
+      <ProfileButtonDiv>
+        <BrandButtonComponent
+          content="포트폴리오 설정"
+          color={null}
+          cancel={false}
+          onClick={handleSettingPortfolio}
+          disabled={false}
+        />
+      </ProfileButtonDiv>
     </UserPageProfileContainer>
   )
 }

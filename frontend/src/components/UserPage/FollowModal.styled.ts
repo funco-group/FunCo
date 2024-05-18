@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import palette from "@/lib/palette";
+import styled from 'styled-components'
+import palette from '@/lib/palette'
 
 export const FollowModalContentDiv = styled.div`
   padding: 1rem 0;
@@ -21,7 +21,7 @@ export const FollowModalContentDiv = styled.div`
   }
 
   /* 실제 체크박스 요소 숨기기 */
-  .custom-checkbox input[type="checkbox"] {
+  .custom-checkbox input[type='checkbox'] {
     position: absolute;
     opacity: 0;
     cursor: pointer;
@@ -47,7 +47,7 @@ export const FollowModalContentDiv = styled.div`
 
   /* 체크 표시 스타일 */
   .custom-checkbox .checkmark:after {
-    content: "";
+    content: '';
     position: absolute;
     display: none;
   }
@@ -65,9 +65,9 @@ export const FollowModalContentDiv = styled.div`
     border-width: 0 0.125rem 0.125rem 0;
     transform: rotate(45deg); /* 체크 표시 각도 */
   }
-`;
+`
 
-export const FollowModalCheckWrapDiv = styled.div``;
+export const FollowModalCheckWrapDiv = styled.div``
 
 export const FollowModalTermsDiv = styled.div`
   /* height: 18.75rem; */
@@ -75,7 +75,7 @@ export const FollowModalTermsDiv = styled.div`
   padding: 0.625rem;
   white-space: pre-line;
   line-height: 1.5rem;
-`;
+`
 
 export const CashDiv = styled.div`
   text-align: right;
@@ -84,18 +84,18 @@ export const CashDiv = styled.div`
   span {
     font-size: 0.6rem;
   }
-`;
+`
 
-export const InputDiv = styled.div<{ $validation: boolean }>`
+export const InputDiv = styled.div<{ $validation?: boolean }>`
   display: flex;
   align-items: end;
   justify-content: end;
   border: 1px solid
     ${(props) => {
       if (props.$validation) {
-        return "red";
+        return 'red'
       }
-      return palette.borderGray;
+      return palette.borderGray
     }};
   padding: 0.4rem 0.5rem;
   margin-left: 0.5rem;
@@ -120,17 +120,17 @@ export const InputDiv = styled.div<{ $validation: boolean }>`
       outline: none;
     }
   }
-`;
+`
 
 export const InvestDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: end;
-`;
+`
 
 export const ValidationText = styled.div<{ $validation: boolean }>`
   color: red;
   text-align: right;
   font-size: 0.7rem;
-  visibility: ${(props) => !props.$validation && "hidden"};
-`;
+  visibility: ${(props) => !props.$validation && 'hidden'};
+`
