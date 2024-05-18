@@ -1,11 +1,15 @@
 export interface FollowingType {
-  followId: number;
-  nickname: string;
-  investment: number;
-  followedAt: string;
-  cash: number;
+  member: {
+    id: number
+    nickname: string
+    profileUrl: string
+  }
+  followId: number
+  investment: number
+  followedAt: string
+  cash: number
   coins: {
-    ticker: string;
-    volume: number;
-  }[];
+    ticker: string
+    volume: number
+  }[]
 }
