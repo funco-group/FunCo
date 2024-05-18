@@ -5,6 +5,8 @@ public enum NotificationType {
     // 매도 알림
     SELL,
     // 정산 알림
+    FUTURES,
+    // 선물 청산
     SETTLE,
     // 강제정산 알림
     FORCE_SETTLE,

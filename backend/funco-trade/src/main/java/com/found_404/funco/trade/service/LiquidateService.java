@@ -1,5 +1,6 @@
 package com.found_404.funco.trade.service;
 
+import com.found_404.funco.feignClient.service.NotificationService;
 import com.found_404.funco.trade.domain.ActiveFuture;
 import com.found_404.funco.trade.domain.FutureTrade;
 import com.found_404.funco.trade.domain.repository.ActiveFutureRepository;
@@ -12,13 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.found_404.funco.feignClient.dto.NotificationType.FUTURES;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class LiquidateService {
     private final ActiveFutureRepository activeFutureRepository;
     private final FutureTradeRepository futureTradeRepository;
-
+    private final NotificationService notificationService;
 
     // 청산 처리
     @Async
@@ -27,9 +30,14 @@ public class LiquidateService {
         List<ActiveFuture> activeFutures = activeFutureRepository.findAllByIdIn(ids);
         activeFutureRepository.deleteAll(activeFutures);
 
-        futureTradeRepository.saveAll(
+        List<FutureTrade> futureTrades = futureTradeRepository.saveAll(
                 activeFutures.stream()
                         .map(FutureTrade::getLiquidatedFutures)
                         .toList());
+
+        // [API async] 알림
+        futureTrades.forEach(futureTrade ->
+                notificationService.sendNotification(futureTrade.getMemberId(), FUTURES, futureTrade.getTicker() +  " 선물 거래가 강제 청산되었습니다.")
+        );
     }
 }
