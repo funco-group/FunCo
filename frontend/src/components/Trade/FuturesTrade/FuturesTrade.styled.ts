@@ -4,12 +4,20 @@ import styled from 'styled-components'
 // eslint-disable-next-line import/prefer-default-export
 export const FuturesTradeButton = styled.div<{ name: string }>`
   background-color: ${(props) => {
-    if (props.name === 'Long') {
+    if (props.name === 'LONG') {
       return palette.brandRed
     }
-    return palette.brandBlue
+    if (props.name === 'SHORT') {
+      return palette.brandBlue
+    }
+    return palette.brandGray
   }};
-  color: ${palette.brandWhite};
+  color: ${(props) => {
+    if (props.name === 'CLOSE') {
+      return '#999999'
+    }
+    return palette.brandWhite
+  }};
   text-align: center;
   padding: 0.6rem;
   cursor: pointer;
