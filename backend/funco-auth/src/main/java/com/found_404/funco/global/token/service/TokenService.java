@@ -1,10 +1,12 @@
 package com.found_404.funco.global.token.service;
 
+import static com.found_404.funco.auth.type.OauthServerType.*;
 import static com.found_404.funco.global.token.exception.TokenErrorCode.*;
 import static java.util.concurrent.TimeUnit.*;
 
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
@@ -13,10 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.found_404.funco.auth.dto.MemberDto;
+import com.found_404.funco.auth.dto.response.TokenResponse;
+import com.found_404.funco.feignClient.dto.response.OAuthMemberResponse;
+import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.global.token.exception.TokenException;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
@@ -35,6 +39,7 @@ public class TokenService {
 	@Value("${spring.jwt.token.refresh-secret-key}")
 	private String refreshSecretKey;
 
+	private final MemberService memberService;
 	private final RedisTemplate<String, Object> tokenRedisTemplate;
 	private final long TOKEN_PERIOD = 12 * 60 * 60 * 1000L; // 12h
 	private final long REFRESH_PERIOD = 14 * 24 * 60 * 60 * 1000L; // 14일
@@ -76,52 +81,27 @@ public class TokenService {
 		return refreshToken;
 	}
 
-	public String resolveToken(HttpServletRequest request) {
-		String accessToken = request.getHeader("Authorization");
-
-		if (accessToken == null || accessToken.trim().isEmpty()) {
-			throw new TokenException(EMPTY_TOKEN, HttpStatus.UNAUTHORIZED);
-		}
-
-		return accessToken;
-	}
-
-	public boolean validateToken(String token) {
+	public TokenResponse reissueAccessToken(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-			return claims.getExpiration().after(new Date());
+			String refreshToken = readRefreshToken(request);
+			String oauthServerId = readMemberIdFromRefreshToken(refreshToken);
+			String redisRefreshToken = Objects.requireNonNull(
+				tokenRedisTemplate.opsForHash().get(oauthServerId, REDIS_REFRESH_TOKEN_KEY)).toString();
 
-		} catch (ExpiredJwtException e) {
-			return false;
+			OAuthMemberResponse oAuthMemberResponse = memberService.getAuthMember(oauthServerId, GOOGLE.name());
+
+			// 리프레시 토큰 만료 시 헤더에서 삭제
+			if (!redisRefreshToken.equals(refreshToken)) {
+				deleteHeader(response);
+				throw new TokenException(EXPIRED_REFRESH_TOKEN, HttpStatus.UNAUTHORIZED);
+			}
+
+			return TokenResponse.builder().accessToken(createToken(oAuthMemberResponse.memberId())).build();
+
+		} catch (NullPointerException e) {
+			deleteHeader(response);
+			throw new TokenException(EXPIRED_REFRESH_TOKEN, HttpStatus.UNAUTHORIZED);
 		}
-	}
-
-	// public TokenResponse reissueAccessToken(HttpServletRequest request, HttpServletResponse response) {
-	// 	try {
-	// 		String refreshToken = readRefreshToken(request);
-	// 		String oauthServerId = readMemberIdFromRefreshToken(refreshToken);
-	// 		String redisRefreshToken = Objects.requireNonNull(
-	// 			tokenRedisTemplate.opsForHash().get(oauthServerId, REDIS_REFRESH_TOKEN_KEY)).toString();
-	//
-	// 		MemberDto member = memberServiceClient.getAuthMember(new OauthId(oauthServerId, GOOGLE))
-	// 			.orElseThrow(() -> new SecurityException(MEMBER_NOT_FOUND, HttpStatus.UNAUTHORIZED));
-	//
-	// 		if (!redisRefreshToken.equals(refreshToken)) {// 리프레시 토큰 만료 시 헤더에서 삭제
-	// 			deleteHeader(response);
-	// 			throw new SecurityException(EXPIRED_REFRESH_TOKEN, HttpStatus.UNAUTHORIZED);
-	// 		}
-	//
-	// 		return TokenResponse.builder().accessToken(createToken(member)).build();
-	//
-	// 	} catch (NullPointerException e) {
-	// 		deleteHeader(response);
-	// 		throw new SecurityException(EXPIRED_REFRESH_TOKEN, HttpStatus.UNAUTHORIZED);
-	// 	}
-	// }
-
-	public Long readMemberId(String token) {
-		String memberId = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-		return Long.valueOf(memberId);
 	}
 
 	public String readMemberIdFromRefreshToken(String refreshToken) {
@@ -150,5 +130,15 @@ public class TokenService {
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
+	}
+
+	public void deleteRefreshToken(Long memberId) {
+		try {
+			HashOperations<String, Object, Object> hashOperations = tokenRedisTemplate.opsForHash();
+			hashOperations.delete(memberService.getOAuthId(memberId).oauthId(), REDIS_REFRESH_TOKEN_KEY);
+		} catch (NullPointerException e) {
+			throw new TokenException(EMPTY_TOKEN, HttpStatus.UNAUTHORIZED);
+		}
+
 	}
 }
