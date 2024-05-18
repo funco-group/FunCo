@@ -121,8 +121,8 @@ public class MemberController {
 	}
 
 	/* asset */
-	@GetMapping("/auth/{memberId}")
-	public ResponseEntity<MemberInitCashDate> getInitCashDate(@PathVariable Long memberId) {
+	@GetMapping("/asset/init-cash")
+	public ResponseEntity<MemberInitCashDate> getInitCashDate(@RequestParam Long memberId) {
 		return ResponseEntity.ok(memberService.readInitCashDate(memberId));
 	}
 }
