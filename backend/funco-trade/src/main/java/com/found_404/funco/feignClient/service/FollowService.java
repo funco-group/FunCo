@@ -22,20 +22,22 @@ public class FollowService {
 	private final FollowServiceClient followServiceClient;
 	private final String SERVER_NAME = "[follow-service]";
 
+	@Async
 	public void createFollowTrade(List<Trade> trades) {
 		callFollowTrade(trades.stream().map(FollowTradeRequest::fromTrade).toList());
 	}
 
+	@Async
 	public void createFollowTrade(Trade trade) {
 		callFollowTrade(List.of(FollowTradeRequest.fromTrade(trade)));
 	}
 
+	@Async
 	public void createFollowTrade(FutureTrade futureTrade) {
 		callFollowTradeByFutures(futureTrade);
 	}
 
-	@Async
-	public void callFollowTradeByFutures(FutureTrade futureTrade) {
+	private void callFollowTradeByFutures(FutureTrade futureTrade) {
 		try {
 			followServiceClient.callFollowTradeByFutures(futureTrade);
 		} catch (FeignException e) {
@@ -44,8 +46,7 @@ public class FollowService {
 		}
 	}
 
-	@Async
-	public void callFollowTrade(List<FollowTradeRequest> followTradeRequests) {
+	private void callFollowTrade(List<FollowTradeRequest> followTradeRequests) {
 		try {
 			followServiceClient.createFollowTrade(followTradeRequests);
 		} catch (FeignException e) {
