@@ -88,7 +88,8 @@ public class TokenService {
 			String redisRefreshToken = Objects.requireNonNull(
 				tokenRedisTemplate.opsForHash().get(oauthServerId, REDIS_REFRESH_TOKEN_KEY)).toString();
 
-			OAuthMemberResponse oAuthMemberResponse = memberService.getAuthMember(oauthServerId, GOOGLE.name());
+			OAuthMemberResponse oAuthMemberResponse = memberService.getAuthMember(GOOGLE.name().toLowerCase(),
+				oauthServerId);
 
 			// 리프레시 토큰 만료 시 헤더에서 삭제
 			if (!redisRefreshToken.equals(refreshToken)) {
