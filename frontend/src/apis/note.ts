@@ -5,14 +5,14 @@ import { AxiosResponse } from 'axios'
 
 const domain = 'notes'
 
-interface PostNotesReqBodyType {
+interface NotesReqBodyType {
   title: string
   content: string
   ticker: string
   thumbnailImage: string
 }
 
-interface PostNotesCommentBodyType {
+interface NotesCommentBodyType {
   parentCommentId?: number
   content: string
 }
@@ -25,7 +25,7 @@ export async function getNotesList(
 }
 
 export async function postNotes(
-  body: PostNotesReqBodyType,
+  body: NotesReqBodyType,
   success: (res: AxiosResponse<{ noteId: number }>) => void,
 ) {
   await localAxios.post(`/v1/${domain}`, body).then(success)
@@ -36,6 +36,18 @@ export async function getNotesDetail(
   success: (res: AxiosResponse<NoteDetailType>) => void,
 ) {
   await localAxios.get(`/v1/${domain}/${noteId}`).then(success)
+}
+
+export async function updateNotes(
+  noteId: number,
+  body: NotesReqBodyType,
+  success: () => void,
+) {
+  await localAxios.put(`/v1/${domain}/${noteId}`, body).then(success)
+}
+
+export async function deleteNotes(noteId: number, success: () => void) {
+  await localAxios.delete(`/v1/${domain}/${noteId}`).then(success)
 }
 
 export async function getCommentsData(noteId: number) {
@@ -50,15 +62,31 @@ export async function getCommentsData(noteId: number) {
 
 export async function postNotesComment(
   noteId: number,
-  body: PostNotesCommentBodyType,
+  body: NotesCommentBodyType,
   success: () => void,
 ) {
   await localAxios.post(`/v1/${domain}/${noteId}/comments`, body).then(success)
+}
+
+export async function updateComment(
+  commentId: number,
+  body: { content: string },
+  success: () => void,
+) {
+  await localAxios.put(`/v1/comments/${commentId}`, body).then(success)
+}
+
+export async function deleteComment(commentId: number, success: () => {}) {
+  await localAxios.delete(`/v1/comments/${commentId}`).then(success)
 }
 
 export async function postImage(
   formData: FormData,
   success: (res: AxiosResponse<{ url: string }>) => void,
 ) {
-  localAxios.post(`/v1/${domain}/image`, formData).then(success)
+  await localAxios.post(`/v1/${domain}/image`, formData).then(success)
+}
+
+export async function postNoteLike(noteId: number, success: () => void) {
+  await localAxios.post(`v1/${domain}/${noteId}/like`).then(success)
 }

@@ -1,4 +1,4 @@
-import { getCommentsData, postNotesComment } from '@/apis/note'
+import { getCommentsData, postNotesComment, updateComment } from '@/apis/note'
 import NoData from '@/components/Common/NoData'
 import useUserState from '@/hooks/recoilHooks/useUserState'
 import { NoteCommentType } from '@/interfaces/note/NoteCommentType'
@@ -8,6 +8,9 @@ import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 interface NotesDetailCommentInputProps {
   noteId: number
   parentCommentId: number | null
+  commentId: number | null
+  initialValue: string
+  isEdit: boolean
   setCommentList: Dispatch<SetStateAction<NoteCommentType[]>>
   setCommentCnt: Dispatch<SetStateAction<number>>
 }
@@ -15,37 +18,39 @@ interface NotesDetailCommentInputProps {
 function NotesDetailCommentInput({
   noteId,
   parentCommentId,
+  commentId,
+  initialValue,
+  isEdit,
   setCommentList,
   setCommentCnt,
 }: NotesDetailCommentInputProps) {
-  const [commentText, setCommentText] = useState('')
+  const [commentText, setCommentText] = useState(initialValue)
   const { user } = useUserState()
 
   const handleCommentChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCommentText(event.target.value)
   }
 
+  const RefreshCommentList = async () => {
+    const commentList: NoteCommentsType = await getCommentsData(noteId)
+    setCommentList(commentList.comments)
+    setCommentCnt(commentList.commentCount)
+  }
+
   const handleClickSubmitBtn = () => {
-    if (parentCommentId) {
+    if (isEdit && commentId !== null) {
+      console.log(commentText)
+      updateComment(commentId, { content: commentText }, RefreshCommentList)
+    } else if (parentCommentId) {
       postNotesComment(
         noteId,
         { parentCommentId, content: commentText },
-        async () => {
-          const commentList: NoteCommentsType = await getCommentsData(noteId)
-          console.log(commentList)
-          setCommentList(commentList.comments)
-          setCommentCnt(commentList.commentCount)
-        },
+        RefreshCommentList,
       )
     } else {
-      postNotesComment(noteId, { content: commentText }, async () => {
-        const commentList: NoteCommentsType = await getCommentsData(noteId)
-        setCommentList(commentList.comments)
-        setCommentCnt(commentList.commentCount)
-      })
-      console.log(commentText)
+      postNotesComment(noteId, { content: commentText }, RefreshCommentList)
     }
-    setCommentText('')
+    setCommentText(initialValue)
   }
 
   return (
