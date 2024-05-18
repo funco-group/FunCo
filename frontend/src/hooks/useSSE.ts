@@ -46,8 +46,6 @@ function useSSE() {
         updateUnReadNoti(newUnReadCount)
 
         toast(parsedData.message)
-        // console.log(parsedData.message);
-        // console.log(parsedData.unReadCount);
       }
 
       eventSource.onerror = (e) => {

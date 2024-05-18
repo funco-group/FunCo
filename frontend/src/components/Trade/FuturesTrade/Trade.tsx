@@ -9,7 +9,13 @@ import useLoginAlertModalState from '@/hooks/recoilHooks/useLoginAlertModalState
 import FuturesTrade from './FuturesTrade'
 import TradeList from './TradeList'
 
-const Trade = React.memo(() => {
+interface TradeProps {
+  futureId: number
+  isTrade: boolean
+  setIsTrade: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Trade = React.memo(({ futureId, isTrade, setIsTrade }: TradeProps) => {
   const tabs = ['선물거래', '거래내역']
   const [activeTab, setActiveTab] = useState<string>('선물거래')
   const user = useRecoilValue(userState)
@@ -30,7 +36,13 @@ const Trade = React.memo(() => {
         activeTab={activeTab}
         changeTab={changeTab}
       />
-      {activeTab === '선물거래' && <FuturesTrade />}
+      {activeTab === '선물거래' && (
+        <FuturesTrade
+          futureId={futureId}
+          isTrade={isTrade}
+          setIsTrade={setIsTrade}
+        />
+      )}
       {activeTab === '거래내역' && <TradeList />}
     </TradeContainer>
   )
