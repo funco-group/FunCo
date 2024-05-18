@@ -5,6 +5,7 @@ export const ModalItemDiv = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 1.5rem 0;
+  align-items: center;
 `
 
 export const TitleDiv = styled.div`
