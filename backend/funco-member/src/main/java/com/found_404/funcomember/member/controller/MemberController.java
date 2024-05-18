@@ -115,13 +115,14 @@ public class MemberController {
 		return ResponseEntity.ok(memberService.createAuthMember(OAuthMemberRequest));
 	}
 
-	@GetMapping("/auth/{memberId}")
-	public ResponseEntity<MemberInitCashDate> getInitCashDate(@PathVariable Long memberId) {
-		return ResponseEntity.ok(memberService.readInitCashDate(memberId));
-	}
-
 	@GetMapping("/auth/oauthid/{memberId}")
 	public ResponseEntity<OAuthIdResponse> getOAuthId(@PathVariable Long memberId) {
 		return ResponseEntity.ok(memberService.readOAuthId(memberId));
+	}
+
+	/* asset */
+	@GetMapping("/auth/{memberId}")
+	public ResponseEntity<MemberInitCashDate> getInitCashDate(@PathVariable Long memberId) {
+		return ResponseEntity.ok(memberService.readInitCashDate(memberId));
 	}
 }
