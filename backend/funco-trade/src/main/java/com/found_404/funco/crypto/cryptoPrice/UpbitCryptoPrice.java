@@ -2,14 +2,7 @@ package com.found_404.funco.crypto.cryptoPrice;
 
 import static com.found_404.funco.trade.exception.TradeErrorCode.*;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,11 +46,11 @@ public class UpbitCryptoPrice implements CryptoPrice {
 
         addTicker(DEFAULT_TICKER);
         // 웹소켓 연결이 끊어지지 않도록 사지지 않을 더미 거래 데이터 등록
-        listener.addTrade(TradeType.BUY, DEFAULT_TICKER, 0L, 0L);
+        listener.addTrade(TradeType.BUY, DEFAULT_TICKER, 0L, 0D);
     }
 
     @Override
-    public Map<String, Long> getTickerPriceMap(List<String> tickers) {
+    public Map<String, Double> getTickerPriceMap(List<String> tickers) {
         if (tickers.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -69,16 +62,16 @@ public class UpbitCryptoPrice implements CryptoPrice {
         CryptoJson[] cryptoJsons = httpClientUtil.parseJsonToClass(apiResponse, CryptoJson[].class)
                 .orElseThrow(() -> new TradeException(PRICE_CONNECTION_FAIL));
 
-        Map<String, Long> tickerPriceMap = new HashMap<>();
+        Map<String, Double> tickerPriceMap = new HashMap<>();
         Arrays.stream(cryptoJsons).forEach(crypto -> tickerPriceMap.put(crypto.getMarket(), crypto.getTradePrice()));
         return tickerPriceMap;
     }
 
     @Override
-    public long getTickerPrice(String ticker) {
-        long cryptoPrice = listener.getCryptoPrice(ticker);
-        if (cryptoPrice > 0) {
-            return cryptoPrice;
+    public double getTickerPrice(String ticker) {
+        Optional<Double> optionalPrice = listener.getCryptoPrice(ticker);
+        if (optionalPrice.isPresent()) {
+            return optionalPrice.get();
         }
 
         // 없을 시 api 요청
@@ -99,17 +92,9 @@ public class UpbitCryptoPrice implements CryptoPrice {
         }
     }
 
-    @Override
-    public void removeTicker(String ticker) {
-        if (markets.contains(ticker)) {
-            markets.remove(ticker);
-            updateListenerMarkets();
-        }
-    }
-
     // 감지될 예약 거래 등록
     @Override
-    public void addTrade(String ticker, Long id, TradeType tradeType, Long price) {
+    public void addTrade(String ticker, Long id, TradeType tradeType, Double price) {
         addTicker(ticker);
         listener.addTrade(tradeType, ticker, id, price);
     }

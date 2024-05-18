@@ -38,7 +38,7 @@ public class OpenTradeService {
 
     @Async
     @Transactional
-    public void processTrade(List<Long> concludingTradeIds, Long tradePrice) {
+    public void processTrade(List<Long> concludingTradeIds, Double tradePrice) {
 
         // 거래 처리할 미체결 거래 가져오기
         List<OpenTrade> openTrades = openTradeRepository.findAllByIdIn(concludingTradeIds);
@@ -72,7 +72,7 @@ public class OpenTradeService {
         StringBuilder message = new StringBuilder();
         message.append("[").append(trade.getTicker()).append("] ")
                         .append(String.format("%,f", trade.getVolume())).append("개 ")
-                        .append(String.format("%,d", trade.getPrice())).append("원 ")
+                        .append(String.format("%,f", trade.getPrice())).append("원 ")
                         .append(trade.getTradeType().getKorean()).append(" 체결 ");
         return message.toString();
     }

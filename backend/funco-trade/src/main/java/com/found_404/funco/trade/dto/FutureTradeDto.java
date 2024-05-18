@@ -13,7 +13,7 @@ public record FutureTradeDto(
     String ticker,
     TradeType tradeType,
     Long orderCash,
-    Long price,
+    Double price,
     Integer leverage,
     Long settlement,
     LocalDateTime tradeDate

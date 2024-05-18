@@ -13,7 +13,7 @@ public record ActiveFutureDto(
         String ticker,
         TradeType tradeType,
         Long orderCash,
-        Long price,
+        Double price,
         LocalDateTime tradeDate,
         Integer leverage
 ) {

@@ -10,7 +10,7 @@ public class CryptoJson {
     private String market;
     private Double trade_price;
 
-    public long getTradePrice() {
-        return trade_price.longValue();
+    public Double getTradePrice() {
+        return trade_price;
     }
 }

@@ -15,6 +15,7 @@ public class DecimalCalculator {
         RETURN_RATE_SCALE(2),   // 수익률
         CASH_SCALE(0),          // 현금
         NORMAL_SCALE(30),       // 일반적인 연산의 경우
+        PRICE_SCALE(3),   // 시세
         ;
 
         private final int scale;

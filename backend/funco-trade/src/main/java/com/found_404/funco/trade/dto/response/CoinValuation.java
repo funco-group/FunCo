@@ -5,6 +5,6 @@ import lombok.Builder;
 @Builder
 public record CoinValuation (
 	String ticker,
-	Long price,
+	Double price,
 	Long valuation) {
 }

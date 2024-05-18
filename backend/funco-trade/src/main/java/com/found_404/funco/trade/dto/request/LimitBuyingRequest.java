@@ -9,7 +9,7 @@ public record LimitBuyingRequest(
         String ticker,
         @NotNull
         @Positive
-        Long price,
+        Double price,
         @NotNull
         @Positive
         Double volume

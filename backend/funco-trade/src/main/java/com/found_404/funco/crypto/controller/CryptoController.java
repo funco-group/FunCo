@@ -21,7 +21,7 @@ public class CryptoController {
 	private final CryptoPrice cryptoPrice;
 
 	@GetMapping()
-	public ResponseEntity<Map<String, Long>> getCryptoPrice(@RequestParam List<String> tickers) {
+	public ResponseEntity<Map<String, Double>> getCryptoPrice(@RequestParam List<String> tickers) {
 		return ResponseEntity.ok(cryptoPrice.getTickerPriceMap(tickers));
 	}
 
