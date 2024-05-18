@@ -15,6 +15,7 @@ import FollowStatistics from '@/components/TradeHistory/Follow/Following/FollowS
 import FollowingUser from '@/components/TradeHistory/Follow/Following/FollowingUser'
 import SettleModal from '@/components/TradeHistory/Follow/Following/SettleModal'
 import { getTotalAsset } from '@/apis/member'
+import NoData from '@/components/Common/NoData'
 import FollowingUserListContainer from './styled'
 
 function Following() {
@@ -132,10 +133,10 @@ function Following() {
   }, [totalInvestment, totalEstimatedValue, investmentList, computedFollowings])
 
   if (isLoading) {
-    return <>Loading</>
+    return <NoData content="Loading" height={80} />
   }
   if (isNoFollowings) {
-    return <>팔로잉하고 있는 유저가 없습니다.</>
+    return <NoData content="팔로우하고 있는 유저가 없습니다." height={80} />
   }
   return (
     <div>

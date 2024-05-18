@@ -92,10 +92,10 @@ function Notes() {
 
   const getNotePreviewListDiv = () => {
     if (isLoading) {
-      return <NoData content="Loading" height={300} />
+      return <NoData content="Loading" height={80} />
     }
     if (notePreviewList.length === 0) {
-      return <NoData content="게시글이 없습니다." height={300} />
+      return <NoData content="게시글이 없습니다." height={80} />
     }
     return (
       <NotePreviewList
