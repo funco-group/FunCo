@@ -21,7 +21,7 @@ public interface TradeServiceClient {
     @GetMapping("/api/crypto")
     Map<String, Double> getCryptoPrice(@RequestParam List<String> tickers);
 
-    @GetMapping("/trade/holding/{ticker}")
+    @GetMapping("/api/trade/holding/{ticker}")
     HoldingCoinResponse getHoldingCoin(@RequestParam Long memberId, @PathVariable String ticker);
 
     @GetMapping("/api/v1/hello")
