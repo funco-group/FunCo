@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.found_404.funcomember.feignClient.dto.FollowAssetResponse;
 import com.found_404.funcomember.feignClient.dto.HoldingCoinResponse;
+import com.found_404.funcomember.feignClient.dto.MemberInitCashDate;
+import com.found_404.funcomember.feignClient.dto.OAuthIdResponse;
 import com.found_404.funcomember.feignClient.service.FollowService;
 import com.found_404.funcomember.feignClient.service.RankService;
 import com.found_404.funcomember.feignClient.service.TradeService;
@@ -79,11 +81,6 @@ public class MemberService {
 		getMember(loginMemberId).withdraw();
 	}
 
-	private Member getMember(Long memberId) {
-		return memberRepository.findById(memberId)
-			.orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-	}
-
 	@Transactional
 	public void updateCash(Long memberId, Long updateCash) {
 		Member member = getMember(memberId);
@@ -112,6 +109,14 @@ public class MemberService {
 		return OAuthMemberResponse.from(member);
 	}
 
+	public MemberInitCashDate readInitCashDate(Long memberId) {
+		return new MemberInitCashDate(getMember(memberId).getInitCashDate());
+	}
+
+	public OAuthIdResponse readOAuthId(Long memberId) {
+		return new OAuthIdResponse(getMember(memberId).getOauthId().getOauthServerId());
+	}
+
 	/*
 	 * 	총자산 : 현금 + 코인 + 미체결 금액 + 팔로우 투자금 + ?(선물투자금)
 	 * */
@@ -136,5 +141,10 @@ public class MemberService {
 				.profileUrl(member.getProfileUrl())
 				.build())
 			.toList();
+	}
+
+	private Member getMember(Long memberId) {
+		return memberRepository.findById(memberId)
+			.orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
 	}
 }
