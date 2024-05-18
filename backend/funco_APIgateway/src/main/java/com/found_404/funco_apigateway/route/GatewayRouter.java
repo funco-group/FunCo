@@ -33,29 +33,29 @@ public class GatewayRouter {
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes()
-				.route(r -> r.path("/api/v1/auth/*/signin").uri(EUREKA_AUTH))
-				.route(r -> r.path("/api/v1/rank/**").uri(EUREKA_RANK))
+			.route(r -> r.path("/api/v1/auth/*/signin").uri(EUREKA_AUTH))
+			.route(r -> r.path("/api/v1/rank/**").uri(EUREKA_RANK))
 
-				.route(r -> getJwtFilterRoute(r, "/api/v1/members/**", EUREKA_MEMBER))
-				.route(r -> r.path("/api/v2/members/**")
-						.filters(f -> f.filter(jwtAuthentication.apply(FALSE))).uri(EUREKA_MEMBER))
-				.route(r -> getJwtFilterRoute(r, "/api/v1/crypto/favorite/**", EUREKA_MEMBER))
+			.route(r -> getJwtFilterRoute(r, "/api/v1/members/**", EUREKA_MEMBER))
+			.route(r -> r.path("/api/v2/members/**")
+				.filters(f -> f.filter(jwtAuthentication.apply(FALSE))).uri(EUREKA_MEMBER))
+			.route(r -> getJwtFilterRoute(r, "/api/v1/crypto/favorite/**", EUREKA_MEMBER))
 
-				.route(r -> getJwtFilterRoute(r, "/api/v1/trade/**", EUREKA_TRADE))
-				.route(r -> getJwtFilterRoute(r, "/api/v1/follows/**", EUREKA_FOLLOW))
-				.route(r -> getJwtFilterRoute(r, "/api/v1/notifications/**", EUREKA_NOTIFICATION))
-				.route(r -> getJwtFilterRoute(r, "/api/v1/comments/**", EUREKA_NOTE))
-				.route(r -> getJwtFilterRoute(r, "/api/v1/assets/**", EUREKA_ASSET))
+			.route(r -> getJwtFilterRoute(r, "/api/v1/trade/**", EUREKA_TRADE))
+			.route(r -> getJwtFilterRoute(r, "/api/v1/follows/**", EUREKA_FOLLOW))
+			.route(r -> getJwtFilterRoute(r, "/api/v1/notifications/**", EUREKA_NOTIFICATION))
+			.route(r -> getJwtFilterRoute(r, "/api/v1/comments/**", EUREKA_NOTE))
+			.route(r -> getJwtFilterRoute(r, "/api/v1/asset/**", EUREKA_ASSET))
 
-				.route(r -> r.path("/api/v1/notes/**").and()
-						.method(HttpMethod.GET).filters(f -> f.filter(jwtAuthentication.apply(FALSE))).uri(EUREKA_NOTE))
+			.route(r -> r.path("/api/v1/notes/**").and()
+				.method(HttpMethod.GET).filters(f -> f.filter(jwtAuthentication.apply(FALSE))).uri(EUREKA_NOTE))
 
-				.route(r -> r.path("/api/v1/notes/**").and()
-						.method(HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)
-						.filters(f -> f.filter(jwtAuthentication.apply())).uri(EUREKA_NOTE))
+			.route(r -> r.path("/api/v1/notes/**").and()
+				.method(HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)
+				.filters(f -> f.filter(jwtAuthentication.apply())).uri(EUREKA_NOTE))
 
-				.route(r -> getJwtFilterRoute(r, "/api/v1/statistics/**", EUREKA_STATISTICS))
-				.build();
+			.route(r -> getJwtFilterRoute(r, "/api/v1/statistics/**", EUREKA_STATISTICS))
+			.build();
 	}
 
 	private Buildable<Route> getJwtFilterRoute(PredicateSpec r, String x, String url) {
