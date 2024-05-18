@@ -49,7 +49,7 @@ const Position = React.memo(
     }
 
     useEffect(() => {
-      if (isTrade && trade && coin) {
+      if (isTrade && trade && coin !== null) {
         let priceChange
         let profit
         if (trade.tradeType === 'LONG') {

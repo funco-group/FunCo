@@ -4,7 +4,6 @@ import PriceWindow from '@/components/Common/PriceWindow/PriceWindow'
 import Chart from '@/components/Trade/Chart'
 import OrderBook from '@/components/Trade/SpotTrade/OrderBook'
 import Trade from '@/components/Trade/SpotTrade/Trade'
-import WideLayout from '@/components/layout/WideLayout'
 import {
   BottomContainer,
   CryptoPageContainer,
@@ -24,18 +23,16 @@ function SpotTrade() {
   )
 
   return (
-    <WideLayout>
-      <CryptoPageContainer>
-        <div>
-          <Chart coin={priceList.find((price) => price.code === coinCode)!} />
-          <BottomContainer>
-            <OrderBook />
-            <Trade />
-          </BottomContainer>
-        </div>
-        <PriceWindow priceList={priceList} setPriceList={setPriceList} />
-      </CryptoPageContainer>
-    </WideLayout>
+    <CryptoPageContainer>
+      <div>
+        <Chart coin={priceList.find((price) => price.code === coinCode)!} />
+        <BottomContainer>
+          <OrderBook />
+          <Trade />
+        </BottomContainer>
+      </div>
+      <PriceWindow priceList={priceList} setPriceList={setPriceList} />
+    </CryptoPageContainer>
   )
 }
 

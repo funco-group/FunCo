@@ -1,7 +1,9 @@
 'use client'
 
+import WideLayout from '@/components/layout/WideLayout'
+
 function TradeLayout({ children }: { children: React.ReactNode }) {
-  return { children }
+  return <WideLayout>{children}</WideLayout>
 }
 
 export default TradeLayout
