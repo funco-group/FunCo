@@ -4,8 +4,8 @@ import lombok.Builder;
 
 @Builder
 public record HoldingCoinInfo(
-        String ticker,
-        Double volume,
-        Long averagePrice
+	String ticker,
+	Double volume,
+	Double averagePrice
 ) {
 }

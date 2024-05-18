@@ -16,8 +16,9 @@ import com.found_404.funco.asset.domain.repository.AssetHistoryRepository;
 import com.found_404.funco.asset.domain.type.AssetType;
 import com.found_404.funco.asset.domain.type.PeriodType;
 import com.found_404.funco.asset.domain.type.TradeType;
+import com.found_404.funco.asset.dto.ActiveFutureInfo;
+import com.found_404.funco.asset.dto.HoldingCoinInfo;
 import com.found_404.funco.asset.dto.response.AssetHistoryResponse;
-import com.found_404.funco.asset.dto.response.CryptoResponse;
 import com.found_404.funco.asset.dto.response.TotalAssetResponse;
 import com.found_404.funco.asset.exception.AssetException;
 import com.found_404.funco.feignClient.service.FollowService;
@@ -41,53 +42,25 @@ public class AssetService {
 	 * 이외는 동일
 	 * */
 	public TotalAssetResponse getMemberTotalAsset(Long memberId) {
-		//
-		// Member member = findByMemberId(memberId);
-		//
-		// // 가용 현금
-		// Long memberCash = member.getCash();
-		//
-		// // 해당 멤버가 팔로우 중인 총 초기 투자 금액
-		// List<Follow> follows = followRepository.findAllByFollowerAndSettledFalse(member);
-		// Long memberFollwingInvestment = follows.stream()
-		// 	.mapToLong(Follow::getInvestment)
-		// 	.sum();
-		//
-		// // 해당 멤버가 보유 중인 코인
-		// // HoldingCoinInfo에 담아서 응답으로 컨트롤러에 넘겨줌
-		// List<HoldingCoin> holdingCoins = holdingCoinRepository.findHoldingCoinByMember(member);
-		// List<HoldingCoinInfo> memberHoldingCoinInfos = holdingCoins.stream()
-		// 	.map(holdingCoin -> new HoldingCoinInfo(
-		// 		holdingCoin.getTicker(),
-		// 		holdingCoin.getVolume(),
-		// 		holdingCoin.getAveragePrice()
-		// 	))
-		// 	.toList();
-		//
-		// // 해당 멤버가 보유 중인 선물 거래
-		// List<ActiveFuture> activeFutures = activeFutureRepository.findActiveFutureByMember(member);
-		// List<ActiveFutureInfo> memberActiveFutureInfos = activeFutures.stream()
-		// 	.map(activeFuture -> new ActiveFutureInfo(
-		// 		activeFuture.getTicker(),
-		// 		activeFuture.getTradeType(),
-		// 		activeFuture.getOrderCash(),
-		// 		activeFuture.getPrice(),
-		// 		activeFuture.getLeverage()
-		// 	))
-		// 	.toList();
+
+		// 가용 현금
+		Long memberCash = memberService.getCash(memberId).cash();
+
+		// 해당 멤버가 팔로우 중인 총 초기 투자 금액
+		Long memberFollowingInvestment = followService.getFollowingInvestment(memberId).investments();
+
+		// 해당 멤버가 보유 중인 코인
+		List<HoldingCoinInfo> memberHoldingCoinInfos = tradeService.getAssetHoldingCoin(memberId);
+
+		// 해당 멤버가 보유 중인 선물 거래
+		List<ActiveFutureInfo> memberActiveFutureInfos = tradeService.getAssetFuture(memberId);
 
 		return TotalAssetResponse.builder()
-			// .cash(memberCash)
-			// .followingInvestment(memberFollwingInvestment)
-			// .holdingCoinInfos(memberHoldingCoinInfos)
-			// .activeFutureInfos(memberActiveFutureInfos)
+			.cash(memberCash)
+			.followingInvestment(memberFollowingInvestment)
+			.holdingCoinInfos(memberHoldingCoinInfos)
+			.activeFutureInfos(memberActiveFutureInfos)
 			.build();
-	}
-
-	public CryptoResponse getCrypto(Long member, String ticker) {
-		// Optional<HoldingCoin> optionalHoldingCoin = holdingCoinRepository.findByMemberAndTicker(member, ticker);
-		// return new CryptoResponse(optionalHoldingCoin.isPresent() ? optionalHoldingCoin.get().getVolume() : 0);
-		return null;
 	}
 
 	public List<? extends AssetHistoryResponse> getMemberHistory(Long memberId, PeriodType period, AssetType asset,

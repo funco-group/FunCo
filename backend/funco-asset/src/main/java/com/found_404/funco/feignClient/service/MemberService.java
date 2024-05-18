@@ -4,6 +4,7 @@ import static com.found_404.funco.asset.exception.AssetErrorCode.*;
 
 import org.springframework.stereotype.Service;
 
+import com.found_404.funco.asset.dto.response.CashResponse;
 import com.found_404.funco.asset.exception.AssetException;
 import com.found_404.funco.feignClient.client.MemberServiceClient;
 import com.found_404.funco.feignClient.dto.MemberInitCashDate;
@@ -33,6 +34,15 @@ public class MemberService {
 			memberServiceClient.modifyCashAndInitCashDate(memberId);
 		} catch (FeignException e) {
 			log.error("{} Modify Cash And Init Cash Date error : {}", SERVER_NAME, e.getMessage());
+			throw new AssetException(MEMBER_SERVER_ERROR);
+		}
+	}
+
+	public CashResponse getCash(Long memberId) {
+		try {
+			return memberServiceClient.getCash(memberId);
+		} catch (FeignException e) {
+			log.error("{} Get Cash error : {}", SERVER_NAME, e.getMessage());
 			throw new AssetException(MEMBER_SERVER_ERROR);
 		}
 	}
