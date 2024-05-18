@@ -153,9 +153,11 @@ public class NoteService {
 
 
     public void removeNote(Long memberId, Long noteId) {
-        Note note = getNote(noteId);
-        checkAuthorization(memberId, note);
-        noteRepository.delete(note);
+        checkAuthorization(memberId, getNote(noteId));
+
+        if (!noteRepository.deleteNoteWithComments(noteId)) {
+            throw new NoteException(DELETE_FAIL);
+        }
     }
 
     private static void checkAuthorization(Long memberId, Note note) {
