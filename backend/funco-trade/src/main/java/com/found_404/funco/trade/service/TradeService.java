@@ -1,7 +1,7 @@
 package com.found_404.funco.trade.service;
 
-import static com.found_404.funco.global.util.DecimalCalculator.*;
 import static com.found_404.funco.global.util.DecimalCalculator.ScaleType.*;
+import static com.found_404.funco.global.util.DecimalCalculator.*;
 import static com.found_404.funco.trade.exception.TradeErrorCode.*;
 
 import java.util.List;
@@ -9,14 +9,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.found_404.funco.feignClient.service.FollowService;
-import com.found_404.funco.feignClient.service.MemberService;
-import com.found_404.funco.global.util.CommissionUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.found_404.funco.crypto.cryptoPrice.CryptoPrice;
+import com.found_404.funco.feignClient.service.FollowService;
+import com.found_404.funco.feignClient.service.MemberService;
+import com.found_404.funco.global.util.CommissionUtil;
 import com.found_404.funco.trade.domain.HoldingCoin;
 import com.found_404.funco.trade.domain.OpenTrade;
 import com.found_404.funco.trade.domain.Trade;
@@ -160,9 +160,9 @@ public class TradeService {
 
 	public List<OtherTradeDto> getOtherOrders(Long memberId, Pageable pageable) {
 		return tradeRepository.findMyTradeHistoryByTicker(memberId, null, pageable)
-				.stream()
-				.map(OtherTradeDto::fromEntity)
-				.collect(Collectors.toList());
+			.stream()
+			.map(OtherTradeDto::fromEntity)
+			.collect(Collectors.toList());
 	}
 
 	public List<OpenTradeDto> getOpenOrders(Long memberId, String ticker, Pageable pageable) {
@@ -265,7 +265,6 @@ public class TradeService {
 			.build();
 	}
 
-
 	// 미체결 + 코인총합
 	@Transactional(readOnly = true)
 	public CoinValuationResponse getCoinValuations(Long memberId) {
@@ -278,7 +277,7 @@ public class TradeService {
 		List<CoinValuation> coinValuations = holdingCoins.stream()
 			.map(holdingCoin -> CoinValuation.builder()
 				.valuation((long)multiple(tickerPriceMap.get(holdingCoin.getTicker()), holdingCoin.getVolume(),
-				CASH_SCALE))
+					CASH_SCALE))
 				.ticker(holdingCoin.getTicker())
 				.price(tickerPriceMap.get(holdingCoin.getTicker()))
 				.build())
@@ -313,5 +312,23 @@ public class TradeService {
 
 	public List<RecentTradedCoin> getRecentTradedCoins(Long memberId) {
 		return tradeRepository.findRecentTradedCoinByMemberId(memberId);
+	}
+
+	@Transactional
+	public void removeCoins(Long memberId) {
+		// 보유 중인 코인 조회
+		List<HoldingCoin> holdingCoins = holdingCoinRepository.findByMemberId(memberId);
+
+		// 모든 보유 중인 코인 삭제
+		holdingCoinRepository.deleteAll(holdingCoins);
+
+		// 지정가 거래 조회
+		List<OpenTrade> openTrades = openTradeRepository.findAllByMemberId(memberId);
+
+		// 모든 지정가 거래 삭제
+		openTradeRepository.deleteAll(openTrades);
+
+		/* 선물 거래 삭제 로직 */
+		
 	}
 }
