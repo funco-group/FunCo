@@ -180,7 +180,7 @@ public class FollowService {
 		List<FollowingCoin> followingCoins = followingCoinRepository.findFollowingCoinsByFollow(follow);
 
 		// [API select] 팔로잉 코인들의 현재 시세
-		Map<String, Long> cryptoPrice = tradeService.getCryptoPrice(
+		Map<String, Double> cryptoPrice = tradeService.getCryptoPrice(
 				followingCoins.stream()
 				.map(FollowingCoin::getTicker)
 				.toList());

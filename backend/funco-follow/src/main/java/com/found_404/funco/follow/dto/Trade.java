@@ -9,6 +9,6 @@ public record Trade(
 	TradeType tradeType,
 	Double volume,
 	Long orderCash,
-	Long price
+	Double price
 ) {
 }

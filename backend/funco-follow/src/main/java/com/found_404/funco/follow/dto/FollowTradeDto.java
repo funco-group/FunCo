@@ -15,7 +15,7 @@ public record FollowTradeDto(
         TradeType tradeType,
         Double volume,
         Long orderCash,
-        Long price,
+        Double price,
         LocalDateTime tradeDate
 ) {
 

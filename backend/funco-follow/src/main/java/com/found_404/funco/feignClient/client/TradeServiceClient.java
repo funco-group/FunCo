@@ -19,7 +19,7 @@ public interface TradeServiceClient {
     CoinValuationResponse getCoinValuations(@RequestParam Long memberId);
 
     @GetMapping("/api/crypto")
-    Map<String, Long> getCryptoPrice(@RequestParam List<String> tickers);
+    Map<String, Double> getCryptoPrice(@RequestParam List<String> tickers);
 
     @GetMapping("/trade/holding/{ticker}")
     HoldingCoinResponse getHoldingCoin(@RequestParam Long memberId, @PathVariable String ticker);

@@ -36,19 +36,19 @@ public class FollowingCoin extends BaseEntity {
 
 	@Comment("평균단가")
 	@Column(nullable = false)
-	private Long averagePrice;
+	private Double averagePrice;
 
 	@Builder
-	public FollowingCoin(Follow follow, String ticker, Double volume, Long averagePrice) {
+	public FollowingCoin(Follow follow, String ticker, Double volume, Double averagePrice) {
 		this.follow = follow;
 		this.ticker = ticker;
 		this.volume = volume;
 		this.averagePrice = averagePrice;
 	}
 
-	public void increaseVolume(double volume, Long price) {
-		this.averagePrice = (long) divide((multiple(this.volume, this.averagePrice, NORMAL_SCALE) + multiple(volume, price, NORMAL_SCALE))
-				, plus(volume, this.volume, VOLUME_SCALE), NORMAL_SCALE);
+	public void increaseVolume(double volume, Double price) {
+		this.averagePrice = divide((multiple(this.volume, this.averagePrice, NORMAL_SCALE) + multiple(volume, price, NORMAL_SCALE))
+				, plus(volume, this.volume, VOLUME_SCALE), PRICE_SCALE);
 		this.volume += CommissionUtil.getVolumeWithoutCommission(volume);
 	}
 
