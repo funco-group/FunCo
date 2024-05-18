@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface ActiveFutureRepository extends JpaRepository<ActiveFuture, Long>, QueryDslFuturesRepository {
+public interface ActiveFutureRepository extends JpaRepository<ActiveFuture, Long> {
     Optional<ActiveFuture> findByMemberIdAndTicker(Long memberId, String ticker);
 
     List<ActiveFuture> findAllByIdIn(Collection<Long> id);
