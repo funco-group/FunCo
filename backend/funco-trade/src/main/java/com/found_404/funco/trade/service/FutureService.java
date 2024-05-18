@@ -53,9 +53,8 @@ public class FutureService {
         memberService.updateMemberCash(memberId, -requestBuyFutures.orderCash());
     }
 
-    private static long getDifference(ActiveFuture activeFuture) {
-        double rate = divide(activeFuture.getLeverage(), 100, NORMAL_SCALE);
-        return (long) multiple(activeFuture.getPrice(), rate, CASH_SCALE);
+    private static double getDifference(ActiveFuture activeFuture) {
+        return divide(activeFuture.getLeverage(), 100, NORMAL_SCALE);
     }
 
     private void checkExistFutures(Long memberId, RequestBuyFutures requestBuyFutures) {
