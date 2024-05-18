@@ -38,7 +38,7 @@ public class FollowTradeService {
 
     @Async
     public void followTrade(Trade trade) {
-        List<Follow> followerList = followRepository.findAllByFollowerMemberIdAndSettledFalse(trade.memberId());
+        List<Follow> followerList = followRepository.findAllByFollowingMemberIdAndSettledFalse(trade.memberId());
 
         followTradeRepository.saveAll(followerList.stream()
                 .map(follow -> getFollowTrade(trade, follow))
