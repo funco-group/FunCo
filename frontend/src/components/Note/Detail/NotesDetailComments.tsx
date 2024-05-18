@@ -31,6 +31,9 @@ function NotesDetailComments({
           <NotesDetailCommentInput
             noteId={noteId}
             parentCommentId={null}
+            commentId={null}
+            initialValue=""
+            isEdit={false}
             setCommentList={setCommentList}
             setCommentCnt={setCommentCnt}
           />

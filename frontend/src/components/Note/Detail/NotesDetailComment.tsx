@@ -24,6 +24,7 @@ function NotesDetailComment({
   isParent,
 }: NotesDetailCommentProps) {
   const [openReply, setOpenReply] = useState(false)
+  const [openUpdate, setOpenUpdate] = useState(false)
   const router = useRouter()
 
   const { user } = useUserState()
@@ -34,6 +35,7 @@ function NotesDetailComment({
 
   const handleUpdateComment = () => {
     console.log('mod comment')
+    setOpenUpdate((prev) => !prev)
   }
 
   const handleDeleteComment = () => {
@@ -48,7 +50,11 @@ function NotesDetailComment({
     if (openReply) {
       setOpenReply(false)
     }
+    if (openUpdate) {
+      setOpenUpdate(false)
+    }
   }, [commentList])
+
   return (
     <div>
       <div className="mt-3 box-border flex gap-3 ">
@@ -72,16 +78,29 @@ function NotesDetailComment({
               </div>
             </div>
           </div>
-          <div className="w-fit rounded border-none bg-brandColor2 p-4">
-            {commentData.content}
-          </div>
+          {openUpdate ? (
+            <NotesDetailCommentInput
+              noteId={noteId}
+              parentCommentId={isParent ? null : commentData.commentId}
+              commentId={commentData.commentId}
+              initialValue={commentData.content}
+              isEdit
+              setCommentCnt={setCommentCnt}
+              setCommentList={setCommentList}
+            />
+          ) : (
+            <div className="w-fit rounded border-none bg-brandColor2 p-4">
+              {commentData.content}
+            </div>
+          )}
+
           <div
             className={`ml-1 mt-1 flex select-none gap-1 text-brandDarkGray ${openReply && 'mb-1'}`}
           >
             {user?.memberId === commentData.member.id ? (
               <div className="flex gap-1">
                 <span className="cursor-pointer" onClick={handleUpdateComment}>
-                  수정
+                  {openUpdate ? '닫기' : '수정'}
                 </span>
                 <span className="cursor-pointer" onClick={handleDeleteComment}>
                   삭제
@@ -98,6 +117,9 @@ function NotesDetailComment({
             <NotesDetailCommentInput
               noteId={noteId}
               parentCommentId={commentData.commentId}
+              commentId={null}
+              initialValue=""
+              isEdit={false}
               setCommentList={setCommentList}
               setCommentCnt={setCommentCnt}
             />
