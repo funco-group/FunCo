@@ -33,6 +33,7 @@ public class NoteCommentService {
         }
     }
 
+    @Transactional
     public void removeComment(Long memberId, Long commentId) {
         NoteComment comment = noteCommentRepository.findById(commentId).orElseThrow(() -> new NoteCommentException(NOT_FOUND_NOTE_COMMENT));
         checkAuthorization(memberId, comment);
