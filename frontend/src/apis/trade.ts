@@ -183,7 +183,7 @@ export async function getActiveFutures(
 }
 export async function futuresHistory(
   ticker: string,
-  success: (response: AxiosResponse<FuturesType>) => void,
+  success: (response: AxiosResponse<FuturesType[]>) => void,
 ) {
   await localAxios.get(`/v1/${domain}/futures?ticker=${ticker}`).then(success)
 }

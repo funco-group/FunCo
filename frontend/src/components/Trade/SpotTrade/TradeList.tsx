@@ -106,7 +106,7 @@ function TradeList() {
           $column={
             selected === '체결'
               ? '6rem 6rem 9rem 8rem'
-              : '5.5rem 6rem 7.2rem 7.1rem 3.5rem'
+              : '5.8rem 5.7rem 7.2rem 7.1rem 3.5rem'
           }
         >
           {selected === '체결' ? (
