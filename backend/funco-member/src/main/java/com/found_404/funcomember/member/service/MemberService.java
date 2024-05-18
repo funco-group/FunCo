@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.found_404.funcomember.feignClient.dto.FollowAssetResponse;
 import com.found_404.funcomember.feignClient.dto.HoldingCoinResponse;
 import com.found_404.funcomember.feignClient.service.FollowService;
 import com.found_404.funcomember.feignClient.service.RankService;
@@ -42,6 +43,7 @@ public class MemberService {
 	public MyInfoResponse getMyPage(Long memberId) {
 		List<HoldingCoinResponse> holdingCoinResponses = tradeService.getHoldingCoinInfos(memberId); // 보유 코인 정보
 		MemberInfo memberInfo = memberRepository.findMyInfoByMemberId(memberId);
+		FollowAssetResponse followAssetResponse = followService.getFollowAsset(memberId);
 
 		return MyInfoResponse.builder()
 			.memberId(memberId)
@@ -55,8 +57,8 @@ public class MemberService {
 				.coins(holdingCoinResponses)
 				.build())
 			.topCoins(tradeService.getRecentTradedCoins(memberId))
-			.followerCash(followService.getFollowAsset(memberId).followerCash())
-			.followingCash(followService.getFollowAsset(memberId).followingCash())
+			.followerCash(followAssetResponse.followerCash())
+			.followingCash(followAssetResponse.followingCash())
 			.portfolioPrice(memberInfo.portfolioPrice())
 			.portfolioStatus(memberInfo.portfolioStatus())
 			.build();
