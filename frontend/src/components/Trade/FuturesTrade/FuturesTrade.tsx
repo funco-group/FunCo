@@ -159,6 +159,7 @@ function FuturesTrade({ futureId, isTrade, setIsTrade }: FuturesTradeProps) {
                 type="range"
                 value={leverage}
                 min={1}
+                max={200}
                 onChange={(e) => {
                   setLeverage(e.target.valueAsNumber)
                 }}
