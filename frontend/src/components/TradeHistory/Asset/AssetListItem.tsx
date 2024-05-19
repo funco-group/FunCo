@@ -51,7 +51,7 @@ function AssetListItem({
             )}
           </ListItemDiv>
           <ListItemDiv
-            $align={evaluationProfit ? 'right' : ''}
+            $align={evaluationProfit !== null ? 'right' : ''}
             color={determineColor(evaluationProfit)}
           >
             {evaluationProfit === null ? '-' : evaluationProfit}
