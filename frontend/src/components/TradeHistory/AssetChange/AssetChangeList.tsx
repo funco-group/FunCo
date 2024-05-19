@@ -5,17 +5,17 @@ import {
   ColumnGrid,
   ColumnTitleDiv,
 } from '@/styles/CommonStyled'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { AssetHistoryType } from '@/interfaces/AssetType'
 import { AxiosResponse } from 'axios'
 import { getHistory } from '@/apis/asset'
+import { AssetTabType } from '@/interfaces/tradeHistory/follow/AssetChangeType'
 import {
   AssetChangeListContainer,
-  HistoryListContainer,
+  // HistoryListContainer,
 } from './AssetChangeList.styled'
-import AssetChangeListItem from './AssetChangeListItem'
+// import AssetChangeListItem from './AssetChangeListItem'
 import { AssetChangeListItemContainer } from './AssetChangeListItem.styled'
-import { AssetTabType } from '@/interfaces/tradeHistory/follow/AssetChangeType'
 
 interface AssetChangeListProps {
   periodTab: AssetTabType[]
@@ -34,7 +34,7 @@ function AssetChangeList({
   tradeActive,
   assetActive,
 }: AssetChangeListProps) {
-  const [historyList, setHistoryList] = useState<AssetHistoryType[]>([])
+  // const [historyList, setHistoryList] = useState<AssetHistoryType[]>([])
   const columns = [
     '체결시간',
     '보유자산',

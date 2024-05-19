@@ -54,6 +54,7 @@ function PortfolioAsset({ memberId }: PortfolioAssetProps) {
     setAssets([
       {
         imgSrc: '/icon/cash-icon.png',
+        type: 'cash',
         name: '현금',
         volume: null,
         averagePrice: null,
@@ -63,6 +64,7 @@ function PortfolioAsset({ memberId }: PortfolioAssetProps) {
       },
       {
         imgSrc: '/icon/follow-icon.png',
+        type: 'follow',
         name: '팔로우',
         volume: null,
         averagePrice: null,
@@ -80,6 +82,7 @@ function PortfolioAsset({ memberId }: PortfolioAssetProps) {
         ...asset,
         {
           imgSrc: `https://static.upbit.com/logos/${coin.ticker.split('-')[1]}.png`,
+          type: 'coin',
           name: coin.ticker,
           volume: coin.volume,
           averagePrice: coin.averagePrice,
@@ -92,16 +95,24 @@ function PortfolioAsset({ memberId }: PortfolioAssetProps) {
     })
 
     assetsRes.activeFutureInfos.forEach((coin) => {
+      let rate =
+        ((curPrice.get(coin.ticker)! - coin.price) / coin.price) * coin.leverage
+      if (coin.tradeType === 'SHORT') {
+        rate = -rate
+      }
+      const evaluationAmount = coin.orderCash * rate + coin.orderCash
+
       setAssets((asset) => [
         ...asset,
         {
           imgSrc: `https://static.upbit.com/logos/${coin.ticker.split('-')[1]}.png`,
-          name: `${coin.ticker} (${coin.tradeType})`,
+          type: coin.tradeType,
+          name: coin.ticker,
           volume: null,
           averagePrice: coin.price,
-          price: `${coin.orderCash} (X ${coin.leverage})`,
-          evaluationAmount: null,
-          evaluationProfit: null,
+          price: coin.orderCash,
+          evaluationAmount: Math.ceil(evaluationAmount),
+          evaluationProfit: Math.ceil(rate * 10000) / 100,
         },
       ])
     })
@@ -115,7 +126,18 @@ function PortfolioAsset({ memberId }: PortfolioAssetProps) {
           (acc, coin) =>
             acc + Math.floor(coin.volume * curPrice.get(coin.ticker)!),
           0,
-        ),
+        ) +
+          assetsRes.activeFutureInfos.reduce((acc, coin) => {
+            let rate =
+              ((curPrice.get(coin.ticker)! - coin.price) / coin.price) *
+              coin.leverage
+            if (coin.tradeType === 'SHORT') {
+              rate = -rate
+            }
+            const evaluationAmount = coin.orderCash * rate + coin.orderCash
+
+            return acc + evaluationAmount
+          }, 0),
       ],
     ])
   }
