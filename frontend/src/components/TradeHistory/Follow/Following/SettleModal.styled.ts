@@ -57,7 +57,7 @@ export const SettleModalContentRowDiv = styled.div`
 `
 
 export const SettleModalContentButtonRowDiv = styled.div`
-  padding: 1rem 0;
+  padding-top: 1rem;
   display: flex;
   justify-content: end;
   gap: 0.625rem;
