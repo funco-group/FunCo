@@ -23,7 +23,7 @@ function HistoryLayout({ children }: { children: React.ReactNode }) {
             <HistoryTab />
             {children}
           </TradeHistoryPageContainer>
-          {/* <PriceWindow priceList={priceList} setPriceList={setPriceList} /> */}
+          <PriceWindow priceList={priceList} setPriceList={setPriceList} />
         </CryptoPageContainer>
       </WideLayout>
     </div>
