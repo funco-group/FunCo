@@ -357,4 +357,14 @@ public class TradeService {
 				.build())
 			.toList();
 	}
+
+	public int loadOpenTrades() {
+		List<OpenTrade> openTrades = openTradeRepository.findAll();
+
+		for (OpenTrade openTrade : openTrades) {
+			cryptoPrice.addTrade(openTrade.getTicker(), openTrade.getId(), openTrade.getTradeType(), openTrade.getPrice());
+		}
+
+		return openTrades.size();
+	}
 }

@@ -44,14 +44,18 @@ public class ActiveFuture extends BaseEntity {
 	@Column(nullable = false)
 	private Integer leverage;
 
+	@Comment("청산 가격")
+	private Double liquidatedPrice;
+
 	@Builder
 	public ActiveFuture(Long memberId, String ticker, TradeType tradeType, Long orderCash, Double price,
-		Integer leverage) {
+		Integer leverage, Double liquidatedPrice) {
 		this.memberId = memberId;
 		this.ticker = ticker;
 		this.tradeType = tradeType;
 		this.orderCash = orderCash;
 		this.price = price;
 		this.leverage = leverage;
+		this.liquidatedPrice = liquidatedPrice;
 	}
 }

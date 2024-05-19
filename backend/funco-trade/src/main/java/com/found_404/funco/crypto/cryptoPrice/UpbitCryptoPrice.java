@@ -37,7 +37,6 @@ public class UpbitCryptoPrice implements CryptoPrice {
         this.listener = listener;
         this.httpClientUtil = httpClientUtil;
 
-
         connectWebSocket();
     }
 

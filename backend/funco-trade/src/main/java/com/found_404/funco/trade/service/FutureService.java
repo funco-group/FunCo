@@ -46,17 +46,16 @@ public class FutureService {
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, TradeType.LONG, requestBuyFutures));
 
         // 배율
-        double liquidatedPrice = activeFuture.getPrice() - getDifference(activeFuture);
         
-        log.info("[Long] member:{} {} 가격 {} 아래로 청산됩니다.", memberId, activeFuture.getTicker(), liquidatedPrice);
-        cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.LONG, liquidatedPrice);
+        log.info("[Long] member:{} {} 가격 {} 아래로 청산됩니다.", memberId, activeFuture.getTicker(), activeFuture.getLiquidatedPrice());
+        cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.LONG, activeFuture.getLiquidatedPrice());
 
         // [API UPDATE] 멤버 자산 감소
         memberService.updateMemberCash(memberId, -requestBuyFutures.orderCash());
     }
 
-    private static double getDifference(ActiveFuture activeFuture) {
-        return multiple(activeFuture.getPrice(), divide(1, activeFuture.getLeverage(), NORMAL_SCALE), NORMAL_SCALE);
+    private static double getDifference(Double price, Integer leverage) {
+        return multiple(price, divide(1, leverage, NORMAL_SCALE), NORMAL_SCALE);
     }
 
     private void checkExistFutures(Long memberId, RequestBuyFutures requestBuyFutures) {
@@ -73,23 +72,26 @@ public class FutureService {
 
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, SHORT, requestBuyFutures));
 
-        // 배율
-        double liquidatedPrice = activeFuture.getPrice() + getDifference(activeFuture);
-        log.info("[Short] member:{} {} 가격 {} 위로 청산됩니다.", memberId, activeFuture.getTicker(), liquidatedPrice);
-        cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), SHORT, liquidatedPrice);
+        log.info("[Short] member:{} {} 가격 {} 위로 청산됩니다.", memberId, activeFuture.getTicker(), activeFuture.getLiquidatedPrice());
+
+        cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), SHORT, activeFuture.getLiquidatedPrice());
 
         // [API UPDATE] 멤버 자산 감소
         memberService.updateMemberCash(memberId, -requestBuyFutures.orderCash());
     }
 
     private ActiveFuture getActiveFuture(Long memberId, TradeType tradeType, RequestBuyFutures requestBuyFutures) {
+        double tickerPrice = cryptoPrice.getTickerPrice(requestBuyFutures.ticker());
+        double liquidatedPrice = tickerPrice - getDifference(tickerPrice, requestBuyFutures.leverage());
+
         return ActiveFuture.builder()
                 .ticker(requestBuyFutures.ticker())
                 .tradeType(tradeType)
                 .orderCash(requestBuyFutures.orderCash())
                 .memberId(memberId)
                 .leverage(requestBuyFutures.leverage())
-                .price(cryptoPrice.getTickerPrice(requestBuyFutures.ticker()))
+                .price(tickerPrice)
+                .liquidatedPrice(liquidatedPrice)
                 .build();
     }
 
@@ -131,5 +133,15 @@ public class FutureService {
                 .stream()
                 .map(FutureTradeDto::fromEntity)
                 .toList();
+    }
+
+    public int loadFuturesTrades() {
+        List<ActiveFuture> activeFutures = activeFutureRepository.findAll();
+        for (ActiveFuture activeFuture : activeFutures) {
+            log.info("[Long] member:{} {} 가격 {} 아래로 청산됩니다.", activeFuture.getMemberId(), activeFuture.getTicker(), activeFuture.getLiquidatedPrice());
+            cryptoPrice.addTrade(activeFuture.getTicker(), activeFuture.getId(), TradeType.LONG, activeFuture.getLiquidatedPrice());
+        }
+
+        return activeFutures.size();
     }
 }
