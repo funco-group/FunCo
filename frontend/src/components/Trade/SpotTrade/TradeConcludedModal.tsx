@@ -27,7 +27,7 @@ function TradeConcludedModal({
         <SettleModalTitleDiv>체결 완료</SettleModalTitleDiv>
         <SettleModalContentDiv>
           <SettleModalContentRowDiv>
-            <div>코인</div>
+            <div>가상화폐</div>
             <div>
               <span>{result.ticker.split('-')[1]}</span>
             </div>
