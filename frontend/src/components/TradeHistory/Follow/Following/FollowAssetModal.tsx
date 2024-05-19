@@ -5,7 +5,7 @@ import {
   AssetType,
   TotalAssetType,
 } from '@/interfaces/AssetType'
-import { getAsset, getHistory } from '@/apis/asset'
+import { getAsset } from '@/apis/asset'
 import { AxiosResponse } from 'axios'
 import {
   AssetChangeListContainer,
@@ -189,10 +189,10 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
   ]
 
   useEffect(() => {
-    getHistory((response: AxiosResponse<AssetHistoryType[]>) => {
-      const { data } = response
-      setHistoryList(data)
-    })
+    // getHistory((response: AxiosResponse<AssetHistoryType[]>) => {
+    //   const { data } = response
+    //   setHistoryList(data)
+    // })
   }, [])
 
   return (
