@@ -2,16 +2,14 @@ package com.found_404.funco.asset.dto.request;
 
 import com.found_404.funco.asset.domain.type.AssetTradeType;
 import com.found_404.funco.asset.domain.type.AssetType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class TotalAssetHistoryRequest {
     private Long memberId;
