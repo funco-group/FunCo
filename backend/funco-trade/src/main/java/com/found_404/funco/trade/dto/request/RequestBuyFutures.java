@@ -8,7 +8,8 @@ public record RequestBuyFutures(
         @Positive
         @NotNull
         Long orderCash,
-        @Max(100)
+
+        @Max(200)
         @Min(1)
         Integer leverage
 ) {
