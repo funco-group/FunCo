@@ -319,7 +319,7 @@ public class TradeService {
 	}
 
 	@Transactional
-	public void removeCoins(Long memberId) {
+	public void removeAsset(Long memberId) {
 		// 보유 중인 코인 조회
 		List<HoldingCoin> holdingCoins = holdingCoinRepository.findByMemberId(memberId);
 
@@ -333,7 +333,7 @@ public class TradeService {
 		openTradeRepository.deleteAll(openTrades);
 
 		/* 선물 거래 삭제 로직 */
-
+		activeFutureRepository.deleteAll(activeFutureRepository.findByMemberId(memberId));
 	}
 
 	public List<HoldingCoinInfo> getAssetHoldingCoin(Long memberId) {

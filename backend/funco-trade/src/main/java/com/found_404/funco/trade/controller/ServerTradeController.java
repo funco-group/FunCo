@@ -53,7 +53,7 @@ public class ServerTradeController {
 
 	@DeleteMapping("/coins")
 	public ResponseEntity<Void> removeCoins(@RequestParam Long memberId) {
-		tradeService.removeCoins(memberId);
+		tradeService.removeAsset(memberId);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
