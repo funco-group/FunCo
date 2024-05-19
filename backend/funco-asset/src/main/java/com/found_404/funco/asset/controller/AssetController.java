@@ -3,6 +3,7 @@ package com.found_404.funco.asset.controller;
 import java.util.List;
 
 import com.found_404.funco.asset.domain.type.AssetType;
+import com.found_404.funco.asset.domain.type.TradeType;
 import com.found_404.funco.asset.dto.request.TotalAssetHistoryRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -78,6 +79,8 @@ public class AssetController {
 	// post 포폴
 	@PostMapping("/histories/portfolio")
 	public ResponseEntity<?> createPortfolioHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest) {
+		totalAssetHistoryRequest.setTradeType(totalAssetHistoryRequest.getOrderCash() > 0 ? TradeType.SELL_PORTFOLIO : TradeType.PURCHASE_PORTFOLIO);
+
 		assetService.saveDataToAssetHistory(totalAssetHistoryRequest, AssetType.PORTFOLIO);
 		return ResponseEntity.ok().build();
 	}
