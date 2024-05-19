@@ -16,8 +16,8 @@ public enum TradeErrorCode {
 
     FOLLOW_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "팔로우 서버 에러"),
     MEMBER_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "멤버 서버 에러"),
-    NOTIFICATION_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알림 서버 에러")
-
+    NOTIFICATION_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알림 서버 에러"),
+    OTHER_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "외부 연동 서버 에러")
     ;
 
     private final HttpStatus httpStatus;

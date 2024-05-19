@@ -13,7 +13,7 @@ import com.found_404.funco.feignClient.dto.UpdateCash;
 public interface MemberServiceClient {
 
     @PatchMapping(value = "/api/v1/members/{memberId}/cash")
-    void updateCash(@PathVariable("memberId") Long memberId, @RequestBody UpdateCash updateCash);
+    CashResponse updateCash(@PathVariable("memberId") Long memberId, @RequestBody UpdateCash updateCash);
 
     @GetMapping("/{memberId}/cash")
     CashResponse getMemberCash(@PathVariable Long memberId);

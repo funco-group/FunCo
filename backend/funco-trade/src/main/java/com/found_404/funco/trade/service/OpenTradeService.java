@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.found_404.funco.crypto.cryptoPrice.LoadTrade;
 import com.found_404.funco.feignClient.dto.NotificationType;
+import com.found_404.funco.feignClient.service.AssetService;
 import com.found_404.funco.feignClient.service.FollowService;
 import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.feignClient.service.NotificationService;
@@ -36,6 +37,7 @@ public class OpenTradeService {
     private final FollowService followService;
     private final MemberService memberService;
     private final NotificationService notificationService;
+    private final AssetService assetService;
 
     @Async
     @Transactional
@@ -79,6 +81,7 @@ public class OpenTradeService {
     }
 
     private void processAsset(Trade trade, Long recoverCash) {
+        Long endingCash = 0L;
         if (trade.getTradeType().equals(TradeType.BUY)) { // BUY
             Optional<HoldingCoin> optionalHoldingCoin = holdingCoinRepository.findByMemberIdAndTicker(trade.getMemberId(), trade.getTicker());
             HoldingCoin holdingCoin;
@@ -96,11 +99,14 @@ public class OpenTradeService {
 
             holdingCoinRepository.save(holdingCoin);
             // [API UPDATE] 거래 금액 대비 차액 입금
-            memberService.updateMemberCash(trade.getMemberId(), recoverCash);
+            endingCash = memberService.updateMemberCash(trade.getMemberId(), recoverCash);
         } else { // SELL
             // [API UPDATE] 자산 증가 + 거래 금액 대비 차액 입금
-            memberService.updateMemberCash(trade.getMemberId(), CommissionUtil.getCashWithoutCommission(trade.getOrderCash()) - recoverCash);
+            endingCash = memberService.updateMemberCash(trade.getMemberId(), CommissionUtil.getCashWithoutCommission(trade.getOrderCash()) - recoverCash);
         }
+
+        // [API] 통합 자산 변동내역
+        assetService.createAssetHistory(trade, endingCash);
     }
 
     public List<LoadTrade> getLoadTrades() {

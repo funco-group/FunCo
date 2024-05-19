@@ -19,9 +19,9 @@ public class MemberService {
 	private final MemberServiceClient memberServiceClient;
 	private final String SERVER_NAME = "[member-service]";
 
-	public void updateMemberCash(Long memberId, Long cash) {
+	public Long updateMemberCash(Long memberId, Long cash) {
 		try {
-			memberServiceClient.updateCash(memberId, new UpdateCash(cash));
+			return memberServiceClient.updateCash(memberId, new UpdateCash(cash)).cash();
 		} catch (FeignException e) {
 			log.error("{} update cash error : {}", SERVER_NAME, e.getMessage());
 			throw new TradeException(INSUFFICIENT_ASSET);

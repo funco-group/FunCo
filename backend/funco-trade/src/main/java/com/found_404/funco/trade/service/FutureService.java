@@ -1,6 +1,7 @@
 package com.found_404.funco.trade.service;
 
 import com.found_404.funco.crypto.cryptoPrice.CryptoPrice;
+import com.found_404.funco.feignClient.service.AssetService;
 import com.found_404.funco.feignClient.service.FollowService;
 import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.global.util.CommissionUtil;
@@ -37,6 +38,7 @@ public class FutureService {
 
     private final MemberService memberService;
     private final FollowService followService;
+    private final AssetService assetService;
 
     @Transactional
     public void buyFuturesLong(Long memberId, RequestBuyFutures requestBuyFutures) {
@@ -119,10 +121,13 @@ public class FutureService {
         FutureTrade futureTrade = futureTradeRepository.save(FutureTrade.fromActiveFutures(activeFuture, settlement));
 
         // [API UPDATE] 멤버 자산 증가
-        memberService.updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(activeFuture.getOrderCash() + settlement));
+        Long endingCash = memberService.updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(activeFuture.getOrderCash() + settlement));
 
         // [API UPDATE] 팔로우 연동
         followService.createFollowTrade(futureTrade);
+
+        // [API] 자산 변동내역 전송
+        assetService.createAssetHistory(futureTrade, endingCash);
     }
 
     public ActiveFutureDto getActiveFutures(Long memberId, String ticker) {
