@@ -24,7 +24,7 @@ function AssetList({ assets }: AssetListProps) {
   return (
     <>
       <ColumnContainer>
-        <ColumnGrid $column="repeat(6, 1fr)">
+        <ColumnGrid $column="1fr 1fr 1fr 1fr 1fr 6.5rem">
           {columns.map((column) => (
             <ColumnTitleDiv key={column}>{column}</ColumnTitleDiv>
           ))}
@@ -34,6 +34,7 @@ function AssetList({ assets }: AssetListProps) {
         {assets.map((coin: AssetType) => (
           <AssetListItem
             imgSrc={coin.imgSrc}
+            type={coin.type}
             name={coin.name}
             volume={coin.volume}
             averagePrice={coin.averagePrice}
