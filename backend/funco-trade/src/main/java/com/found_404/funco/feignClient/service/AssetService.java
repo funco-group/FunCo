@@ -34,7 +34,7 @@ public class AssetService {
     @Async
     public void createAssetHistory(FutureTrade futureTrade, Long cash) {
         try {
-            this.assetServiceClient.createCoinHistory(TotalAssetHistoryRequest.builder().ticker(futureTrade.getTicker()).tradeType(futureTrade.getTradeType()).price(futureTrade.getPrice()).orderCash(futureTrade.getSettlement()).endingCash(cash).build());
+            this.assetServiceClient.createFuturesHistory(TotalAssetHistoryRequest.builder().ticker(futureTrade.getTicker()).tradeType(futureTrade.getTradeType()).price(futureTrade.getPrice()).orderCash(futureTrade.getSettlement()).endingCash(cash).build());
         } catch (FeignException e) {
             log.error("{} create Follow Trade By futures error : {}", SERVER_NAME, e.getMessage());
             throw new TradeException(TradeErrorCode.OTHER_SERVER_ERROR);

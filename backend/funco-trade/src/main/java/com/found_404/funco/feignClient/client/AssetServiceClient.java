@@ -9,4 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AssetServiceClient {
     @PostMapping({"/api/v1/asset/histories/coin"})
     void createCoinHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest);
+
+    @PostMapping({"/api/v1/asset/histories/futures"})
+    void createFuturesHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest);
 }
