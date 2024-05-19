@@ -8,6 +8,8 @@ import static com.found_404.funcomember.portfolio.exception.PortfolioErrorCode.N
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.found_404.funcomember.feignClient.dto.AssetTradeType;
+import com.found_404.funcomember.feignClient.service.AssetService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 public class PortfolioService {
 	private final MemberRepository memberRepository;
 	private final SubscribeRepository subscribeRepository;
+
 	private final FollowService followService;
+	private final AssetService assetService;
 
 	@Transactional
 	public void updatePortfolioStatus(Long memberId, PortfolioStatusRequest portfolioStatusRequest) {
@@ -64,12 +68,17 @@ public class PortfolioService {
 		seller.increaseCashWithoutCommission(portfolioPrice);
 
 		// 구독
-		subscribe(subscriber, seller);
+		Subscribe subscribe = subscribe(subscriber, seller);
+
 		// seller의 팔로워들 동기화(더해줌)
 		synchronizeFollowers(seller.getId(), ratio);
 
 		// subscriber의 팔로워들 동기화(빼줌)
 		synchronizeFollowers(subscriber.getId(), -ratio);
+
+		// [API] 통합 자산 변동내역
+		assetService.createAssetHistory(subscribe, AssetTradeType.PURCHASE_PORTFOLIO, subscribe.getFromMember().getCash());
+		assetService.createAssetHistory(subscribe, AssetTradeType.SELL_PORTFOLIO, subscribe.getToMember().getCash());
 	}
 
 	private static void checkAbailable(Member subscriber, Long portfolioPrice) {
@@ -103,12 +112,12 @@ public class PortfolioService {
 		);
 	}
 
-	private void subscribe(Member subscriber, Member seller) {
-		subscribeRepository.save(Subscribe.builder()
-			.fromMember(subscriber)
-			.toMember(seller)
-			.orderCash(seller.getPortfolioPrice())
-			.expiredAt(LocalDateTime.now().plusWeeks(2))
-			.build());
+	private Subscribe subscribe(Member subscriber, Member seller) {
+		return subscribeRepository.save(Subscribe.builder()
+				.fromMember(subscriber)
+				.toMember(seller)
+				.orderCash(seller.getPortfolioPrice())
+				.expiredAt(LocalDateTime.now().plusWeeks(2))
+				.build());
 	}
 }
