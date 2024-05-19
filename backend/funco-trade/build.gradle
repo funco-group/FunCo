@@ -64,6 +64,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
+    /*kafka*/
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    /*data bind */
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
     /*test*/
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
