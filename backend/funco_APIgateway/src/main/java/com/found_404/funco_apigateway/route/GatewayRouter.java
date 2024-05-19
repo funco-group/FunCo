@@ -5,6 +5,7 @@ import static java.lang.Boolean.*;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.Buildable;
+import org.springframework.cloud.gateway.route.builder.GatewayFilterSpec;
 import org.springframework.cloud.gateway.route.builder.PredicateSpec;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -33,12 +34,13 @@ public class GatewayRouter {
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes()
-				.route(r -> r.path("/api/v1/auth/*/signin").uri(EUREKA_AUTH))
-				.route(r -> r.path("/api/v1/rank/**").uri(EUREKA_RANK))
+				.route(r -> r.path("/api/v1/auth/*/signin").filters(f -> circuitBreaker(f, EUREKA_AUTH)).uri(EUREKA_AUTH))
+				.route(r -> r.path("/api/v1/rank/**").filters(f -> circuitBreaker(f, EUREKA_RANK)).uri(EUREKA_RANK))
 
 				.route(r -> getJwtFilterRoute(r, "/api/v1/members/**", EUREKA_MEMBER))
-				.route(r -> r.path("/api/v2/members/**")
-						.filters(f -> f.filter(jwtAuthentication.apply(FALSE))).uri(EUREKA_MEMBER))
+				.route(r -> r.path("/api/v2/members/**").filters(f -> circuitBreaker(f.filter(jwtAuthentication.apply(FALSE)), EUREKA_MEMBER))
+						.uri(EUREKA_MEMBER))
+
 				.route(r -> getJwtFilterRoute(r, "/api/v1/crypto/favorite/**", EUREKA_MEMBER))
 
 				.route(r -> getJwtFilterRoute(r, "/api/v1/trade/**", EUREKA_TRADE))
@@ -48,19 +50,24 @@ public class GatewayRouter {
 				.route(r -> getJwtFilterRoute(r, "/api/v1/assets/**", EUREKA_ASSET))
 
 				.route(r -> r.path("/api/v1/notes/**").and()
-						.method(HttpMethod.GET).filters(f -> f.filter(jwtAuthentication.apply(FALSE))).uri(EUREKA_NOTE))
+						.method(HttpMethod.GET).filters(f -> circuitBreaker(f.filter(jwtAuthentication.apply(FALSE)), EUREKA_NOTE)).uri(EUREKA_NOTE))
 
 				.route(r -> r.path("/api/v1/notes/**").and()
 						.method(HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)
-						.filters(f -> f.filter(jwtAuthentication.apply())).uri(EUREKA_NOTE))
+						.filters(f -> circuitBreaker(f.filter(jwtAuthentication.apply()), EUREKA_NOTE)).uri(EUREKA_NOTE))
 
 				.route(r -> getJwtFilterRoute(r, "/api/v1/statistics/**", EUREKA_STATISTICS))
 				.build();
 	}
 
+	private GatewayFilterSpec circuitBreaker(GatewayFilterSpec filter, String name) {
+		return filter.circuitBreaker(c -> c.setName(name + "-circuitBreaker")
+				.setFallbackUri("forward:/fallback"));
+	}
+
 	private Buildable<Route> getJwtFilterRoute(PredicateSpec r, String x, String url) {
 		return r.path(x)
-			.filters(f -> f.filter(jwtAuthentication.apply()))
-			.uri(url);
+				.filters(f -> circuitBreaker(f.filter(jwtAuthentication.apply()), url))
+				.uri(url);
 	}
 }
