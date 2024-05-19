@@ -187,8 +187,9 @@ function Asset() {
       const returnResult = evaluationAmount - price
       // 총 평가수익률
       const evaluationProfit =
-        Math.floor(((evaluationAmount - price) / price) * 100 * 100) / 100
-
+        price > 0
+          ? Math.floor(((evaluationAmount - price) / price) * 100 * 100) / 100
+          : 0
       setTotalAsset({
         cash,
         price,
@@ -205,7 +206,7 @@ function Asset() {
   return (
     <div>
       <TotalAssetInfoContainer>
-        <TotalAsset totalAsset={totalAsset} />
+        <TotalAsset totalAsset={totalAsset} setAssets={setAssets} />
         <ChartContainer>
           <MonochromePieChart investmentList={investmentList} isLegend />
         </ChartContainer>
