@@ -239,7 +239,7 @@ public class FollowService {
 		}
 
 		/* [API async] 정산 알림 */
-		sendSettlementNotification(memberService.getSimpleMember(follow.getFollowingMemberId()).nickname(), follow);
+		sendSettlementNotification(memberService.getSimpleMember(follow.getFollowerMemberId()).nickname(), follow);
 	}
 
 	private void sendSettlementNotification(String nickname, Follow follow) {
