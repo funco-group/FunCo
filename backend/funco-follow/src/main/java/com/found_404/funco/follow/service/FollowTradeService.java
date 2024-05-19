@@ -127,7 +127,7 @@ public class FollowTradeService {
 
         // 팔로우의 자산 증가 또는 감소
         long followerSettlement = (long) multiple(follow.getCash(), ratio, CASH_SCALE);
-        follow.decreaseCash(followerSettlement);
+        follow.updateCash(followerSettlement);
 
         log.info("부모{}에 의해 자식: {} 거래\n => {} 선물 {} 거래 정산 결과:{}", follow.getFollowingMemberId(), follow.getFollowerMemberId(),
                 futures.ticker(), futures.tradeType(), followerSettlement);
