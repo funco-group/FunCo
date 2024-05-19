@@ -1,7 +1,7 @@
 package com.found_404.funco.asset.dto.request;
 
+import com.found_404.funco.asset.domain.type.AssetTradeType;
 import com.found_404.funco.asset.domain.type.AssetType;
-import com.found_404.funco.asset.domain.type.TradeType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class TotalAssetHistoryRequest {
     private Long memberId;
     private AssetType assetType;
-    private TradeType tradeType;
+    private AssetTradeType assetTradeType;
     private Double volume;
     private Double price;
     private Long commission;

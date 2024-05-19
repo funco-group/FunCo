@@ -6,11 +6,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.found_404.funco.asset.domain.type.AssetTradeType;
 import com.found_404.funco.asset.dto.*;
 import org.springframework.stereotype.Repository;
 
 import com.found_404.funco.asset.domain.repository.QueryDslAssetHistoryRepository;
-import com.found_404.funco.asset.domain.type.TradeType;
 import com.found_404.funco.asset.domain.type.AssetType;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,7 +24,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 
 	@Override
 	public List<CoinHistory> findCoinHistory(Long memberId, LocalDateTime startDate, LocalDateTime endDate,
-											 TradeType tradeType) {
+											 AssetTradeType assetTradeType) {
 
 		return jpaQueryFactory
 			.select(new QCoinHistory(assetHistory.createdAt, assetHistory.ticker, assetHistory.tradeType,
@@ -33,14 +33,14 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 			.where(assetHistory.memberId.eq(memberId),
 				assetHistory.assetType.eq(AssetType.COIN),
 				filterDate(startDate, endDate),
-				filterType(tradeType))
+				filterType(assetTradeType))
 			.orderBy(assetHistory.createdAt.desc())
 			.fetch();
 	}
 
 	@Override
 	public List<FollowHistory> findFollowHistory(Long memberId, LocalDateTime startDate, LocalDateTime endDate,
-												 TradeType tradeType) {
+												 AssetTradeType assetTradeType) {
 		return jpaQueryFactory
 			.select(new QFollowHistory(assetHistory.createdAt, assetHistory.tradeType, assetHistory.investment,
 				assetHistory.settlement, assetHistory.followReturnRate, assetHistory.commission, assetHistory.followDate))
@@ -48,14 +48,14 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 			.where(assetHistory.memberId.eq(memberId),
 				assetHistory.assetType.eq(AssetType.FOLLOW),
 				filterDate(startDate, endDate),
-				filterType(tradeType))
+				filterType(assetTradeType))
 			.orderBy(assetHistory.createdAt.desc())
 			.fetch();
 	}
 
 	@Override
 	public List<PortfolioHistory> findPortfolioHistory(Long memberId, LocalDateTime startDate,
-													   LocalDateTime endDate, TradeType tradeType) {
+													   LocalDateTime endDate, AssetTradeType assetTradeType) {
 		return jpaQueryFactory
 			.select(new QPortfolioHistory(assetHistory.createdAt, assetHistory.portfolioName, assetHistory.tradeType,
 				assetHistory.price, assetHistory.endingCash))
@@ -63,13 +63,13 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 			.where(assetHistory.memberId.eq(memberId),
 				assetHistory.assetType.eq(AssetType.PORTFOLIO),
 				filterDate(startDate, endDate),
-				filterType(tradeType))
+				filterType(assetTradeType))
 			.orderBy(assetHistory.createdAt.desc())
 			.fetch();
 	}
 
 	@Override
-	public List<FuturesHistory> findFuturesHistory(Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, TradeType tradeType) {
+	public List<FuturesHistory> findFuturesHistory(Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, AssetTradeType assetTradeType) {
 		return jpaQueryFactory
 				.select(new QFuturesHistory(assetHistory.createdAt, assetHistory.ticker, assetHistory.tradeType
 						, assetHistory.price, assetHistory.orderCash, assetHistory.endingCash))
@@ -77,7 +77,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 				.where(assetHistory.memberId.eq(memberId),
 						assetHistory.assetType.eq(AssetType.FUTURES),
 						filterDate(startDateTime, endDateTime),
-						filterType(tradeType))
+						filterType(assetTradeType))
 				.orderBy(assetHistory.createdAt.desc())
 				.fetch();
 	}
@@ -86,7 +86,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 		return Objects.nonNull(startDate) && Objects.nonNull(endDate) ? assetHistory.createdAt.between(startDate, endDate) : null;
 	}
 
-	private Predicate filterType(TradeType tradeType) {
-		return tradeType.equals(TradeType.ALL) ? null : assetHistory.tradeType.eq(tradeType);
+	private Predicate filterType(AssetTradeType assetTradeType) {
+		return assetTradeType.equals(AssetTradeType.ALL) ? null : assetHistory.tradeType.eq(assetTradeType);
 	}
 }
