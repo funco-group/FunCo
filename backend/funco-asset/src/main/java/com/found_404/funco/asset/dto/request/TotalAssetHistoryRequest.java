@@ -5,12 +5,14 @@ import com.found_404.funco.asset.domain.type.TradeType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public class TotalAssetHistoryRequest {
     private Long memberId;
     private AssetType assetType;
