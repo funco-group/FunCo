@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "asset-service")
 public interface AssetServiceClient {
-    @PostMapping({"/histories/coin"})
+    @PostMapping({"/api/v1/asset/histories/coin"})
     void createCoinHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest);
 }
