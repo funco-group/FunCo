@@ -44,7 +44,6 @@ public class AssetController {
 	}
 
 	// ----------------- 통합 자산 내역 -----------------------------
-
 	@GetMapping("/history")
 	public ResponseEntity<List<? extends AssetHistoryResponse>> getMemberHistory(@AuthMemberId Long memberId,
 		AssetHistoryRequest assetHistoryRequest) {
