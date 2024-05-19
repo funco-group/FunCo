@@ -29,6 +29,7 @@ public class AssetService {
                     .memberId(assetTradeType.equals(AssetTradeType.FOLLOWING) ? follow.getFollowerMemberId() : follow.getFollowingMemberId())
                     .investment(follow.getInvestment())
                     .settlement(follow.getSettlement())
+                    .orderCash(follow.getSettlement())
                     .followReturnRate(follow.getReturnRate())
                     .commission(follow.getCommission())
                     .endingCash(cash)
