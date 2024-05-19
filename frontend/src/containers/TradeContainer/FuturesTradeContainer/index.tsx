@@ -21,6 +21,7 @@ function FuturesTrade() {
 
   const [trade, setTrade] = useState<FuturesType | null>(null)
   const [isTrade, setIsTrade] = useState<boolean>(false)
+  const [liquidate, setLiquidate] = useState<boolean>(false)
   const coinCode = pathname?.split('/')[3]
 
   const [priceList, setPriceList] = useState<PriceType[]>(
@@ -28,14 +29,16 @@ function FuturesTrade() {
   )
 
   useEffect(() => {
-    getActiveFutures(coinCode, (response) => {
-      if (response.status === 200) {
-        const { data } = response
-        setTrade(data)
-        setIsTrade(true)
-      }
-    })
-  }, [isTrade])
+    if (!liquidate) {
+      getActiveFutures(coinCode, (response) => {
+        if (response.status === 200) {
+          const { data } = response
+          setTrade(data)
+          setIsTrade(true)
+        }
+      })
+    }
+  }, [isTrade, liquidate])
 
   return (
     <CryptoPageContainer>
@@ -51,6 +54,8 @@ function FuturesTrade() {
                 : null
             }
             trade={trade}
+            liquidate={liquidate}
+            setLiquidate={setLiquidate}
           />
           <Trade
             isTrade={isTrade}

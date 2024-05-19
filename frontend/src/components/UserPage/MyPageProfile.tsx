@@ -39,8 +39,12 @@ function MyPageProfile({ member }: UserPageProfileProps) {
   const { updateNickname } = useUserState()
 
   useEffect(() => {
-    setPrice(member.portfolioPrice)
-    setPriceStr(member.portfolioPrice.toLocaleString('ko-KR'))
+    setPrice(member.portfolioPrice === null ? 0 : member.portfolioPrice)
+    setPriceStr(
+      member.portfolioPrice === null
+        ? '0'
+        : member.portfolioPrice.toLocaleString('ko-KR'),
+    )
     setStatus(member.portfolioStatus !== 'PUBLIC')
   }, [])
 
