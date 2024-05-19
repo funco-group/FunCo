@@ -11,9 +11,14 @@ export async function getAsset(
 }
 
 export async function getHistory(
+  period: string,
+  asset: string,
+  trade: string,
   success: (response: AxiosResponse<AssetHistoryType[]>) => void,
 ) {
-  await localAxios.get(`/v1/${domain}/history`).then(success)
+  await localAxios
+    .get(`/v2/${domain}/history?period=${period}&asset=${asset}&trade=${trade}`)
+    .then(success)
 }
 
 export async function getUserAsset(
