@@ -7,7 +7,7 @@ import static com.found_404.funcomember.portfolio.exception.PortfolioErrorCode.*
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.found_404.funcomember.feignClient.dto.TradeType;
+import com.found_404.funcomember.feignClient.dto.AssetTradeType;
 import com.found_404.funcomember.feignClient.service.AssetService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,8 +77,8 @@ public class PortfolioService {
 		synchronizeFollowers(subscriber.getId(), -ratio);
 
 		// [API] 통합 자산 변동내역
-		assetService.createPortfolioAssetHistory(subscribe, TradeType.PURCHASE_PORTFOLIO, subscribe.getFromMember().getCash());
-		assetService.createPortfolioAssetHistory(subscribe, TradeType.SELL_PORTFOLIO, subscribe.getToMember().getCash());
+		assetService.createPortfolioAssetHistory(subscribe, AssetTradeType.PURCHASE_PORTFOLIO, subscribe.getFromMember().getCash());
+		assetService.createPortfolioAssetHistory(subscribe, AssetTradeType.SELL_PORTFOLIO, subscribe.getToMember().getCash());
 	}
 
 	private void checkDuplicateSubscribe(Member subscriber, Member seller) {

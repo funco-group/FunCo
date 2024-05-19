@@ -3,7 +3,7 @@ package com.found_404.funcomember.feignClient.service;
 
 import com.found_404.funcomember.feignClient.client.AssetServiceClient;
 import com.found_404.funcomember.feignClient.dto.AssetType;
-import com.found_404.funcomember.feignClient.dto.TradeType;
+import com.found_404.funcomember.feignClient.dto.AssetTradeType;
 import com.found_404.funcomember.feignClient.dto.request.TotalAssetHistoryRequest;
 import com.found_404.funcomember.member.exception.MemberException;
 import com.found_404.funcomember.portfolio.domain.Subscribe;
@@ -23,15 +23,15 @@ public class AssetService {
     private final String SERVER_NAME = "[asset-service]";
 
     @Async
-    public void createPortfolioAssetHistory(Subscribe subscribe, TradeType tradeType, Long cash) {
+    public void createPortfolioAssetHistory(Subscribe subscribe, AssetTradeType assetTradeType, Long cash) {
         try {
             this.assetServiceClient.createCoinHistory(TotalAssetHistoryRequest.builder()
                     .assetType(AssetType.PORTFOLIO)
-                    .tradeType(tradeType)
+                    .assetTradeType(assetTradeType)
                     .price(Double.valueOf(subscribe.getOrderCash()))
-                    .memberId(tradeType.equals(TradeType.SELL_PORTFOLIO) ? subscribe.getToMember().getId() : subscribe.getFromMember().getId())
+                    .memberId(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getToMember().getId() : subscribe.getFromMember().getId())
                     .portfolioName(subscribe.getToMember().getNickname())
-                    .orderCash(tradeType.equals(TradeType.SELL_PORTFOLIO) ? subscribe.getOrderCash() : -subscribe.getOrderCash())
+                    .orderCash(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getOrderCash() : -subscribe.getOrderCash())
                     .endingCash(cash)
                     .build());
 
