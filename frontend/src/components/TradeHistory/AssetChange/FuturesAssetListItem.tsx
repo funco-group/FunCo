@@ -43,9 +43,9 @@ function FuturesAssetListItem({ history }: { history: FuturesAssetType }) {
           </ListItemDiv>
           <ListItemDiv
             $align="center"
-            color={getColorForTradeType(history.tradeType)}
+            color={getColorForTradeType(history.assetTradeType)}
           >
-            {history.tradeType}
+            {history.assetTradeType}
           </ListItemDiv>
           <ListItemDiv $align="right" color="black">
             {history.price?.toLocaleString('ko-KR')}
