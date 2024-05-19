@@ -111,7 +111,7 @@ public class AssetService {
 				.price(totalAssetHistoryRequest.price())
 				.commission(totalAssetHistoryRequest.commission())
 				.settlement(totalAssetHistoryRequest.settlement())
-				.beginningCash(totalAssetHistoryRequest.beginningCash())
+				.beginningCash(totalAssetHistoryRequest.endingCash() - totalAssetHistoryRequest.orderCash())
 				.endingCash(totalAssetHistoryRequest.endingCash())
 				.orderCash(totalAssetHistoryRequest.orderCash())
 				.ticker(totalAssetHistoryRequest.ticker())
