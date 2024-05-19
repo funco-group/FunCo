@@ -19,7 +19,7 @@ public class KafkaConsumerService {
 //
 //    }
 
-    @KafkaListener(topics = "${spring.kafka.topic.name}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = TOPIC, containerFactory = "kafkaListenerContainerFactory")
     public void listen(String message) {
         System.out.println("Received raw message: " + message);
         // JSON 문자열을 직접 TotalAssetHistoryRequest 객체로 변환해 봅니다.
