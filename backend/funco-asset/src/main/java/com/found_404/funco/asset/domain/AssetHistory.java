@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 public class AssetHistory extends BaseEntity {
 
 	@Comment("멤버 SEQ")
+	@Column(nullable = false)
 	private Long memberId;
 
 	@Comment("자산 구분")
