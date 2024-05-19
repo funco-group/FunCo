@@ -60,7 +60,7 @@ public class PortfolioService {
 		Long portfolioPrice = seller.getPortfolioPrice();
 
 		// subscirber의 가용현금으로 seller의 포트폴리오 살 수 없다면 에러 발생
-		checkAbailable(subscriber, portfolioPrice);
+		checkAvailable(subscriber, portfolioPrice);
 
 		double ratio = divide(portfolioPrice, seller.getCash(), RETURN_RATE_SCALE);
 
@@ -81,7 +81,7 @@ public class PortfolioService {
 		assetService.createAssetHistory(subscribe, AssetTradeType.SELL_PORTFOLIO, subscribe.getToMember().getCash());
 	}
 
-	private static void checkAbailable(Member subscriber, Long portfolioPrice) {
+	private static void checkAvailable(Member subscriber, Long portfolioPrice) {
 		if (subscriber.getCash() < portfolioPrice) {
 			throw new PortfolioException(INSUFFICIENT_CASH);
 		}
