@@ -48,6 +48,9 @@ dependencies {
     // openfeign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+    /* openfeign에서 patch 쓰기 위해 okhttp로 실행 */
+    implementation 'io.github.openfeign:feign-okhttp:13.2.1'
+
     // querydsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
