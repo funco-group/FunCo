@@ -14,5 +14,7 @@ public class KafkaConsumerService {
     @KafkaListener(topics = TOPIC, groupId = "${spring.kafka.consumer.group-id}")
     public void listen(TotalAssetHistoryRequest totalAssetHistoryRequest) {
         log.info("kafka consume : {}", totalAssetHistoryRequest);
+
+
     }
 }
