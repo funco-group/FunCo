@@ -26,7 +26,8 @@ public class AssetService {
 
     @Async
     public void createAssetHistory(Trade trade, Long cash) {
-        TotalAssetHistoryRequest totalAssetHistoryRequest = TotalAssetHistoryRequest.builder().memberId(trade.getMemberId()).ticker(trade.getTicker()).tradeType(trade.getTradeType()).volume(trade.getVolume()).price(trade.getPrice()).orderCash(trade.getTradeType().equals(TradeType.BUY) ? -trade.getOrderCash() : trade.getOrderCash()).endingCash(cash).build();
+        TotalAssetHistoryRequest totalAssetHistoryRequest = TotalAssetHistoryRequest.builder()
+                .memberId(trade.getMemberId()).ticker(trade.getTicker()).tradeType(trade.getTradeType()).volume(trade.getVolume()).price(trade.getPrice()).orderCash(trade.getTradeType().equals(TradeType.BUY) ? -trade.getOrderCash() : trade.getOrderCash()).endingCash(cash).build();
         kafkaProducerService.sendHistory(trade.getMemberId(), totalAssetHistoryRequest);
 
         try {
@@ -39,7 +40,10 @@ public class AssetService {
 
     @Async
     public void createAssetHistory(FutureTrade futureTrade, Long cash) {
-        TotalAssetHistoryRequest totalAssetHistoryRequest = TotalAssetHistoryRequest.builder().ticker(futureTrade.getTicker()).tradeType(futureTrade.getTradeType()).price(futureTrade.getPrice()).orderCash(futureTrade.getSettlement()).endingCash(cash).build();
+        TotalAssetHistoryRequest totalAssetHistoryRequest = TotalAssetHistoryRequest.builder()
+                .memberId(futureTrade.getMemberId())
+                .ticker(futureTrade.getTicker())
+                .tradeType(futureTrade.getTradeType()).price(futureTrade.getPrice()).orderCash(futureTrade.getSettlement()).endingCash(cash).build();
         kafkaProducerService.sendHistory(futureTrade.getMemberId(), totalAssetHistoryRequest);
 
         try {
