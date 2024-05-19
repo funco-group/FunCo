@@ -87,8 +87,6 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	}
 
 	private Predicate filterType(TradeType tradeType) {
-		return assetHistory.tradeType.eq(tradeType);
+		return tradeType.equals(TradeType.ALL) ? null : assetHistory.tradeType.eq(tradeType);
 	}
-
-
 }
