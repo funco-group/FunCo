@@ -1,6 +1,6 @@
 import FollowingModal from '../TradeHistory/Follow/Following/FollowingModal'
 import PortfolioAsset from './PortfolioAsset'
-import PortfolioAssetChange from './PortfolioAssetChange'
+// import PortfolioAssetChange from './PortfolioAssetChange'
 
 interface PortfolioModalProps {
   memberId: number
@@ -19,7 +19,7 @@ function PortfolioModal({
       handleClick={handlePortFolioClick}
     >
       <PortfolioAsset memberId={memberId} />
-      <PortfolioAssetChange memberId={memberId} />
+      {/* <PortfolioAssetChange memberId={memberId} /> */}
     </FollowingModal>
   )
 }

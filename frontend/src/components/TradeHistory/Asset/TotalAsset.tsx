@@ -7,6 +7,7 @@ import { TotalAssetType } from '@/interfaces/AssetType'
 import AlertWithCancelModal from '@/components/Common/Modal/AlertWithCancelModal'
 import { useState } from 'react'
 import { patchInitCash } from '@/apis/asset'
+import { usePathname } from 'next/navigation'
 import {
   AssetItemContainer,
   AssetItemDiv,
@@ -19,6 +20,8 @@ interface TotalAssetProps {
 
 function TotalAsset({ totalAsset }: TotalAssetProps) {
   const [onAlertModal, setOnAlertModal] = useState(false)
+  const pathName = usePathname()
+
   const handleInitCash = () => {
     setOnAlertModal(true)
   }
@@ -103,15 +106,17 @@ function TotalAsset({ totalAsset }: TotalAssetProps) {
             </GreenDataDiv>
           </AssetItemDiv>
         </AssetItemContainer>
-        <div className="flex justify-end">
-          <button
-            type="button"
-            className="rounded border-none bg-brandColor p-2 text-brandWhite"
-            onClick={handleInitCash}
-          >
-            원 초기화
-          </button>
-        </div>
+        {pathName.includes('history') && (
+          <div className="flex justify-end">
+            <button
+              type="button"
+              className="rounded border-none bg-brandColor p-2 text-brandWhite"
+              onClick={handleInitCash}
+            >
+              원 초기화
+            </button>
+          </div>
+        )}
       </GreenContainer>
     </TotalAssetContainer>
   )
