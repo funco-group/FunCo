@@ -62,6 +62,15 @@ public class UpbitWebSocketListener extends WebSocketListener {
     @Override
     public void onOpen(@NotNull WebSocket webSocket, Response response) {
         log.info("upbit websocket opened [response: {}]", response.body());
+        log.info("이전에 등록된 감지될 거래 데이터들을 로딩합니다. ");
+
+        List<LoadTrade> loadTrades = openTradeService.getLoadTrades();
+        log.info("미체결 거래: {} 개 로딩", loadTrades.size());
+        loadTrades.forEach(loadTrade -> addTrade(loadTrade.tradeType(), loadTrade.ticker(), loadTrade.id(), loadTrade.price()));
+
+        loadTrades = liquidateService.getLoadTrades();
+        log.info("활성 선물 거래: {} 개 로딩", loadTrades.size());
+        loadTrades.forEach(loadTrade -> addTrade(loadTrade.tradeType(), loadTrade.ticker(), loadTrade.id(), loadTrade.price()));
     }
 
     /*
