@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum AssetTradeType {
+public enum TradeType {
 	ALL("전체"),
 	PURCHASE_PORTFOLIO("포트폴리오구매"),
 	SELL_PORTFOLIO("포트폴리오판매")

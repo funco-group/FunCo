@@ -1,6 +1,7 @@
 package com.found_404.funcomember.feignClient.dto.request;
 
-import com.found_404.funcomember.feignClient.dto.AssetTradeType;
+import com.found_404.funcomember.feignClient.dto.AssetType;
+import com.found_404.funcomember.feignClient.dto.TradeType;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -8,7 +9,8 @@ import java.time.LocalDateTime;
 @Builder
 public record TotalAssetHistoryRequest(
         Long memberId,
-        AssetTradeType assetTradeType,
+        AssetType assetType,
+        TradeType tradeType,
         Double volume,
         Double price,
         Long commission,
