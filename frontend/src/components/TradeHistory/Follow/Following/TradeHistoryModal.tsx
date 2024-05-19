@@ -79,9 +79,18 @@ function TradeHistoryModal({
                   <FollowTradeHistoryTextAlignDiv>
                     {tradeHistory.orderCash.toLocaleString('en-US')}
                   </FollowTradeHistoryTextAlignDiv>
+                  {(tradeHistory.tradeType === 'LONG' ||
+                    tradeHistory.tradeType === 'SHORT') && (
+                    <FollowTradeHistoryTextAlignDiv>
+                      {tradeHistory.volume.toLocaleString('en-US')}
+                    </FollowTradeHistoryTextAlignDiv>
+                  )}
                 </FollowTradeHistoryContentInnerDiv>
                 <FollowTradeHistoryContentInnerDiv>
-                  {tradeHistory.volume}
+                  {tradeHistory.tradeType === 'LONG' ||
+                  tradeHistory.tradeType === 'SHORT'
+                    ? '-'
+                    : tradeHistory.volume}
                 </FollowTradeHistoryContentInnerDiv>
               </FollowTradeHistoryColumnGridDiv>
             ))}
