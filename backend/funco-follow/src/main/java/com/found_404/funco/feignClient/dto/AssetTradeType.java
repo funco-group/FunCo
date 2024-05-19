@@ -10,7 +10,7 @@ import java.util.Arrays;
 public enum AssetTradeType {
 	ALL("전체"),
 	FOLLOWING("팔로잉"),
-	FOLLOWER("팔로워")
+	FOLLOWER("팔로워"),
 	;
 
 	private final String korean;
