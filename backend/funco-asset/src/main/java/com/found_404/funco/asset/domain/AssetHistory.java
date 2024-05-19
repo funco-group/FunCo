@@ -36,11 +36,9 @@ public class AssetHistory extends BaseEntity {
 	private TradeType tradeType;
 
 	@Comment("거래 수량")
-	@Column(nullable = false)
 	private Double volume;
 
 	@Comment("거래 단가")
-	@Column(nullable = false)
 	private Double price;
 
 	@Comment("수수료")
