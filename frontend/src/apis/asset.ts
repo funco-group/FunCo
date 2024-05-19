@@ -1,6 +1,12 @@
 import { AxiosResponse } from 'axios'
 import localAxios from '@/utils/http-commons'
-import { AssetHistoryType, AssetResponseType } from '@/interfaces/AssetType'
+import {
+  AssetResponseType,
+  CoinAssetType,
+  FollowAssetType,
+  FuturesAssetType,
+  PortfolioAssetType,
+} from '@/interfaces/AssetType'
 
 const domain = 'asset'
 
@@ -14,10 +20,17 @@ export async function getHistory(
   period: string,
   asset: string,
   trade: string,
-  success: (response: AxiosResponse<AssetHistoryType[]>) => void,
+  success: (
+    response: AxiosResponse<
+      | CoinAssetType[]
+      | FuturesAssetType[]
+      | FollowAssetType[]
+      | PortfolioAssetType[]
+    >,
+  ) => void,
 ) {
   await localAxios
-    .get(`/v2/${domain}/history?period=${period}&asset=${asset}&trade=${trade}`)
+    .get(`/v1/${domain}/history?period=${period}&asset=${asset}&trade=${trade}`)
     .then(success)
 }
 
