@@ -5,17 +5,25 @@ import {
   ColumnGrid,
   ColumnTitleDiv,
 } from '@/styles/CommonStyled'
-import { useEffect } from 'react'
-import { AssetHistoryType } from '@/interfaces/AssetType'
+import { useEffect, useState } from 'react'
+import {
+  CoinAssetType,
+  FollowAssetType,
+  FuturesAssetType,
+  PortfolioAssetType,
+} from '@/interfaces/AssetType'
 import { AxiosResponse } from 'axios'
 import { getHistory } from '@/apis/asset'
 import { AssetTabType } from '@/interfaces/tradeHistory/follow/AssetChangeType'
 import {
   AssetChangeListContainer,
-  // HistoryListContainer,
+  HistoryListContainer,
 } from './AssetChangeList.styled'
-// import AssetChangeListItem from './AssetChangeListItem'
 import { AssetChangeListItemContainer } from './AssetChangeListItem.styled'
+import CoinAssetListItem from './CoinAssetListItem'
+import FuturesAssetListItem from './FuturesAssetListItem'
+import FollowAssetListItem from './FollowAssetListItem'
+import PortfolioAssetListItem from './PortfolioAssetListItem'
 
 interface AssetChangeListProps {
   periodTab: AssetTabType[]
@@ -34,47 +42,144 @@ function AssetChangeList({
   tradeActive,
   assetActive,
 }: AssetChangeListProps) {
-  // const [historyList, setHistoryList] = useState<AssetHistoryType[]>([])
-  const columns = [
+  const [historyList, setHistoryList] = useState<
+    | CoinAssetType[]
+    | FuturesAssetType[]
+    | FollowAssetType[]
+    | PortfolioAssetType[]
+  >([])
+
+  const coinColumns = [
     '체결시간',
     '보유자산',
     '종류',
     '거래수량',
     '거래단가',
     '거래금액',
-    '수수료',
     '정산금액',
   ]
+
+  const futuresColumns = [
+    '체결시간',
+    '보유자산',
+    '종류',
+    '거래단가',
+    '거래금액',
+    '정산금액',
+  ]
+
+  const followColumns = [
+    '체결시간',
+    '종류',
+    '거래금액',
+    '투자손익',
+    '수수료',
+    '정산금액',
+    '정산시간',
+  ]
+
+  const portfolioColumns = ['체결시간', '유저', '종류', '거래금액', '정산금액']
+
+  const columns = () => {
+    switch (assetActive) {
+      case 0:
+        return coinColumns
+      case 1:
+        return futuresColumns
+      case 2:
+        return followColumns
+      default:
+        return portfolioColumns
+    }
+  }
+
+  const setColumn = () => {
+    switch (assetActive) {
+      case 0:
+        return 'repeat(7, 1fr)'
+      case 1:
+        return 'repeat(6, 1fr)'
+      case 2:
+        return 'repeat(7, 1fr)'
+      default:
+        return 'repeat(5, 1fr)'
+    }
+  }
 
   useEffect(() => {
     getHistory(
       periodTab[periodActive].type,
       assetTypeTab[assetActive].type,
       tradeTypeTab[assetActive][tradeActive].type,
-      (response: AxiosResponse<AssetHistoryType[]>) => {
+      (
+        response: AxiosResponse<
+          | CoinAssetType[]
+          | FuturesAssetType[]
+          | FollowAssetType[]
+          | PortfolioAssetType[]
+        >,
+      ) => {
         const { data } = response
-        console.log(data)
-        // setHistoryList(data)
+        setHistoryList(data)
       },
     )
   }, [periodActive, assetActive, tradeActive])
+
+  const returnAssetListItem = (
+    history:
+      | CoinAssetType
+      | FuturesAssetType
+      | FollowAssetType
+      | PortfolioAssetType,
+  ) => {
+    switch (assetActive) {
+      case 0:
+        return (
+          <CoinAssetListItem
+            key={history.date}
+            history={history as CoinAssetType}
+          />
+        )
+      case 1:
+        return (
+          <FuturesAssetListItem
+            key={history.date}
+            history={history as FuturesAssetType}
+          />
+        )
+      case 2:
+        return (
+          <FollowAssetListItem
+            key={history.date}
+            history={history as FollowAssetType}
+          />
+        )
+      case 3:
+        return (
+          <PortfolioAssetListItem
+            key={history.date}
+            history={history as PortfolioAssetType}
+          />
+        )
+      default:
+        return <div />
+    }
+  }
 
   return (
     <AssetChangeListContainer>
       <ColumnContainer>
         <AssetChangeListItemContainer>
-          <ColumnGrid $column="7rem 6rem 5rem 1.3fr 1fr 1fr 1fr 1fr">
-            {columns.map((column) => (
+          <ColumnGrid $column={setColumn()}>
+            {columns().map((column) => (
               <ColumnTitleDiv key={column}>{column}</ColumnTitleDiv>
             ))}
           </ColumnGrid>
         </AssetChangeListItemContainer>
       </ColumnContainer>
-      {/* <HistoryListContainer>
-        {historyList.map((history) => (
-          <AssetChangeListItem key={history.date} history={history} />
-        ))}
-      </HistoryListContainer> */}
+      <HistoryListContainer>
+        {historyList.map((history) => returnAssetListItem(history))}
+      </HistoryListContainer>
     </AssetChangeListContainer>
   )
 }
