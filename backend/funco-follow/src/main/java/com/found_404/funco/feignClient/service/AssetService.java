@@ -2,6 +2,7 @@
 package com.found_404.funco.feignClient.service;
 
 import com.found_404.funco.feignClient.client.AssetServiceClient;
+import com.found_404.funco.feignClient.dto.AssetType;
 import com.found_404.funco.feignClient.dto.AssetTradeType;
 import com.found_404.funco.feignClient.dto.request.TotalAssetHistoryRequest;
 import com.found_404.funco.follow.domain.Follow;
@@ -26,6 +27,7 @@ public class AssetService {
         try {
             this.assetServiceClient.createCoinHistory(TotalAssetHistoryRequest.builder()
                     .assetTradeType(assetTradeType)
+                    .assetType(AssetType.FOLLOW)
                     .memberId(assetTradeType.equals(AssetTradeType.FOLLOWING) ? follow.getFollowerMemberId() : follow.getFollowingMemberId())
                     .investment(follow.getInvestment())
                     .settlement(follow.getSettlement())
