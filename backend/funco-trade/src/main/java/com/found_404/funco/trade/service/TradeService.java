@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.found_404.funco.feignClient.service.AssetService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +56,7 @@ public class TradeService {
 
 	private final CryptoPrice cryptoPrice;
 	private final FollowService followService;
+	private final AssetService assetService;
 
 	private double getPriceByTicker(String ticker) {
 		return cryptoPrice.getTickerPrice(ticker);
@@ -94,10 +96,13 @@ public class TradeService {
 		tradeRepository.save(trade);
 
 		// orderCash <= 자산 check, member 원화 감소
-		memberService.updateMemberCash(memberId, -orderCash);
+		Long endingCash = memberService.updateMemberCash(memberId, -orderCash);
 
 		// 팔로우 연동
 		followService.createFollowTrade(trade);
+
+		// [API] 통합 자산 변동내역
+		assetService.createAssetHistory(trade, endingCash);
 
 		return MarketTradeResponse.builder()
 			.ticker(trade.getTicker())
@@ -133,10 +138,13 @@ public class TradeService {
 		tradeRepository.save(trade);
 
 		// [API UPDATE] member 원화 증가
-		memberService.updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(orderCash));
+		Long endingCash = memberService.updateMemberCash(memberId, CommissionUtil.getCashWithoutCommission(orderCash));
 
 		// [API UPDATE] 팔로우 연동
 		followService.createFollowTrade(trade);
+
+		// [API] 통합 자산 변동내역
+		assetService.createAssetHistory(trade, endingCash);
 
 		return MarketTradeResponse.builder()
 			.ticker(trade.getTicker())

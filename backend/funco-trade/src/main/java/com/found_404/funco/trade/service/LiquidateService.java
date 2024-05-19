@@ -1,6 +1,8 @@
 package com.found_404.funco.trade.service;
 
 import com.found_404.funco.crypto.cryptoPrice.LoadTrade;
+import com.found_404.funco.feignClient.service.AssetService;
+import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.feignClient.service.NotificationService;
 import com.found_404.funco.trade.domain.ActiveFuture;
 import com.found_404.funco.trade.domain.FutureTrade;
@@ -22,7 +24,10 @@ import static com.found_404.funco.feignClient.dto.NotificationType.FUTURES;
 public class LiquidateService {
     private final ActiveFutureRepository activeFutureRepository;
     private final FutureTradeRepository futureTradeRepository;
+
     private final NotificationService notificationService;
+    private final AssetService assetService;
+    private final MemberService memberService;
 
     // 청산 처리
     @Async
@@ -35,6 +40,11 @@ public class LiquidateService {
                 activeFutures.stream()
                         .map(FutureTrade::getLiquidatedFutures)
                         .toList());
+
+        // [API] 통합 자산 변동내역
+        futureTrades.forEach((futureTrade) ->
+                assetService.createAssetHistory(futureTrade, memberService.getMemberCash(futureTrade.getMemberId())));
+
 
         // [API async] 알림
         futureTrades.forEach(futureTrade ->
