@@ -29,7 +29,7 @@ public class MyPageService {
 
 	public UserInfoResponse getMyPage(Long loginMemberId, Long memberId) {
 		List<HoldingCoinResponse> holdingCoinResponses = tradeService.getHoldingCoinInfos(memberId); // 보유 코인 정보
-		MemberInfo memberInfo = memberRepository.findUserInfoByMemberId(memberId);
+		MemberInfo memberInfo = memberRepository.findUserInfoByMemberId(loginMemberId, memberId);
 
 		return UserInfoResponse.builder()
 			.memberId(memberInfo.id())
