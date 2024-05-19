@@ -10,14 +10,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.found_404.funco.feignClient.dto.*;
+import com.found_404.funco.feignClient.service.AssetService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.found_404.funco.feignClient.dto.CoinValuation;
-import com.found_404.funco.feignClient.dto.CoinValuationResponse;
-import com.found_404.funco.feignClient.dto.NotificationType;
-import com.found_404.funco.feignClient.dto.SimpleMember;
 import com.found_404.funco.feignClient.service.MemberService;
 import com.found_404.funco.feignClient.service.NotificationService;
 import com.found_404.funco.feignClient.service.TradeService;
@@ -60,6 +58,7 @@ public class FollowService {
 	private final MemberService memberService;
 	private final TradeService tradeService;
 	private final NotificationService notificationService;
+	private final AssetService assetService;
 
 	private static final double FOLLOW_FEE = 0.03, PERCENT = 100L;
 	private static final int PAGE_SIZE = Integer.MAX_VALUE - 1; // 임시
@@ -233,13 +232,16 @@ public class FollowService {
 		followTradeRepository.saveAll(followTrades);
 
 		// [API update] 자산 반영
-		memberService.updateMemberCash(follow.getFollowerMemberId(), settlement);
+		Long endingCash = memberService.updateMemberCash(follow.getFollowerMemberId(), settlement);
+		assetService.createAssetHistory(follow, AssetTradeType.FOLLOWING , endingCash); // 정산
+
 		if (commission > 0) {
-			memberService.updateMemberCash(follow.getFollowingMemberId(), commission);
+			Long endingCashByCommission = memberService.updateMemberCash(follow.getFollowingMemberId(), commission);
+			assetService.createAssetHistory(follow, AssetTradeType.FOLLOWER , endingCashByCommission); // 수수료
 		}
 
 		/* [API async] 정산 알림 */
-		sendSettlementNotification(memberService.getSimpleMember(follow.getFollowingMemberId()).nickname(), follow);
+		sendSettlementNotification(memberService.getSimpleMember(follow.getFollowerMemberId()).nickname(), follow);
 	}
 
 	private void sendSettlementNotification(String nickname, Follow follow) {
