@@ -2,6 +2,7 @@ package com.found_404.funco.asset.controller;
 
 import java.util.List;
 
+import com.found_404.funco.asset.dto.request.TotalAssetHistoryRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,8 @@ public class AssetController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
+	// ----------------- 통합 자산 내역 -----------------------------
+
 	@GetMapping("/history")
 	public ResponseEntity<List<? extends AssetHistoryResponse>> getMemberHistory(@AuthMemberId Long memberId,
 		AssetHistoryRequest assetHistoryRequest) {
@@ -49,4 +52,33 @@ public class AssetController {
 		return ResponseEntity.ok(assetService.getMemberHistory(memberId, assetHistoryRequest.periodType(),
 			assetHistoryRequest.assetType(), assetHistoryRequest.tradeType()));
 	}
+
+	// post 코인
+	@PostMapping("/histories/coin")
+	public ResponseEntity<?> createCoinHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest) {
+		assetService.saveDataToAssetHistory(totalAssetHistoryRequest);
+		return ResponseEntity.ok().build();
+	}
+
+	// post 선물
+	@PostMapping("/histories/futures")
+	public ResponseEntity<?> createFuturesHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest) {
+		assetService.saveDataToAssetHistory(totalAssetHistoryRequest);
+		return ResponseEntity.ok().build();
+	}
+
+	// post 팔로우
+	@PostMapping("/histories/follow")
+	public ResponseEntity<?> createFollowHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest) {
+		assetService.saveDataToAssetHistory(totalAssetHistoryRequest);
+		return ResponseEntity.ok().build();
+	}
+
+	// post 포폴
+	@PostMapping("/histories/portfolio")
+	public ResponseEntity<?> createPortfolioHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest) {
+		assetService.saveDataToAssetHistory(totalAssetHistoryRequest);
+		return ResponseEntity.ok().build();
+	}
+
 }
