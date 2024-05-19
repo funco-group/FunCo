@@ -55,9 +55,7 @@ function DateTab({
   return (
     <DateTabContainer>
       <TabDiv>
-        <TabTitleDiv>
-          기간 <span>2024년 01월 01일 ~ 2024년 03월 12일</span>
-        </TabTitleDiv>
+        <TabTitleDiv>기간</TabTitleDiv>
         {periodTab.map((tab) => (
           <TabButton
             key={tab.id}

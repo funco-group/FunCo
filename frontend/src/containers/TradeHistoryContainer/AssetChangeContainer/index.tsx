@@ -72,7 +72,7 @@ function AssetChange() {
       {
         id: 1,
         type: 'FOLLOWING',
-        typeKor: '팔로우',
+        typeKor: '팔로잉',
       },
       {
         id: 2,
@@ -107,7 +107,7 @@ function AssetChange() {
     },
     {
       id: 1,
-      type: 'COIN',
+      type: 'FUTURES',
       typeKor: '선물',
     },
     {
