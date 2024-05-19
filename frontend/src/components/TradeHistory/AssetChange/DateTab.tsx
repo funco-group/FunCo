@@ -3,8 +3,8 @@
 /* eslint-disable no-nested-ternary */
 
 import TabButton from '@/components/Common/Button/TabButton.styled'
-import { DateTabContainer, TabDiv, TabTitleDiv } from './DateTab.styled'
 import { AssetTabType } from '@/interfaces/tradeHistory/follow/AssetChangeType'
+import { DateTabContainer, TabDiv, TabTitleDiv } from './DateTab.styled'
 
 interface DateTabProps {
   periodTab: AssetTabType[]

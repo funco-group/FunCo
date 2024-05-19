@@ -8,7 +8,7 @@ import NotesSearch from '@/components/Note/Notes/NotesSearch'
 import { NotePreviewType } from '@/interfaces/note/NotePreviewType'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 
 const NotesFilterBtnList = dynamic(
   () => import('@/components/Note/Notes/NotesFilterBtnList'),
@@ -24,6 +24,10 @@ function Notes() {
   const [params, setParams] = useState<string[]>([])
   const [notePreviewList, setNotePreviewList] = useState<NotePreviewType[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [page, setPage] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+
+  const observer = useRef<IntersectionObserver | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -61,12 +65,15 @@ function Notes() {
         ? `sorted=${searchParams.get('sorted')}`
         : 'sorted=LATEST',
       'page=0',
-      'size=100',
+      'size=3',
     ].filter(Boolean)
 
     getNotesList(apiParams.join('&'), (res) => {
       const { data } = res
       setNotePreviewList(data)
+      setIsLoading(false)
+      setPage(1)
+      setHasMore(data.length > 0)
     })
   }, [searchParams])
 
@@ -86,24 +93,50 @@ function Notes() {
     router.push(`/notes?${params.join('&')}`)
   }, [params])
 
-  useEffect(() => {
-    setIsLoading(false)
-  }, [notePreviewList])
+  const lastNoteElementRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (isLoading) return
+      if (observer.current) observer.current.disconnect()
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setIsLoading(true)
+          const apiParams = [
+            `type=${nowFilter}`,
+            coinList.length > 0 ? `coin=${coinList.join(',')}` : '',
+            search ? `search=${search}` : '',
+            keyword ? `keyword=${keyword}` : '',
+            `sorted=${sorted}`,
+            `page=${page}`,
+            'size=3',
+          ].filter(Boolean)
+
+          getNotesList(apiParams.join('&'), (res) => {
+            const { data } = res
+            setNotePreviewList((prev) => [...prev, ...data])
+            setIsLoading(false)
+            setPage((prevPage) => prevPage + 1)
+            setHasMore(data.length > 0)
+          })
+        }
+      })
+      if (node) observer.current.observe(node)
+    },
+    [isLoading, hasMore, nowFilter, coinList, search, keyword, sorted, page],
+  )
 
   const getNotePreviewListDiv = () => {
-    if (isLoading) {
-      return <NoData content="Loading" height={80} />
-    }
-    if (notePreviewList.length === 0) {
+    if (notePreviewList.length === 0 && !isLoading) {
       return <NoData content="게시글이 없습니다." height={80} />
     }
     return (
       <NotePreviewList
         notePreviewList={notePreviewList}
         setCoinList={setCoinList}
+        lastNoteElementRef={lastNoteElementRef}
       />
     )
   }
+
   return (
     <>
       <div className="flex justify-between">
@@ -139,6 +172,7 @@ function Notes() {
         </button>
       </div>
       {getNotePreviewListDiv()}
+      {isLoading && <NoData content="Loading..." height={20} />}
     </>
   )
 }
