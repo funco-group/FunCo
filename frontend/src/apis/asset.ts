@@ -27,3 +27,7 @@ export async function getUserAsset(
 ) {
   await localAxios.get(`/v1/${domain}/${memberId}`).then(success)
 }
+
+export async function patchInitCash(success: () => void) {
+  await localAxios.patch(`/v1/${domain}/init-cash`).then(success)
+}
