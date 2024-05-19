@@ -1,14 +1,18 @@
 package com.found_404.funco.global.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.found_404.funco.asset.domain.type.AssetType;
 import com.found_404.funco.asset.dto.request.TotalAssetHistoryRequest;
+import com.found_404.funco.asset.service.AssetService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class KafkaConsumerService {
+    private final AssetService assetService;
 
     private static final String TOPIC = "history";
 
@@ -16,19 +20,17 @@ public class KafkaConsumerService {
     public void listen(TotalAssetHistoryRequest totalAssetHistoryRequest) {
         log.info("kafka consume : {}", totalAssetHistoryRequest);
 
-
+        if (AssetType.COIN.equals(totalAssetHistoryRequest.getAssetType())) {
+            assetService.saveDataToAssetHistory(totalAssetHistoryRequest, AssetType.COIN);
+        } else if (AssetType.FUTURES.equals(totalAssetHistoryRequest.getAssetType())) {
+            assetService.saveDataToAssetHistory(totalAssetHistoryRequest, AssetType.FUTURES);
+        } else if (AssetType.FOLLOW.equals(totalAssetHistoryRequest.getAssetType())) {
+            assetService.saveDataToAssetHistory(totalAssetHistoryRequest, AssetType.FOLLOW);
+        } else if (AssetType.PORTFOLIO.equals(totalAssetHistoryRequest.getAssetType())) {
+            assetService.saveDataToAssetHistory(totalAssetHistoryRequest, AssetType.PORTFOLIO);
+        } else {
+            log.info("kafka consume history data AssetType 없음");
+        }
     }
 
-//    @KafkaListener(topics = TOPIC, containerFactory = "kafkaListenerContainerFactory")
-//    public void listen(String message) {
-//        System.out.println("Received raw message: " + message);
-//        // JSON 문자열을 직접 TotalAssetHistoryRequest 객체로 변환해 봅니다.
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            TotalAssetHistoryRequest request = mapper.readValue(message, TotalAssetHistoryRequest.class);
-//            System.out.println("Deserialized message: " + request);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
