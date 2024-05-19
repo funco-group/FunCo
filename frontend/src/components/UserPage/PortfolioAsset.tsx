@@ -201,7 +201,7 @@ function PortfolioAsset({ memberId }: PortfolioAssetProps) {
   return (
     <div>
       <TotalAssetInfoContainer>
-        <TotalAsset totalAsset={totalAsset} />
+        <TotalAsset totalAsset={totalAsset} setAssets={setAssets} />
         <ChartContainer>
           {investmentList && (
             <MonochromePieChart investmentList={investmentList} isLegend />
