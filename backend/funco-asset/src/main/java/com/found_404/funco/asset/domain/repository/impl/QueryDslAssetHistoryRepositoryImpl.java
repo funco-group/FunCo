@@ -42,7 +42,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	public List<FollowHistory> findFollowHistory(Long memberId, LocalDateTime startDate, LocalDateTime endDate,
 												 TradeType tradeType) {
 		return jpaQueryFactory
-			.select(new QFollowHistory(assetHistory.createdAt, assetHistory.tradeType, assetHistory.followName, assetHistory.investment,
+			.select(new QFollowHistory(assetHistory.createdAt, assetHistory.tradeType, assetHistory.investment,
 				assetHistory.settlement, assetHistory.followReturnRate, assetHistory.commission, assetHistory.followDate))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),

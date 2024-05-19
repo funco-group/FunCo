@@ -9,7 +9,6 @@ import com.querydsl.core.annotations.QueryProjection;
 public record FollowHistory(
 	LocalDateTime settleDate,
 	TradeType tradeType,
-	String followName,
 	Long investment,
 	Long settlement,
 	Double returnRate,
@@ -18,11 +17,10 @@ public record FollowHistory(
 ) implements AssetHistoryResponse {
 
 	@QueryProjection
-	public FollowHistory(LocalDateTime settleDate, TradeType tradeType, String followName, Long investment, Long settlement,
+	public FollowHistory(LocalDateTime settleDate, TradeType tradeType, Long investment, Long settlement,
 						 Double returnRate, Long commission, LocalDateTime followDate) {
 		this.settleDate = settleDate;
 		this.tradeType = tradeType;
-		this.followName = followName;
 		this.investment = investment;
 		this.settlement = settlement;
 		this.returnRate = returnRate;
