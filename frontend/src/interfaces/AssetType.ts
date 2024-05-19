@@ -8,6 +8,18 @@ export interface AssetCoinType {
   averagePrice: number
 }
 
+export interface AssetHistoryType {
+  date: string
+  name: string
+  assetType: string
+  tradeType: string
+  volume: number
+  price: number | null
+  orderCash: number
+  commission: number | null
+  settlement: number | null
+}
+
 export interface AssetFuturesType {
   ticker: string
   tradeType: string
@@ -54,14 +66,39 @@ export interface OptionType {
   name: string
 }
 
-export interface AssetHistoryType {
+export interface CoinAssetType {
   date: string
-  name: string
-  assetType: string
+  ticker: string
   tradeType: string
   volume: number
-  price: number | null
+  price: number
   orderCash: number
-  commission: number | null
-  settlement: number | null
+  endingCash: number
+}
+
+export interface FuturesAssetType {
+  date: string
+  ticker: string
+  tradeType: string
+  price: number
+  orderCash: number
+  endingCash: number
+}
+
+export interface FollowAssetType {
+  date: string
+  tradeType: string
+  investment: number
+  settlement: number
+  returnRate: number
+  commission: number
+  settleDate: string
+}
+
+export interface PortfolioAssetType {
+  date: string
+  portfolioName: string
+  tradeType: string
+  price: number
+  endingCash: number
 }
