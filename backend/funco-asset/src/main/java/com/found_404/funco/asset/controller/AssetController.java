@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.found_404.funco.asset.domain.type.AssetType;
 import com.found_404.funco.asset.dto.request.TotalAssetHistoryRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,10 +48,10 @@ public class AssetController {
 	// ----------------- 통합 자산 내역 -----------------------------
 	@GetMapping("/history")
 	public ResponseEntity<List<? extends AssetHistoryResponse>> getMemberHistory(@AuthMemberId Long memberId,
-		AssetHistoryRequest assetHistoryRequest) {
+		@Valid AssetHistoryRequest assetHistoryRequest) {
 
-		return ResponseEntity.ok(assetService.getMemberHistory(memberId, assetHistoryRequest.periodType(),
-			assetHistoryRequest.assetType(), assetHistoryRequest.tradeType()));
+		return ResponseEntity.ok(assetService.getMemberHistory(memberId, assetHistoryRequest.period(),
+			assetHistoryRequest.asset(), assetHistoryRequest.trade()));
 	}
 
 	// post 코인
