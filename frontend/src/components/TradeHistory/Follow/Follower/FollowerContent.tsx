@@ -32,13 +32,17 @@ function FollowerContent({ content }: { content: FollowerContentType }) {
           <ListItemDiv
             $align={content.returnRate !== null ? 'right' : ''}
             color={
-              content.returnRate && content.returnRate > 0 ? 'red' : 'blue'
+              content.returnRate !== null && content.returnRate >= 0
+                ? 'red'
+                : 'blue'
             }
           >
             {content.returnRate !== null
               ? content.returnRate.toLocaleString('ko-KR')
               : '-'}
-            {content.returnRate && <span>%</span>}
+            {content.returnRate !== null && content.returnRate >= 0 && (
+              <span>%</span>
+            )}
           </ListItemDiv>
           <ListItemDiv
             $align={content.commission !== null ? 'right' : ''}
