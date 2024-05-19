@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.found_404.funco.follow.exception.FollowException;
 import org.hibernate.annotations.Comment;
 
 import com.found_404.funco.global.entity.BaseEntity;
@@ -17,6 +18,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.found_404.funco.follow.exception.FollowErrorCode.INSUFFICIENT_ASSET;
 
 @Entity
 @Getter
@@ -81,9 +84,15 @@ public class Follow extends BaseEntity {
 
 	public void decreaseCash(long orderCash) {
 		if (this.cash < orderCash) {
-			throw new RuntimeException("잔액이 부족합니다.");  // member domain에서 custom exception 추가
+			throw new FollowException(INSUFFICIENT_ASSET);  // member domain에서 custom exception 추가
 		}
 		this.cash -= orderCash;
+	}
+
+	public void updateCash(long orderCash) {
+		if (this.cash + orderCash < 0) {
+			throw new FollowException(INSUFFICIENT_ASSET);
+		}
 	}
 
 	public void increaseCash(long orderCash) {
