@@ -30,6 +30,8 @@ interface PositionProps {
   setIsTrade: React.Dispatch<React.SetStateAction<boolean>>
   coin: PriceType | null
   trade: FuturesType | null
+  liquidate: boolean
+  setLiquidate: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface PositionType {
@@ -40,7 +42,14 @@ interface PositionType {
 }
 
 const Position = React.memo(
-  ({ isTrade, setIsTrade, coin, trade }: PositionProps) => {
+  ({
+    isTrade,
+    setIsTrade,
+    coin,
+    trade,
+    liquidate,
+    setLiquidate,
+  }: PositionProps) => {
     const [positions, setPositions] = useState<PositionType[]>([])
     const [alert, setAlert] = useState<boolean>(false)
 
@@ -49,7 +58,7 @@ const Position = React.memo(
     }
 
     useEffect(() => {
-      if (isTrade && trade && coin !== null) {
+      if (isTrade && trade && coin !== null && !liquidate) {
         let priceChange
         let profit
         if (trade.tradeType === 'LONG') {
@@ -66,9 +75,10 @@ const Position = React.memo(
             trade.leverage
         }
 
-        if (trade.orderCash - profit <= 0) {
+        if (trade.orderCash <= profit) {
           setIsTrade(false)
           setAlert(true)
+          setLiquidate(true)
         }
 
         setPositions([
