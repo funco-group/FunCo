@@ -2,6 +2,7 @@
 package com.found_404.funco.feignClient.service;
 
 import com.found_404.funco.feignClient.client.AssetServiceClient;
+import com.found_404.funco.feignClient.dto.AssetTradeType;
 import com.found_404.funco.feignClient.dto.AssetType;
 import com.found_404.funco.feignClient.dto.request.TotalAssetHistoryRequest;
 import com.found_404.funco.global.kafka.KafkaProducerService;
@@ -31,7 +32,7 @@ public class AssetService {
                 .memberId(trade.getMemberId())
                 .ticker(trade.getTicker())
                 .assetType(AssetType.COIN)
-                .tradeType(trade.getTradeType())
+                .assetTradeType(AssetTradeType.tradeTypeToAssetTradeType(trade.getTradeType()))
                 .volume(trade.getVolume())
                 .price(trade.getPrice())
                 .orderCash(trade.getTradeType().equals(TradeType.BUY) ? -trade.getOrderCash() : trade.getOrderCash())
@@ -53,7 +54,7 @@ public class AssetService {
         TotalAssetHistoryRequest totalAssetHistoryRequest = TotalAssetHistoryRequest.builder()
                 .memberId(futureTrade.getMemberId())
                 .ticker(futureTrade.getTicker())
-                .tradeType(futureTrade.getTradeType())
+                .assetTradeType(AssetTradeType.tradeTypeToAssetTradeType(futureTrade.getTradeType()))
                 .assetType(AssetType.FUTURES)
                 .price(futureTrade.getPrice())
                 .orderCash(futureTrade.getSettlement())
