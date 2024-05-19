@@ -1,7 +1,6 @@
 
 package com.found_404.funco.feignClient.service;
 
-import com.found_404.funco.feignClient.client.AssetServiceClient;
 import com.found_404.funco.feignClient.dto.AssetTradeType;
 import com.found_404.funco.feignClient.dto.AssetType;
 import com.found_404.funco.feignClient.dto.request.TotalAssetHistoryRequest;
@@ -9,9 +8,6 @@ import com.found_404.funco.global.kafka.KafkaProducerService;
 import com.found_404.funco.trade.domain.FutureTrade;
 import com.found_404.funco.trade.domain.Trade;
 import com.found_404.funco.trade.domain.type.TradeType;
-import com.found_404.funco.trade.exception.TradeErrorCode;
-import com.found_404.funco.trade.exception.TradeException;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -21,7 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class AssetService {
-    private final AssetServiceClient assetServiceClient;
+    //private final AssetServiceClient assetServiceClient;
     private final String SERVER_NAME = "[asset-service]";
 
     private final KafkaProducerService kafkaProducerService;
@@ -41,12 +37,12 @@ public class AssetService {
 
         kafkaProducerService.sendHistory(trade.getMemberId(), totalAssetHistoryRequest);
 
-        try {
-            this.assetServiceClient.createCoinHistory(totalAssetHistoryRequest);
-        } catch (FeignException e) {
-            log.error("{} create Follow Trade By futures error : {}", SERVER_NAME, e.getMessage());
-            throw new TradeException(TradeErrorCode.OTHER_SERVER_ERROR);
-        }
+//        try {
+//            this.assetServiceClient.createCoinHistory(totalAssetHistoryRequest);
+//        } catch (FeignException e) {
+//            log.error("{} create Follow Trade By futures error : {}", SERVER_NAME, e.getMessage());
+//            throw new TradeException(TradeErrorCode.OTHER_SERVER_ERROR);
+//        }
     }
 
     @Async
@@ -62,13 +58,13 @@ public class AssetService {
                 .build();
 
         kafkaProducerService.sendHistory(futureTrade.getMemberId(), totalAssetHistoryRequest);
-
-        try {
-            this.assetServiceClient.createFuturesHistory(totalAssetHistoryRequest);
-        } catch (FeignException e) {
-            log.error("{} create Follow Trade By futures error : {}", SERVER_NAME, e.getMessage());
-            throw new TradeException(TradeErrorCode.OTHER_SERVER_ERROR);
-        }
+//
+//        try {
+//            this.assetServiceClient.createFuturesHistory(totalAssetHistoryRequest);
+//        } catch (FeignException e) {
+//            log.error("{} create Follow Trade By futures error : {}", SERVER_NAME, e.getMessage());
+//            throw new TradeException(TradeErrorCode.OTHER_SERVER_ERROR);
+//        }
     }
 
 }
