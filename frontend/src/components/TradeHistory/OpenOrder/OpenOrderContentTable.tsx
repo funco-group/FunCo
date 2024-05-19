@@ -9,6 +9,7 @@ import {
 import { TradeListType } from '@/interfaces/TradeType'
 import { cancleOrder, getAllOpenTradeList } from '@/apis/trade'
 import AlertModal from '@/components/Common/Modal/AlertModal'
+import NoData from '@/components/Common/NoData'
 import OpenOrderContent from './OpenOrderContent'
 import {
   OpenOrderContentTableContainer,
@@ -84,13 +85,18 @@ function OpenOrderContentTable() {
         </ColumnGrid>
       </ColumnContainer>
       <OpenOrderContentListContainer>
-        {openOrderContentList?.map((content) => (
-          <OpenOrderContent
-            key={content.id}
-            content={content}
-            handleCancelOpenOrder={handleCancelOpenOrder}
-          />
-        ))}
+        {openOrderContentList !== undefined &&
+        openOrderContentList.length > 0 ? (
+          openOrderContentList?.map((content) => (
+            <OpenOrderContent
+              key={content.id}
+              content={content}
+              handleCancelOpenOrder={handleCancelOpenOrder}
+            />
+          ))
+        ) : (
+          <NoData content="미체결 내역이 없습니다." height={80} />
+        )}
       </OpenOrderContentListContainer>
     </OpenOrderContentTableContainer>
   )

@@ -75,7 +75,7 @@ function NotesDetailCommentInput({
           </button>
         </div>
       ) : (
-        <NoData content="로그인 후 댓글을 작성할 수 있습니다." />
+        <NoData content="로그인 후 댓글을 작성할 수 있습니다." height={20} />
       )}
     </div>
   )

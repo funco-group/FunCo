@@ -56,7 +56,7 @@ function NotiDropdown({ visible }: NotiDropdownProps) {
             />
           ))
         ) : (
-          <NoData content="알림이 없습니다." />
+          <NoData content="알림이 없습니다." height="full" />
         )}
       </NotiHistoryContentContainer>
       <NotiMoreButton>
