@@ -51,7 +51,7 @@ function NotesDetailComments({
             />
           ))
         ) : (
-          <NoData content="댓글이 아직 없습니다." />
+          <NoData content="댓글이 아직 없습니다." height={80} />
         )}
       </div>
     </div>

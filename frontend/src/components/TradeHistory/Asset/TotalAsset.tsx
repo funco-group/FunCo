@@ -4,6 +4,9 @@ import {
   GreenTitleDiv,
 } from '@/styles/TradeHistoryStyled'
 import { TotalAssetType } from '@/interfaces/AssetType'
+import AlertWithCancelModal from '@/components/Common/Modal/AlertWithCancelModal'
+import { useState } from 'react'
+import { patchInitCash } from '@/apis/asset'
 import {
   AssetItemContainer,
   AssetItemDiv,
@@ -15,8 +18,34 @@ interface TotalAssetProps {
 }
 
 function TotalAsset({ totalAsset }: TotalAssetProps) {
+  const [onAlertModal, setOnAlertModal] = useState(false)
+  const handleInitCash = () => {
+    setOnAlertModal(true)
+  }
   return (
     <TotalAssetContainer>
+      {onAlertModal && (
+        <AlertWithCancelModal
+          title="경고"
+          content={
+            <div>
+              <div className="mb-2 text-lg text-brandRed">
+                원 초기화 시 팔로우 기능이 강제 청산되며 모든 자산이
+                초기화됩니다.
+              </div>
+              <div>그래도 초기화 하시겠습니까?</div>
+            </div>
+          }
+          cancelAlert={() => {
+            setOnAlertModal(false)
+          }}
+          confirmAlert={() => {
+            patchInitCash(() => {
+              setOnAlertModal(false)
+            })
+          }}
+        />
+      )}
       <GreenContainer>
         <AssetItemContainer $top>
           <AssetItemDiv>
@@ -74,6 +103,15 @@ function TotalAsset({ totalAsset }: TotalAssetProps) {
             </GreenDataDiv>
           </AssetItemDiv>
         </AssetItemContainer>
+        <div className="flex justify-end">
+          <button
+            type="button"
+            className="rounded border-none bg-brandColor p-2 text-brandWhite"
+            onClick={handleInitCash}
+          >
+            원 초기화
+          </button>
+        </div>
       </GreenContainer>
     </TotalAssetContainer>
   )

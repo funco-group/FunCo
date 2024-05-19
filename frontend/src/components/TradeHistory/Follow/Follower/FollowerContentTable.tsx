@@ -6,6 +6,7 @@ import {
 } from '@/styles/CommonStyled'
 import { FollowerContentType } from '@/interfaces/tradeHistory/follow/FollowerContentType'
 import { getFollowerList } from '@/apis/follow'
+import NoData from '@/components/Common/NoData'
 import {
   FollowerContentListContainer,
   FollowerContentTableContainer,
@@ -33,6 +34,7 @@ function FollowerContentTable({
   useEffect(() => {
     getFollowerList((res) => {
       const newFollowContentList = res.data.followers
+      console.log(newFollowContentList)
       setFollowerContentList(newFollowContentList)
     }, nowTabName)
   }, [nowTabName])
@@ -47,9 +49,13 @@ function FollowerContentTable({
         </ColumnGrid>
       </ColumnContainer>
       <FollowerContentListContainer>
-        {FollowerContentList.map((content) => (
-          <FollowerContent key={content.followId} content={content} />
-        ))}
+        {FollowerContentList.length > 0 ? (
+          FollowerContentList.map((content) => (
+            <FollowerContent key={content.followId} content={content} />
+          ))
+        ) : (
+          <NoData content="팔로워 내역이 없습니다." height={80} />
+        )}
       </FollowerContentListContainer>
     </FollowerContentTableContainer>
   )
