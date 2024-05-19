@@ -26,6 +26,7 @@ export interface AssetResponseType {
 
 export interface AssetType {
   imgSrc: string
+  type: string
   name: string
   volume: number | null
   averagePrice: number | null
