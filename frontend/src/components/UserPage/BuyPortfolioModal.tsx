@@ -60,6 +60,7 @@ function BuyPortfolioModal({
 
   const closeAlert = () => {
     setAlert(false)
+    handleBuyPortFolioClick()
   }
 
   const clickBuyPortfolio = () => {
@@ -71,7 +72,6 @@ function BuyPortfolioModal({
         setAlert(true)
         setAlertContent('포트폴리오 구독을 시작합니다.')
         setPortfolioStatus('SUBSCRIBE')
-        handleBuyPortFolioClick()
       })
     }
   }
