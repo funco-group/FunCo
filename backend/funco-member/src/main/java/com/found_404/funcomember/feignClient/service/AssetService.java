@@ -26,10 +26,10 @@ public class AssetService {
         try {
             this.assetServiceClient.createCoinHistory(TotalAssetHistoryRequest.builder()
                     .assetTradeType(assetTradeType)
-                    .price(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? Double.valueOf(subscribe.getOrderCash()) : -Double.valueOf(subscribe.getOrderCash()))
+                    .price(Double.valueOf(subscribe.getOrderCash()))
                     .memberId(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getToMember().getId() : subscribe.getFromMember().getId())
-                    .portfolioName(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getFromMember().getNickname() : subscribe.getToMember().getNickname())
-                    .orderCash(subscribe.getOrderCash())
+                    .portfolioName(subscribe.getToMember().getNickname())
+                    .orderCash(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getOrderCash() : -subscribe.getOrderCash())
                     .endingCash(cash)
                     .build());
 
