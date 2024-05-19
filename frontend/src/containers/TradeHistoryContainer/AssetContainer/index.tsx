@@ -104,8 +104,6 @@ function Asset() {
       }
       const evaluationAmount = coin.orderCash * rate + coin.orderCash
 
-      console.log(coin.ticker, curPrice.get(coin.ticker))
-
       setAssets((asset) => [
         ...asset,
         {
@@ -130,7 +128,18 @@ function Asset() {
           (acc, coin) =>
             acc + Math.floor(coin.volume * curPrice.get(coin.ticker)!),
           0,
-        ),
+        ) +
+          assetsRes.activeFutureInfos.reduce((acc, coin) => {
+            let rate =
+              ((curPrice.get(coin.ticker)! - coin.price) / coin.price) *
+              coin.leverage
+            if (coin.tradeType === 'SHORT') {
+              rate = -rate
+            }
+            const evaluationAmount = coin.orderCash * rate + coin.orderCash
+
+            return acc + evaluationAmount
+          }, 0),
       ],
     ])
   }
