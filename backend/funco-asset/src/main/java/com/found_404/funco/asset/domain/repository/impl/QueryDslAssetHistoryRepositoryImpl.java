@@ -75,7 +75,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 						, assetHistory.price, assetHistory.orderCash, assetHistory.endingCash))
 				.from(assetHistory)
 				.where(assetHistory.memberId.eq(memberId),
-						assetHistory.assetType.eq(AssetType.COIN),
+						assetHistory.assetType.eq(AssetType.FUTURES),
 						filterDate(startDateTime, endDateTime),
 						filterType(tradeType))
 				.orderBy(assetHistory.createdAt.desc())
