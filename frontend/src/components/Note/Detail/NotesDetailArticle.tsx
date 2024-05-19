@@ -55,7 +55,7 @@ function NotesDetailArticle({ noteId }: NotesDetailArticleProps) {
   }, [detail, height])
 
   if (!detail) {
-    return <NoData content="Loading..." />
+    return <NoData content="Loading" height={80} />
   }
 
   const handleClickCoinBtn = () => {

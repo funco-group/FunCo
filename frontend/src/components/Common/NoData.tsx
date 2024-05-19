@@ -1,10 +1,9 @@
 interface NoDataProps {
   content: string
-  // eslint-disable-next-line react/require-default-props
-  height?: number
+  height: number | string
 }
 
-function NoData({ content, height = 20 }: NoDataProps) {
+function NoData({ content, height }: NoDataProps) {
   const heightClass = `h-${height}`
   return (
     <div
