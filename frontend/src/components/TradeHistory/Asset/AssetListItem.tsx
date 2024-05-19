@@ -26,7 +26,7 @@ function AssetListItem({
   return (
     <ListItemContainer>
       <ListItemContainerDiv>
-        <ColumnGrid $column="repeat(6, 1fr)">
+        <ColumnGrid $column="1fr 1fr 1fr 1fr 1fr 6.5rem">
           <ListItemDiv $align="left" color="black">
             <img src={imgSrc} alt={name} width={20} />
             {name !== '현금' && name !== '팔로우' ? nameMap.get(name) : name}
@@ -41,17 +41,17 @@ function AssetListItem({
             {averagePrice && <span> WON</span>}
           </ListItemDiv>
           <ListItemDiv $align={price != null ? 'right' : ''} color="black">
-            {price != null ? price.toLocaleString('ko-KR') : '-'}
-            {price != null && <span> WON</span>}
+            {price !== null ? price.toLocaleString('ko-KR') : '-'}
+            {price !== null && <span> WON</span>}
           </ListItemDiv>
-          <ListItemDiv $align="right" color="black">
+          <ListItemDiv $align={evaluationAmount ? 'right' : ''} color="black">
             {evaluationAmount ? evaluationAmount.toLocaleString('ko-KR') : '-'}
             {evaluationAmount !== null && evaluationAmount !== 0 && (
               <span> WON</span>
             )}
           </ListItemDiv>
           <ListItemDiv
-            $align={evaluationProfit ? '' : ''}
+            $align={evaluationProfit ? 'right' : ''}
             color={determineColor(evaluationProfit)}
           >
             {evaluationProfit === null ? '-' : evaluationProfit}
