@@ -2,8 +2,7 @@ package com.found_404.funcomember.portfolio.service;
 
 import static com.found_404.funcomember.global.util.DecimalCalculator.*;
 import static com.found_404.funcomember.global.util.DecimalCalculator.ScaleType.*;
-import static com.found_404.funcomember.portfolio.exception.PortfolioErrorCode.INSUFFICIENT_CASH;
-import static com.found_404.funcomember.portfolio.exception.PortfolioErrorCode.NOT_PRIVATE_STATUS;
+import static com.found_404.funcomember.portfolio.exception.PortfolioErrorCode.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,6 +54,7 @@ public class PortfolioService {
 		Member seller = findByMemberId(subscribeRequest.sellerId());
 
 		checkPortfolioStatus(seller);
+		checkDuplicateSubscribe(subscriber, seller);
 
 		// 포트폴리오 가격 확인
 		Long portfolioPrice = seller.getPortfolioPrice();
@@ -79,6 +79,11 @@ public class PortfolioService {
 		// [API] 통합 자산 변동내역
 		assetService.createAssetHistory(subscribe, AssetTradeType.PURCHASE_PORTFOLIO, subscribe.getFromMember().getCash());
 		assetService.createAssetHistory(subscribe, AssetTradeType.SELL_PORTFOLIO, subscribe.getToMember().getCash());
+	}
+
+	private void checkDuplicateSubscribe(Member subscriber, Member seller) {
+		subscribeRepository.findByFromMemberAndToMember(subscriber, seller)
+				.ifPresent(subscribe -> {throw new PortfolioException(DUPLICATED_SUBSCRIBE);});
 	}
 
 	private static void checkAvailable(Member subscriber, Long portfolioPrice) {
