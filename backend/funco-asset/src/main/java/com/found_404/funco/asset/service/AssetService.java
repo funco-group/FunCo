@@ -102,10 +102,10 @@ public class AssetService {
 		memberService.modifyCashAndInitCashDate(memberId);
 	}
 
-	public void saveDataToAssetHistory(TotalAssetHistoryRequest totalAssetHistoryRequest) {
+	public void saveDataToAssetHistory(TotalAssetHistoryRequest totalAssetHistoryRequest, AssetType assetType) {
 		assetHistoryRepository.save(AssetHistory.builder()
 				.memberId(totalAssetHistoryRequest.memberId())
-				.assetType(totalAssetHistoryRequest.assetType())
+				.assetType(assetType)
 				.tradeType(totalAssetHistoryRequest.tradeType())
 				.volume(totalAssetHistoryRequest.volume())
 				.price(totalAssetHistoryRequest.price())

@@ -2,6 +2,7 @@ package com.found_404.funco.asset.controller;
 
 import java.util.List;
 
+import com.found_404.funco.asset.domain.type.AssetType;
 import com.found_404.funco.asset.dto.request.TotalAssetHistoryRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,28 +56,28 @@ public class AssetController {
 	// post 코인
 	@PostMapping("/histories/coin")
 	public ResponseEntity<?> createCoinHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest) {
-		assetService.saveDataToAssetHistory(totalAssetHistoryRequest);
+		assetService.saveDataToAssetHistory(totalAssetHistoryRequest, AssetType.COIN);
 		return ResponseEntity.ok().build();
 	}
 
 	// post 선물
 	@PostMapping("/histories/futures")
 	public ResponseEntity<?> createFuturesHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest) {
-		assetService.saveDataToAssetHistory(totalAssetHistoryRequest);
+		assetService.saveDataToAssetHistory(totalAssetHistoryRequest, AssetType.FUTURES);
 		return ResponseEntity.ok().build();
 	}
 
 	// post 팔로우
 	@PostMapping("/histories/follow")
 	public ResponseEntity<?> createFollowHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest) {
-		assetService.saveDataToAssetHistory(totalAssetHistoryRequest);
+		assetService.saveDataToAssetHistory(totalAssetHistoryRequest, AssetType.FOLLOW);
 		return ResponseEntity.ok().build();
 	}
 
 	// post 포폴
 	@PostMapping("/histories/portfolio")
 	public ResponseEntity<?> createPortfolioHistory(@RequestBody TotalAssetHistoryRequest totalAssetHistoryRequest) {
-		assetService.saveDataToAssetHistory(totalAssetHistoryRequest);
+		assetService.saveDataToAssetHistory(totalAssetHistoryRequest, AssetType.PORTFOLIO);
 		return ResponseEntity.ok().build();
 	}
 
