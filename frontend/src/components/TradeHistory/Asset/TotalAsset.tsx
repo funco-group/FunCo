@@ -3,9 +3,9 @@ import {
   GreenDataDiv,
   GreenTitleDiv,
 } from '@/styles/TradeHistoryStyled'
-import { TotalAssetType } from '@/interfaces/AssetType'
+import { AssetType, TotalAssetType } from '@/interfaces/AssetType'
 import AlertWithCancelModal from '@/components/Common/Modal/AlertWithCancelModal'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { patchInitCash } from '@/apis/asset'
 import { usePathname } from 'next/navigation'
 import {
@@ -16,9 +16,10 @@ import {
 
 interface TotalAssetProps {
   totalAsset: TotalAssetType | undefined
+  setAssets: Dispatch<SetStateAction<AssetType[]>>
 }
 
-function TotalAsset({ totalAsset }: TotalAssetProps) {
+function TotalAsset({ totalAsset, setAssets }: TotalAssetProps) {
   const [onAlertModal, setOnAlertModal] = useState(false)
   const pathName = usePathname()
 
@@ -44,6 +45,28 @@ function TotalAsset({ totalAsset }: TotalAssetProps) {
           }}
           confirmAlert={() => {
             patchInitCash(() => {
+              setAssets([
+                {
+                  imgSrc: '/icon/cash-icon.png',
+                  type: 'cash',
+                  name: '현금',
+                  volume: null,
+                  averagePrice: null,
+                  price: null,
+                  evaluationAmount: 5000000,
+                  evaluationProfit: null,
+                },
+                {
+                  imgSrc: '/icon/follow-icon.png',
+                  type: 'follow',
+                  name: '팔로우',
+                  volume: null,
+                  averagePrice: null,
+                  price: 0,
+                  evaluationAmount: null,
+                  evaluationProfit: null,
+                },
+              ])
               setOnAlertModal(false)
             })
           }}
