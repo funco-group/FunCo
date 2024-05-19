@@ -33,7 +33,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
 			.fetchFirst();
 	}
 
-	public MemberInfo findUserInfoByMemberId(Long memberId) {
+	public MemberInfo findUserInfoByMemberId(Long loginMemberId, Long memberId) {
 		CaseBuilder caseBuilder = new CaseBuilder();
 		return jpaQueryFactory
 			.select(new QMemberInfo(member.id, member.nickname, member.profileUrl, member.introduction, member.cash,
@@ -42,6 +42,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
 					.when(member.portfolioStatus.stringValue()
 						.eq(PortfolioStatusType.PRIVATE.toString())
 						.and(subscribe.id.isNotNull())
+						.and(subscribe.fromMember.id.eq(loginMemberId))
 						.and(subscribe.expiredAt.after(
 							LocalDateTime.now())))
 					.then(SUBSCRIBE.getValue())
