@@ -15,8 +15,8 @@ public enum FollowErrorCode {
 	INSUFFICIENT_ASSET(HttpStatus.BAD_REQUEST,"자산이 부족합니다."),
 	TRADE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "trade server error"),
 	MEMBER_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "member server error"),
-	NOTIFICATION_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "notification server error")
-
+	NOTIFICATION_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "notification server error"),
+	OTHER_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "other server error")
 	;
 
 	private final HttpStatus httpStatus;
