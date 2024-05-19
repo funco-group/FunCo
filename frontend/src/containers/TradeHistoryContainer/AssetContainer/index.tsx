@@ -19,17 +19,25 @@ import { ChartContainer, TotalAssetInfoContainer } from './styled'
 function Asset() {
   const [assets, setAssets] = useState<AssetType[]>([])
   const [totalAsset, setTotalAsset] = useState<TotalAssetType>()
-
   const [investmentList, setInvestmentList] = useState<(string | number)[][]>()
 
   const getCurPrice = async (assetRes: AssetResponseType) => {
     const curPrice = new Map<string, number>()
     if (assetRes.holdingCoinInfos.length !== 0) {
-      const codes = assetRes.holdingCoinInfos
-        .map((coin) => coin.ticker)
-        .join(',')
+      const codes: string[] = []
+
+      assetRes.holdingCoinInfos.forEach((info) => {
+        codes.push(info.ticker)
+      })
+
+      assetRes.activeFutureInfos.forEach((info) => {
+        codes.push(info.ticker)
+      })
+
+      const uniqueCodes = Array.from(new Set(codes))
+
       await getTickerPrice(
-        codes,
+        uniqueCodes.join(', '),
         (response: AxiosResponse<ResTickerType[]>) => {
           const { data } = response
           data.forEach((coin) => {
@@ -48,6 +56,7 @@ function Asset() {
     setAssets([
       {
         imgSrc: '/icon/cash-icon.png',
+        type: 'cash',
         name: '현금',
         volume: null,
         averagePrice: null,
@@ -57,6 +66,7 @@ function Asset() {
       },
       {
         imgSrc: '/icon/follow-icon.png',
+        type: 'follow',
         name: '팔로우',
         volume: null,
         averagePrice: null,
@@ -74,6 +84,7 @@ function Asset() {
         ...asset,
         {
           imgSrc: `https://static.upbit.com/logos/${coin.ticker.split('-')[1]}.png`,
+          type: 'coin',
           name: coin.ticker,
           volume: coin.volume,
           averagePrice: coin.averagePrice,
@@ -86,16 +97,24 @@ function Asset() {
     })
 
     assetsRes.activeFutureInfos.forEach((coin) => {
+      let rate =
+        ((curPrice.get(coin.ticker)! - coin.price) / coin.price) * coin.leverage
+      if (coin.tradeType === 'SHORT') {
+        rate = -rate
+      }
+      const evaluationAmount = coin.orderCash * rate + coin.orderCash
+
       setAssets((asset) => [
         ...asset,
         {
           imgSrc: `https://static.upbit.com/logos/${coin.ticker.split('-')[1]}.png`,
-          name: `${coin.ticker} (${coin.tradeType})`,
+          type: coin.tradeType,
+          name: coin.ticker,
           volume: null,
           averagePrice: coin.price,
-          price: `${coin.orderCash} (X ${coin.leverage})`,
-          evaluationAmount: null,
-          evaluationProfit: null,
+          price: coin.orderCash,
+          evaluationAmount: Math.ceil(evaluationAmount),
+          evaluationProfit: Math.ceil(rate * 10000) / 100,
         },
       ])
     })
@@ -109,7 +128,18 @@ function Asset() {
           (acc, coin) =>
             acc + Math.floor(coin.volume * curPrice.get(coin.ticker)!),
           0,
-        ),
+        ) +
+          assetsRes.activeFutureInfos.reduce((acc, coin) => {
+            let rate =
+              ((curPrice.get(coin.ticker)! - coin.price) / coin.price) *
+              coin.leverage
+            if (coin.tradeType === 'SHORT') {
+              rate = -rate
+            }
+            const evaluationAmount = coin.orderCash * rate + coin.orderCash
+
+            return acc + evaluationAmount
+          }, 0),
       ],
     ])
   }

@@ -5,7 +5,7 @@ import {
   AssetType,
   TotalAssetType,
 } from '@/interfaces/AssetType'
-import { getAsset, getHistory } from '@/apis/asset'
+import { getAsset } from '@/apis/asset'
 import { AxiosResponse } from 'axios'
 import {
   AssetChangeListContainer,
@@ -66,6 +66,7 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
     setAssets([
       {
         imgSrc: cashIcon.src,
+        type: 'cash',
         name: '현금',
         volume: null,
         averagePrice: null,
@@ -75,6 +76,7 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
       },
       {
         imgSrc: followIcon.src,
+        type: 'follow',
         name: '팔로우',
         volume: null,
         averagePrice: null,
@@ -92,6 +94,7 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
         ...asset,
         {
           imgSrc: `https://static.upbit.com/logos/${coin.ticker.split('-')[1]}.png`,
+          type: 'coin',
           name: coin.ticker,
           volume: coin.volume,
           averagePrice: coin.averagePrice,
@@ -186,10 +189,10 @@ function FollowAssetModal({ handlePortFolioClick }: FollowAssetModalProps) {
   ]
 
   useEffect(() => {
-    getHistory((response: AxiosResponse<AssetHistoryType[]>) => {
-      const { data } = response
-      setHistoryList(data)
-    })
+    // getHistory((response: AxiosResponse<AssetHistoryType[]>) => {
+    //   const { data } = response
+    //   setHistoryList(data)
+    // })
   }, [])
 
   return (

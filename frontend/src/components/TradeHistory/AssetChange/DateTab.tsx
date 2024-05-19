@@ -3,27 +3,53 @@
 /* eslint-disable no-nested-ternary */
 
 import TabButton from '@/components/Common/Button/TabButton.styled'
-import { useState } from 'react'
 import { DateTabContainer, TabDiv, TabTitleDiv } from './DateTab.styled'
+import { AssetTabType } from '@/interfaces/tradeHistory/follow/AssetChangeType'
 
-function DateTab() {
-  const dateTab = ['1주일', '1개월', '3개월', '6개월']
-  const tradeTypeTab = ['전체', '매수', '매도']
-  const assetTypeTab = ['전체', '가상화폐', '팔로잉', '팔로워']
-  const [dateActive, setDateActive] = useState<string>('1주일')
-  const [tradeActive, setTradeActive] = useState<string>('전체')
-  const [assetActive, setAssetActive] = useState<string>('전체')
+interface DateTabProps {
+  periodTab: AssetTabType[]
+  tradeTypeTab: AssetTabType[][]
+  assetTypeTab: AssetTabType[]
+  periodActive: number
+  tradeActive: number
+  assetActive: number
+  setPeriodActive: React.Dispatch<React.SetStateAction<number>>
+  setTradeActive: React.Dispatch<React.SetStateAction<number>>
+  setAssetActive: React.Dispatch<React.SetStateAction<number>>
+}
 
-  const dateClick = (tab: string) => {
-    setDateActive(tab)
+function DateTab({
+  periodTab,
+  tradeTypeTab,
+  assetTypeTab,
+  periodActive,
+  tradeActive,
+  assetActive,
+  setPeriodActive,
+  setTradeActive,
+  setAssetActive,
+}: DateTabProps) {
+  const dateClick = (tab: number) => {
+    setPeriodActive(tab)
   }
 
-  const tradeClick = (tab: string) => {
+  const tradeClick = (tab: number) => {
     setTradeActive(tab)
   }
 
-  const assetClick = (tab: string) => {
+  const assetClick = (tab: number) => {
     setAssetActive(tab)
+    setTradeActive(0)
+  }
+
+  const borderRadius = (id: number, lastId: number) => {
+    if (id === 0) {
+      return 'left'
+    }
+    if (id === lastId) {
+      return 'right'
+    }
+    return ''
   }
 
   return (
@@ -32,31 +58,31 @@ function DateTab() {
         <TabTitleDiv>
           기간 <span>2024년 01월 01일 ~ 2024년 03월 12일</span>
         </TabTitleDiv>
-        {dateTab.map((tab) => (
+        {periodTab.map((tab) => (
           <TabButton
-            key={tab}
+            key={tab.id}
             width="4rem"
             height="2.5rem"
-            $active={tab === dateActive}
-            onClick={() => dateClick(tab)}
-            radius={tab === '1주일' ? 'left' : tab === '6개월' ? 'right' : ''}
+            $active={tab.id === periodActive}
+            onClick={() => dateClick(tab.id)}
+            radius={borderRadius(tab.id, 3)}
           >
-            {tab}
+            {tab.typeKor}
           </TabButton>
         ))}
       </TabDiv>
       <TabDiv>
         <TabTitleDiv>거래종류</TabTitleDiv>
-        {tradeTypeTab.map((tab) => (
+        {tradeTypeTab[assetActive].map((tab) => (
           <TabButton
-            key={tab}
+            key={tab.id}
             width="4rem"
             height="2.5rem"
-            $active={tab === tradeActive}
-            onClick={() => tradeClick(tab)}
-            radius={tab === '전체' ? 'left' : tab === '매도' ? 'right' : ''}
+            $active={tab.id === tradeActive}
+            onClick={() => tradeClick(tab.id)}
+            radius={borderRadius(tab.id, 2)}
           >
-            {tab}
+            {tab.typeKor}
           </TabButton>
         ))}
       </TabDiv>
@@ -64,14 +90,14 @@ function DateTab() {
         <TabTitleDiv>자산종류</TabTitleDiv>
         {assetTypeTab.map((tab) => (
           <TabButton
-            key={tab}
-            width="4rem"
+            key={tab.id}
+            width="5rem"
             height="2.5rem"
-            $active={tab === assetActive}
-            onClick={() => assetClick(tab)}
-            radius={tab === '전체' ? 'left' : tab === '팔로워' ? 'right' : ''}
+            $active={tab.id === assetActive}
+            onClick={() => assetClick(tab.id)}
+            radius={borderRadius(tab.id, 3)}
           >
-            {tab}
+            {tab.typeKor}
           </TabButton>
         ))}
       </TabDiv>
