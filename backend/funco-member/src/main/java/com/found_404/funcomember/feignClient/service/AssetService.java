@@ -26,8 +26,7 @@ public class AssetService {
         try {
             this.assetServiceClient.createCoinHistory(TotalAssetHistoryRequest.builder()
                     .assetTradeType(assetTradeType)
-                    .price(Double.valueOf(subscribe.getOrderCash()) *
-                            (assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? 1 : -1))
+                    .price(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? Double.valueOf(subscribe.getOrderCash()) : -Double.valueOf(subscribe.getOrderCash()))
                     .memberId(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getToMember().getId() : subscribe.getFromMember().getId())
                     .portfolioName(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getFromMember().getNickname() : subscribe.getToMember().getNickname())
                     .orderCash(subscribe.getOrderCash())
