@@ -29,7 +29,7 @@ public class AssetService {
                     .price(Double.valueOf(subscribe.getOrderCash()) *
                             (assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? 1 : -1))
                     .memberId(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getToMember().getId() : subscribe.getFromMember().getId())
-                    .portfolioName(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getToMember().getNickname() : subscribe.getFromMember().getNickname())
+                    .portfolioName(assetTradeType.equals(AssetTradeType.SELL_PORTFOLIO) ? subscribe.getFromMember().getNickname() : subscribe.getToMember().getNickname())
                     .orderCash(subscribe.getOrderCash())
                     .endingCash(cash)
                     .build());
