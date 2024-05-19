@@ -1,3 +1,5 @@
+'use client'
+
 import {
   ColumnContainer,
   ColumnGrid,
@@ -33,6 +35,7 @@ function AssetList({ assets }: AssetListProps) {
       <AssetListContainer>
         {assets.map((coin: AssetType) => (
           <AssetListItem
+            key={coin.name + coin.type}
             imgSrc={coin.imgSrc}
             type={coin.type}
             name={coin.name}
