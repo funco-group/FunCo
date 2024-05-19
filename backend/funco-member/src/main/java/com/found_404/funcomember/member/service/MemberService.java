@@ -83,9 +83,11 @@ public class MemberService {
 	}
 
 	@Transactional
-	public void updateCash(Long memberId, Long updateCash) {
+	public CashResponse updateCash(Long memberId, Long updateCash) {
 		Member member = getMember(memberId);
 		member.updateCash(updateCash);
+
+		return new CashResponse(member.getCash());
 	}
 
 	public CashResponse getCash(Long memberId) {
