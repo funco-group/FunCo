@@ -46,16 +46,16 @@ public class MemberController {
 
 	// 닉네임 변경
 	@PatchMapping("/nickname")
-	public ResponseEntity<?> updateNickname(@AuthMemberId Long loginMemberId,
-		@RequestBody @Valid RequestNickName requestNickName) {
+	public ResponseEntity<?> updateIntroduction(@AuthMemberId Long loginMemberId,
+												@RequestBody @Valid RequestNickName requestNickName) {
 		memberService.updateNickname(loginMemberId, requestNickName.nickname());
 		return ResponseEntity.ok().build();
 	}
 
 	// 소개 수정
 	@PatchMapping("/introduction")
-	public ResponseEntity<?> updateNickname(@AuthMemberId Long loginMemberId,
-		@RequestBody @Valid RequestIntroduction requestIntroduction) {
+	public ResponseEntity<?> updateIntroduction(@AuthMemberId Long loginMemberId,
+												@RequestBody @Valid RequestIntroduction requestIntroduction) {
 		memberService.updateIntroduce(loginMemberId, requestIntroduction.introduction());
 		return ResponseEntity.ok().build();
 	}
@@ -68,9 +68,8 @@ public class MemberController {
 	}
 
 	@PatchMapping("/{memberId}/cash")
-	public ResponseEntity<?> updateCash(@PathVariable Long memberId, @RequestBody UpdateCash updateCash) {
-		memberService.updateCash(memberId, updateCash.cash());
-		return ResponseEntity.ok().build();
+	public ResponseEntity<CashResponse> updateCash(@PathVariable Long memberId, @RequestBody UpdateCash updateCash) {
+		return ResponseEntity.ok(memberService.updateCash(memberId, updateCash.cash()));
 	}
 
 	@GetMapping("/cash")
