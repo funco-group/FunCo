@@ -27,7 +27,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 											 AssetTradeType assetTradeType) {
 
 		return jpaQueryFactory
-			.select(new QCoinHistory(assetHistory.createdAt, assetHistory.ticker, assetHistory.tradeType,
+			.select(new QCoinHistory(assetHistory.createdAt, assetHistory.ticker, assetHistory.assetTradeType,
 				assetHistory.volume, assetHistory.price, assetHistory.orderCash, assetHistory.endingCash))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),
@@ -42,7 +42,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	public List<FollowHistory> findFollowHistory(Long memberId, LocalDateTime startDate, LocalDateTime endDate,
 												 AssetTradeType assetTradeType) {
 		return jpaQueryFactory
-			.select(new QFollowHistory(assetHistory.createdAt, assetHistory.tradeType, assetHistory.investment,
+			.select(new QFollowHistory(assetHistory.createdAt, assetHistory.assetTradeType, assetHistory.investment,
 				assetHistory.settlement, assetHistory.followReturnRate, assetHistory.commission, assetHistory.followDate))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),
@@ -57,7 +57,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	public List<PortfolioHistory> findPortfolioHistory(Long memberId, LocalDateTime startDate,
 													   LocalDateTime endDate, AssetTradeType assetTradeType) {
 		return jpaQueryFactory
-			.select(new QPortfolioHistory(assetHistory.createdAt, assetHistory.portfolioName, assetHistory.tradeType,
+			.select(new QPortfolioHistory(assetHistory.createdAt, assetHistory.portfolioName, assetHistory.assetTradeType,
 				assetHistory.price, assetHistory.endingCash))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),
@@ -71,7 +71,7 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	@Override
 	public List<FuturesHistory> findFuturesHistory(Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, AssetTradeType assetTradeType) {
 		return jpaQueryFactory
-				.select(new QFuturesHistory(assetHistory.createdAt, assetHistory.ticker, assetHistory.tradeType
+				.select(new QFuturesHistory(assetHistory.createdAt, assetHistory.ticker, assetHistory.assetTradeType
 						, assetHistory.price, assetHistory.orderCash, assetHistory.endingCash))
 				.from(assetHistory)
 				.where(assetHistory.memberId.eq(memberId),
@@ -87,6 +87,6 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	}
 
 	private Predicate filterType(AssetTradeType assetTradeType) {
-		return assetTradeType.equals(AssetTradeType.ALL) ? null : assetHistory.tradeType.eq(assetTradeType);
+		return assetTradeType.equals(AssetTradeType.ALL) ? null : assetHistory.assetTradeType.eq(assetTradeType);
 	}
 }

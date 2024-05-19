@@ -106,7 +106,7 @@ public class AssetService {
 		assetHistoryRepository.save(AssetHistory.builder()
 				.memberId(totalAssetHistoryRequest.getMemberId())
 				.assetType(assetType)
-				.tradeType(totalAssetHistoryRequest.getAssetTradeType())
+				.assetTradeType(totalAssetHistoryRequest.getAssetTradeType())
 				.volume(totalAssetHistoryRequest.getVolume())
 				.price(totalAssetHistoryRequest.getPrice())
 				.commission(totalAssetHistoryRequest.getCommission())
