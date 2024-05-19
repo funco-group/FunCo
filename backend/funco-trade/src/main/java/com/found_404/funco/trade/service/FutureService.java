@@ -137,13 +137,4 @@ public class FutureService {
                 .toList();
     }
 
-    public int loadFuturesTrades() {
-        List<ActiveFuture> activeFutures = activeFutureRepository.findAll();
-        for (ActiveFuture activeFuture : activeFutures) {
-            log.info("[Long] member:{} {} 가격 {} 아래로 청산됩니다.", activeFuture.getMemberId(), activeFuture.getTicker(), activeFuture.getLiquidatedPrice());
-            cryptoPrice.addTrade(activeFuture.getTicker(), activeFuture.getId(), TradeType.LONG, activeFuture.getLiquidatedPrice());
-        }
-
-        return activeFutures.size();
-    }
 }
