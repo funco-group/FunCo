@@ -80,7 +80,7 @@ export const ListItemDiv = styled.div<{ $align: string; color: string }>`
     if (props.$align === 'right') {
       return 'right'
     }
-    return null
+    return 'center'
   }};
 
   img {
