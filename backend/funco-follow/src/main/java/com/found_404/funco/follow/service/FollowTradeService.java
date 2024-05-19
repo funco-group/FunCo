@@ -119,23 +119,25 @@ public class FollowTradeService {
                 .toList());
     }
 
-    private FollowTrade getFollowTrade(FuturesTrade futures, Follow follow) {
+    @Transactional
+    public FollowTrade getFollowTrade(FuturesTrade futures, Follow follow) {
         long prevCash = memberService.getMemberCash(follow.getFollowingMemberId()) - futures.settlement(); // 정산 전 자산
 
         double ratio = divide(futures.settlement(), prevCash, NORMAL_SCALE); // 얼마 비율을 벌거나 잃었는가
 
         // 팔로우의 자산 증가 또는 감소
-        follow.decreaseCash((long) multiple(follow.getCash(), ratio, CASH_SCALE));
+        long followerSettlement = (long) multiple(follow.getCash(), ratio, CASH_SCALE);
+        follow.decreaseCash(followerSettlement);
 
         log.info("부모{}에 의해 자식: {} 거래\n => {} 선물 {} 거래 정산 결과:{}", follow.getFollowingMemberId(), follow.getFollowerMemberId(),
-                futures.ticker(), futures.tradeType(), futures.settlement());
+                futures.ticker(), futures.tradeType(), followerSettlement);
 
         return FollowTrade.builder()
                 .follow(follow)
                 .tradeType(futures.tradeType())
                 .price(futures.price())
                 .ticker(futures.ticker())
-                .volume(futures.settlement().doubleValue()) // 세틀
+                .volume((double) followerSettlement) // 세틀
                 .orderCash(futures.orderCash())
                 .build();
     }
