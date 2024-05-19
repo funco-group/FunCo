@@ -69,7 +69,7 @@ export interface OptionType {
 export interface CoinAssetType {
   date: string
   ticker: string
-  tradeType: string
+  assetTradeType: string
   volume: number
   price: number
   orderCash: number
@@ -79,15 +79,15 @@ export interface CoinAssetType {
 export interface FuturesAssetType {
   date: string
   ticker: string
-  tradeType: string
+  assetTradeType: string
   price: number
   orderCash: number
   endingCash: number
 }
 
 export interface FollowAssetType {
-  date: string
-  tradeType: string
+  followDate: string
+  assetTradeType: string
   investment: number
   settlement: number
   returnRate: number
@@ -98,7 +98,7 @@ export interface FollowAssetType {
 export interface PortfolioAssetType {
   date: string
   portfolioName: string
-  tradeType: string
+  assetTradeType: string
   price: number
   endingCash: number
 }

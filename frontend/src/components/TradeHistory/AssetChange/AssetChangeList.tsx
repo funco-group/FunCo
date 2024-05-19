@@ -55,8 +55,8 @@ function AssetChangeList({
     '종류',
     '거래수량',
     '거래단가',
-    '거래금액',
-    '정산금액',
+    '변동금액',
+    '자산',
   ]
 
   const futuresColumns = [
@@ -64,8 +64,8 @@ function AssetChangeList({
     '보유자산',
     '종류',
     '거래단가',
-    '거래금액',
-    '정산금액',
+    '변동금액',
+    '자산',
   ]
 
   const followColumns = [
@@ -131,33 +131,31 @@ function AssetChangeList({
       | FuturesAssetType
       | FollowAssetType
       | PortfolioAssetType,
+    index: number,
   ) => {
     switch (assetActive) {
       case 0:
         return (
-          <CoinAssetListItem
-            key={history.date}
-            history={history as CoinAssetType}
-          />
+          <CoinAssetListItem key={index} history={history as CoinAssetType} />
         )
       case 1:
         return (
           <FuturesAssetListItem
-            key={history.date}
+            key={index}
             history={history as FuturesAssetType}
           />
         )
       case 2:
         return (
           <FollowAssetListItem
-            key={history.date}
+            key={index}
             history={history as FollowAssetType}
           />
         )
       case 3:
         return (
           <PortfolioAssetListItem
-            key={history.date}
+            key={index}
             history={history as PortfolioAssetType}
           />
         )
@@ -178,7 +176,9 @@ function AssetChangeList({
         </AssetChangeListItemContainer>
       </ColumnContainer>
       <HistoryListContainer>
-        {historyList.map((history) => returnAssetListItem(history))}
+        {historyList.map((history, index) =>
+          returnAssetListItem(history, index),
+        )}
       </HistoryListContainer>
     </AssetChangeListContainer>
   )

@@ -43,23 +43,23 @@ function CoinAssetListItem({ history }: { history: CoinAssetType }) {
           </ListItemDiv>
           <ListItemDiv
             $align=""
-            color={getColorForTradeType(history.tradeType)}
+            color={getColorForTradeType(history.assetTradeType)}
           >
-            {history.tradeType === 'BUY' ? '매수' : '매도'}
+            {history.assetTradeType === 'BUY' ? '매수' : '매도'}
           </ListItemDiv>
           <ListItemDiv $align="right" color="black">
             {history.volume}
           </ListItemDiv>
           <ListItemDiv $align="right" color="black">
-            {history.price.toLocaleString('ko-KR')}
+            {history.price?.toLocaleString('ko-KR')}
             <span>WON</span>
           </ListItemDiv>
           <ListItemDiv $align="right" color="black">
-            {history.orderCash.toLocaleString('ko-KR')}
+            {history.orderCash?.toLocaleString('ko-KR')}
             <span>WON</span>
           </ListItemDiv>
           <ListItemDiv $align="right" color="black">
-            {history.endingCash.toLocaleString('ko-KR')}
+            {history.endingCash?.toLocaleString('ko-KR')}
             <span>WON</span>
           </ListItemDiv>
         </ColumnGrid>
