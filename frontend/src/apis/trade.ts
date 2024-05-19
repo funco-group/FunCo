@@ -133,6 +133,7 @@ export async function getUserTradeList(
     .get(`/v1/${domain}/orders/${memberId}?&page=${page}&size=${size}`)
     .then(success)
 }
+
 export async function futuresLong(
   ticker: string,
   orderCash: number,
