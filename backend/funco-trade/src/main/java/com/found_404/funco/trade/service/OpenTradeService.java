@@ -3,6 +3,7 @@ package com.found_404.funco.trade.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.found_404.funco.crypto.cryptoPrice.LoadTrade;
 import com.found_404.funco.feignClient.dto.NotificationType;
 import com.found_404.funco.feignClient.service.FollowService;
 import com.found_404.funco.feignClient.service.MemberService;
@@ -48,8 +49,8 @@ public class OpenTradeService {
 
         // 체결 데이터로 전환
         List<Trade> trades = openTrades.stream()
-            .map(openTrade -> OpenTrade.toTrade(openTrade, tradePrice))
-            .toList();
+                .map(openTrade -> OpenTrade.toTrade(openTrade, tradePrice))
+                .toList();
 
         // 체결 데이터 저장
         tradeRepository.saveAll(trades);
@@ -71,9 +72,9 @@ public class OpenTradeService {
     private String getMessage(Trade trade) {
         StringBuilder message = new StringBuilder();
         message.append("[").append(trade.getTicker()).append("] ")
-                        .append(String.format("%,f", trade.getVolume())).append("개 ")
-                        .append(String.format("%,f", trade.getPrice())).append("원 ")
-                        .append(trade.getTradeType().getKorean()).append(" 체결 ");
+                .append(String.format("%,f", trade.getVolume())).append("개 ")
+                .append(String.format("%,f", trade.getPrice())).append("원 ")
+                .append(trade.getTradeType().getKorean()).append(" 체결 ");
         return message.toString();
     }
 
@@ -100,6 +101,12 @@ public class OpenTradeService {
             // [API UPDATE] 자산 증가 + 거래 금액 대비 차액 입금
             memberService.updateMemberCash(trade.getMemberId(), CommissionUtil.getCashWithoutCommission(trade.getOrderCash()) - recoverCash);
         }
+    }
+
+    public List<LoadTrade> getLoadTrades() {
+        return openTradeRepository.findAll()
+                .stream().map(LoadTrade::getLoadTrade)
+                .toList();
     }
 
 }

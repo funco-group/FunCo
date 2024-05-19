@@ -1,5 +1,6 @@
 package com.found_404.funco.trade.service;
 
+import com.found_404.funco.crypto.cryptoPrice.LoadTrade;
 import com.found_404.funco.feignClient.service.NotificationService;
 import com.found_404.funco.trade.domain.ActiveFuture;
 import com.found_404.funco.trade.domain.FutureTrade;
@@ -39,5 +40,11 @@ public class LiquidateService {
         futureTrades.forEach(futureTrade ->
                 notificationService.sendNotification(futureTrade.getMemberId(), FUTURES, futureTrade.getTicker() +  " 선물 거래가 강제 청산되었습니다.")
         );
+    }
+
+    public List<LoadTrade> getLoadTrades() {
+        return activeFutureRepository.findAll()
+                .stream().map(LoadTrade::getLoadTrade)
+                .toList();
     }
 }
