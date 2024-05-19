@@ -2,9 +2,9 @@ package com.found_404.funco.asset.domain;
 
 import java.time.LocalDateTime;
 
+import com.found_404.funco.asset.domain.type.AssetTradeType;
 import org.hibernate.annotations.Comment;
 
-import com.found_404.funco.asset.domain.type.TradeType;
 import com.found_404.funco.asset.domain.type.AssetType;
 import com.found_404.funco.global.entity.BaseEntity;
 
@@ -34,7 +34,7 @@ public class AssetHistory extends BaseEntity {
 	@Comment("거래 구분")
 	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false)
-	private TradeType tradeType;
+	private AssetTradeType assetTradeType;
 
 	@Comment("거래 수량")
 	private Double volume;
@@ -79,12 +79,12 @@ public class AssetHistory extends BaseEntity {
 	private Double followReturnRate;
 
 	@Builder
-	public AssetHistory(Long memberId, AssetType assetType, TradeType tradeType, Double volume, Double price,
-		Long commission, Long settlement, Long beginningCash, Long endingCash, Long orderCash, String ticker,
-		String portfolioName, Long investment, String followName, LocalDateTime followDate, Double followReturnRate) {
+	public AssetHistory(Long memberId, AssetType assetType, AssetTradeType assetTradeType, Double volume, Double price,
+						Long commission, Long settlement, Long beginningCash, Long endingCash, Long orderCash, String ticker,
+						String portfolioName, Long investment, String followName, LocalDateTime followDate, Double followReturnRate) {
 		this.memberId = memberId;
 		this.assetType = assetType;
-		this.tradeType = tradeType;
+		this.assetTradeType = assetTradeType;
 		this.volume = volume;
 		this.price = price;
 		this.commission = commission;

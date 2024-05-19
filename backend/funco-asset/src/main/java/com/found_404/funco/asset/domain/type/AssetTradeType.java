@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum TradeType {
+public enum AssetTradeType {
 	ALL("전체"),
 	BUY("매수"),
 	SELL("매도"),

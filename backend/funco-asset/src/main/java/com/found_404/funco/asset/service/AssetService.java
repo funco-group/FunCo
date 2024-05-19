@@ -17,7 +17,7 @@ import com.found_404.funco.asset.domain.AssetHistory;
 import com.found_404.funco.asset.domain.repository.AssetHistoryRepository;
 import com.found_404.funco.asset.domain.type.AssetType;
 import com.found_404.funco.asset.domain.type.PeriodType;
-import com.found_404.funco.asset.domain.type.TradeType;
+import com.found_404.funco.asset.domain.type.AssetTradeType;
 import com.found_404.funco.asset.dto.response.AssetHistoryResponse;
 import com.found_404.funco.asset.dto.response.TotalAssetResponse;
 import com.found_404.funco.asset.exception.AssetException;
@@ -64,7 +64,7 @@ public class AssetService {
 	}
 
 	public List<? extends AssetHistoryResponse> getMemberHistory(Long memberId, PeriodType period, AssetType asset,
-		TradeType tradeType) {
+		AssetTradeType assetTradeType) {
 
 		LocalDateTime endDateTime = LocalDateTime.now();
 		LocalDate endDate = LocalDate.now();
@@ -79,10 +79,10 @@ public class AssetService {
 		};
 
 		return switch (asset.name()) {
-			case "COIN" -> assetHistoryRepository.findCoinHistory(memberId, startDateTime, endDateTime, tradeType);
-			case "FUTURES" -> assetHistoryRepository.findFuturesHistory(memberId, startDateTime, endDateTime, tradeType);
-			case "FOLLOW" -> assetHistoryRepository.findFollowHistory(memberId, startDateTime, endDateTime, tradeType);
-			case "PORTFOLIO" -> assetHistoryRepository.findPortfolioHistory(memberId, startDateTime, endDateTime, tradeType);
+			case "COIN" -> assetHistoryRepository.findCoinHistory(memberId, startDateTime, endDateTime, assetTradeType);
+			case "FUTURES" -> assetHistoryRepository.findFuturesHistory(memberId, startDateTime, endDateTime, assetTradeType);
+			case "FOLLOW" -> assetHistoryRepository.findFollowHistory(memberId, startDateTime, endDateTime, assetTradeType);
+			case "PORTFOLIO" -> assetHistoryRepository.findPortfolioHistory(memberId, startDateTime, endDateTime, assetTradeType);
 			default -> Collections.emptyList();
 		};
 	}
@@ -106,7 +106,7 @@ public class AssetService {
 		assetHistoryRepository.save(AssetHistory.builder()
 				.memberId(totalAssetHistoryRequest.getMemberId())
 				.assetType(assetType)
-				.tradeType(totalAssetHistoryRequest.getTradeType())
+				.tradeType(totalAssetHistoryRequest.getAssetTradeType())
 				.volume(totalAssetHistoryRequest.getVolume())
 				.price(totalAssetHistoryRequest.getPrice())
 				.commission(totalAssetHistoryRequest.getCommission())
