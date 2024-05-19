@@ -19,7 +19,7 @@ function PortfolioModal({
       handleClick={handlePortFolioClick}
     >
       <PortfolioAsset memberId={memberId} />
-      <PortfolioAssetChange memberId={memberId} />
+      {/* <PortfolioAssetChange memberId={memberId} /> */}
     </FollowingModal>
   )
 }
