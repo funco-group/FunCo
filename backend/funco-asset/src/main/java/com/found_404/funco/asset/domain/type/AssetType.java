@@ -8,5 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum AssetType {
 	COIN,
 	FOLLOW,
-	PORTFOLIO
+	PORTFOLIO,
+	FUTURES
+	;
 }

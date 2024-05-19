@@ -41,7 +41,7 @@ public class AssetHistory extends BaseEntity {
 
 	@Comment("거래 단가")
 	@Column(nullable = false)
-	private Long price;
+	private Double price;
 
 	@Comment("수수료")
 	private Long commission;
@@ -80,7 +80,7 @@ public class AssetHistory extends BaseEntity {
 	private Double followReturnRate;
 
 	@Builder
-	public AssetHistory(Long memberId, AssetType assetType, TradeType tradeType, Double volume, Long price,
+	public AssetHistory(Long memberId, AssetType assetType, TradeType tradeType, Double volume, Double price,
 		Long commission, Long settlement, Long beginningCash, Long endingCash, Long orderCash, String ticker,
 		String portfolioName, Long investment, String followName, LocalDateTime followDate, Double followReturnRate) {
 		this.memberId = memberId;

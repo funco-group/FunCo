@@ -6,17 +6,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.found_404.funco.asset.dto.*;
 import org.springframework.stereotype.Repository;
 
 import com.found_404.funco.asset.domain.repository.QueryDslAssetHistoryRepository;
 import com.found_404.funco.asset.domain.type.TradeType;
 import com.found_404.funco.asset.domain.type.AssetType;
-import com.found_404.funco.asset.dto.response.CoinHistoryResponse;
-import com.found_404.funco.asset.dto.response.FollowHistoryResponse;
-import com.found_404.funco.asset.dto.response.PortfolioHistoryResponse;
-import com.found_404.funco.asset.dto.response.QCoinHistoryResponse;
-import com.found_404.funco.asset.dto.response.QFollowHistoryResponse;
-import com.found_404.funco.asset.dto.response.QPortfolioHistoryResponse;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -28,11 +23,11 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public List<CoinHistoryResponse> findCoinHistory(Long memberId, LocalDateTime startDate, LocalDateTime endDate,
-		TradeType tradeType) {
+	public List<CoinHistory> findCoinHistory(Long memberId, LocalDateTime startDate, LocalDateTime endDate,
+											 TradeType tradeType) {
 
 		return jpaQueryFactory
-			.select(new QCoinHistoryResponse(assetHistory.createdAt, assetHistory.ticker, assetHistory.tradeType,
+			.select(new QCoinHistory(assetHistory.createdAt, assetHistory.ticker, assetHistory.tradeType,
 				assetHistory.volume, assetHistory.price, assetHistory.orderCash, assetHistory.endingCash))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),
@@ -44,10 +39,10 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	}
 
 	@Override
-	public List<FollowHistoryResponse> findFollowHistory(Long memberId, LocalDateTime startDate, LocalDateTime endDate,
-		TradeType tradeType) {
+	public List<FollowHistory> findFollowHistory(Long memberId, LocalDateTime startDate, LocalDateTime endDate,
+												 TradeType tradeType) {
 		return jpaQueryFactory
-			.select(new QFollowHistoryResponse(assetHistory.createdAt, assetHistory.tradeType, assetHistory.followName, assetHistory.investment,
+			.select(new QFollowHistory(assetHistory.createdAt, assetHistory.tradeType, assetHistory.followName, assetHistory.investment,
 				assetHistory.settlement, assetHistory.followReturnRate, assetHistory.commission, assetHistory.followDate))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),
@@ -59,10 +54,10 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 	}
 
 	@Override
-	public List<PortfolioHistoryResponse> findPortfolioHistory(Long memberId, LocalDateTime startDate,
-		LocalDateTime endDate, TradeType tradeType) {
+	public List<PortfolioHistory> findPortfolioHistory(Long memberId, LocalDateTime startDate,
+													   LocalDateTime endDate, TradeType tradeType) {
 		return jpaQueryFactory
-			.select(new QPortfolioHistoryResponse(assetHistory.createdAt, assetHistory.portfolioName, assetHistory.tradeType,
+			.select(new QPortfolioHistory(assetHistory.createdAt, assetHistory.portfolioName, assetHistory.tradeType,
 				assetHistory.price, assetHistory.endingCash))
 			.from(assetHistory)
 			.where(assetHistory.memberId.eq(memberId),
@@ -73,6 +68,19 @@ public class QueryDslAssetHistoryRepositoryImpl implements QueryDslAssetHistoryR
 			.fetch();
 	}
 
+	@Override
+	public List<FuturesHistory> findFuturesHistory(Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, TradeType tradeType) {
+		return jpaQueryFactory
+				.select(new QFuturesHistory(assetHistory.createdAt, assetHistory.ticker, assetHistory.tradeType
+						, assetHistory.price, assetHistory.orderCash, assetHistory.endingCash))
+				.from(assetHistory)
+				.where(assetHistory.memberId.eq(memberId),
+						assetHistory.assetType.eq(AssetType.COIN),
+						filterDate(startDateTime, endDateTime),
+						filterType(tradeType))
+				.orderBy(assetHistory.createdAt.desc())
+				.fetch();
+	}
 
 	private Predicate filterDate(LocalDateTime startDate, LocalDateTime endDate) {
 		return Objects.nonNull(startDate) && Objects.nonNull(endDate) ? assetHistory.createdAt.between(startDate, endDate) : null;

@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.found_404.funco.asset.dto.*;
+import com.found_404.funco.asset.dto.request.TotalAssetHistoryRequest;
 import org.springframework.stereotype.Service;
 
 import com.found_404.funco.asset.domain.AssetHistory;
@@ -16,8 +18,6 @@ import com.found_404.funco.asset.domain.repository.AssetHistoryRepository;
 import com.found_404.funco.asset.domain.type.AssetType;
 import com.found_404.funco.asset.domain.type.PeriodType;
 import com.found_404.funco.asset.domain.type.TradeType;
-import com.found_404.funco.asset.dto.ActiveFutureInfo;
-import com.found_404.funco.asset.dto.HoldingCoinInfo;
 import com.found_404.funco.asset.dto.response.AssetHistoryResponse;
 import com.found_404.funco.asset.dto.response.TotalAssetResponse;
 import com.found_404.funco.asset.exception.AssetException;
@@ -80,9 +80,9 @@ public class AssetService {
 
 		return switch (asset.name()) {
 			case "COIN" -> assetHistoryRepository.findCoinHistory(memberId, startDateTime, endDateTime, tradeType);
+			case "FUTURES" -> assetHistoryRepository.findFuturesHistory(memberId, startDateTime, endDateTime, tradeType);
 			case "FOLLOW" -> assetHistoryRepository.findFollowHistory(memberId, startDateTime, endDateTime, tradeType);
-			case "PORTFOLIO" ->
-				assetHistoryRepository.findPortfolioHistory(memberId, startDateTime, endDateTime, tradeType);
+			case "PORTFOLIO" -> assetHistoryRepository.findPortfolioHistory(memberId, startDateTime, endDateTime, tradeType);
 			default -> Collections.emptyList();
 		};
 	}
@@ -102,65 +102,25 @@ public class AssetService {
 		memberService.modifyCashAndInitCashDate(memberId);
 	}
 
-	public void saveCoinToAssetHistory(Long memberId, String ticker, TradeType tradeType, Double volume,
-		Long price, Long orderCash, Long beginningCash, Long endingCash) {
-
-		// 코인 거래 시 assetHistory에 필요한 요소들 저장
-		assetHistoryRepository.save(
-			AssetHistory.builder()
-				.memberId(memberId)
-				.ticker(ticker)
-				.assetType(AssetType.COIN)
-				.tradeType(tradeType)
-				.volume(volume)
-				.price(price)
-				.orderCash(orderCash)
-				.beginningCash(beginningCash)
-				.endingCash(endingCash)
-				.build()
-		);
-
-	}
-
-	public void saveFollowToAssetHistory(Long memberId, TradeType tradeType, String followName,
-		Long investment, Double returnRate, Long commission, Long settlement, LocalDateTime followDate,
-		Long beginningCash, Long endingCash) {
-
-		// 코인 거래 시 assetHistory에 필요한 요소들 저장
-		assetHistoryRepository.save(
-			AssetHistory.builder()
-				.memberId(memberId)
-				.assetType(AssetType.FOLLOW)
-				.tradeType(tradeType)
-				.followName(followName)
-				.investment(investment)
-				.followReturnRate(returnRate)
-				.commission(commission)
-				.settlement(settlement)
-				.followDate(followDate)
-				.beginningCash(beginningCash)
-				.endingCash(endingCash)
-				.build()
-		);
-
-	}
-
-	public void savePortfolioToAssetHistory(Long memberId, String portfolioName, TradeType tradeType,
-		Long price, Long beginningCash, Long endingCash) {
-
-		// 코인 거래 시 assetHistory에 필요한 요소들 저장
-		assetHistoryRepository.save(
-			AssetHistory.builder()
-				.memberId(memberId)
-				.assetType(AssetType.PORTFOLIO)
-				.tradeType(tradeType)
-				.portfolioName(portfolioName)
-				.price(price)
-				.beginningCash(beginningCash)
-				.endingCash(endingCash)
-				.build()
-		);
-
+	public void saveDataToAssetHistory(TotalAssetHistoryRequest totalAssetHistoryRequest) {
+		assetHistoryRepository.save(AssetHistory.builder()
+				.memberId(totalAssetHistoryRequest.memberId())
+				.assetType(totalAssetHistoryRequest.assetType())
+				.tradeType(totalAssetHistoryRequest.tradeType())
+				.volume(totalAssetHistoryRequest.volume())
+				.price(totalAssetHistoryRequest.price())
+				.commission(totalAssetHistoryRequest.commission())
+				.settlement(totalAssetHistoryRequest.settlement())
+				.beginningCash(totalAssetHistoryRequest.beginningCash())
+				.endingCash(totalAssetHistoryRequest.endingCash())
+				.orderCash(totalAssetHistoryRequest.orderCash())
+				.ticker(totalAssetHistoryRequest.ticker())
+				.portfolioName(totalAssetHistoryRequest.portfolioName())
+				.investment(totalAssetHistoryRequest.investment())
+				.followName(totalAssetHistoryRequest.followName())
+				.followDate(totalAssetHistoryRequest.followDate())
+				.followReturnRate(totalAssetHistoryRequest.followReturnRate())
+				.build());
 	}
 
 }
