@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.found_404.funco.trade.service.LiquidateService;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.found_404.funco.global.util.HttpClientUtil;
@@ -49,6 +50,7 @@ public class UpbitWebSocketListener extends WebSocketListener {
         sellTrades.putIfAbsent(ticker, new PriorityQueue<>((t1, t2) -> Double.compare(t1.price, t2.price))); // 최대힙
 
         if (tradeType.equals(BUY) || tradeType.equals(LONG)) {
+            log.info("{} 가 {} 이하면 청산", ticker, price);
             buyTrades.get(ticker).add(new ProcessingTrade(id, price, tradeType));
         } else {
             sellTrades.get(ticker).add(new ProcessingTrade(id, price, tradeType));
@@ -94,7 +96,8 @@ public class UpbitWebSocketListener extends WebSocketListener {
         processTrade(code, tradePrice);
     }
 
-    private void processTrade(String code, Double tradePrice) {
+    @Async
+    public void processTrade(String code, Double tradePrice) {
         List<Long> concludingTradeIds = new ArrayList<>();
         List<Long> liquidatedFuturesIds = new ArrayList<>();
 
