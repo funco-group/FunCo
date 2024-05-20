@@ -1,5 +1,6 @@
 package com.found_404.funco.trade.service;
 
+import com.found_404.funco.crypto.LiveTradeProcessor;
 import com.found_404.funco.crypto.cryptoPrice.CryptoPrice;
 import com.found_404.funco.feignClient.service.AssetService;
 import com.found_404.funco.feignClient.service.FollowService;
@@ -35,6 +36,7 @@ public class FutureService {
     private final ActiveFutureRepository activeFutureRepository;
     private final FutureTradeRepository futureTradeRepository;
     private final CryptoPrice cryptoPrice;
+    private final LiveTradeProcessor liveTradeProcessor;
 
     private final MemberService memberService;
     private final FollowService followService;
@@ -48,7 +50,7 @@ public class FutureService {
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, TradeType.LONG, requestBuyFutures));
 
         log.info("[Long] member:{} {} 가격 {} 아래로 청산됩니다.", memberId, activeFuture.getTicker(), activeFuture.getLiquidatedPrice());
-        cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.LONG, activeFuture.getLiquidatedPrice());
+        liveTradeProcessor.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), TradeType.LONG, activeFuture.getLiquidatedPrice());
 
         // [API UPDATE] 멤버 자산 감소
         memberService.updateMemberCash(memberId, -requestBuyFutures.orderCash());
@@ -73,7 +75,7 @@ public class FutureService {
         ActiveFuture activeFuture = activeFutureRepository.save(getActiveFuture(memberId, SHORT, requestBuyFutures));
 
         log.info("[Short] member:{} {} 가격 {} 위로 청산됩니다.", memberId, activeFuture.getTicker(), activeFuture.getLiquidatedPrice());
-        cryptoPrice.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), SHORT, activeFuture.getLiquidatedPrice());
+        liveTradeProcessor.addTrade(requestBuyFutures.ticker(), activeFuture.getId(), SHORT, activeFuture.getLiquidatedPrice());
 
         // [API UPDATE] 멤버 자산 감소
         memberService.updateMemberCash(memberId, -requestBuyFutures.orderCash());

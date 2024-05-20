@@ -1,24 +1,21 @@
 package com.found_404.funco.crypto.cryptoPrice;
 
-import static com.found_404.funco.trade.exception.TradeErrorCode.*;
+import com.found_404.funco.crypto.cryptoPrice.jsonObject.CryptoJson;
+import com.found_404.funco.crypto.cryptoPrice.jsonObject.Format;
+import com.found_404.funco.crypto.cryptoPrice.jsonObject.Ticket;
+import com.found_404.funco.crypto.cryptoPrice.jsonObject.TypeCodes;
+import com.found_404.funco.global.util.HttpClientUtil;
+import com.found_404.funco.trade.exception.TradeException;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.Request;
+import okhttp3.WebSocket;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.found_404.funco.crypto.cryptoPrice.jsonObject.CryptoJson;
-import com.found_404.funco.global.util.HttpClientUtil;
-import com.found_404.funco.crypto.cryptoPrice.jsonObject.Format;
-import com.found_404.funco.crypto.cryptoPrice.jsonObject.Ticket;
-import com.found_404.funco.crypto.cryptoPrice.jsonObject.TypeCodes;
-import com.found_404.funco.trade.domain.type.TradeType;
-import com.found_404.funco.trade.exception.TradeException;
-
-import lombok.extern.slf4j.Slf4j;
-import okhttp3.Request;
-import okhttp3.WebSocket;
+import static com.found_404.funco.trade.exception.TradeErrorCode.PRICE_CONNECTION_FAIL;
 
 @Component
 @Slf4j
@@ -91,12 +88,6 @@ public class UpbitCryptoPrice implements CryptoPrice {
         CryptoJson[] cryptoJsons = httpClientUtil.parseJsonToClass(apiResponse, CryptoJson[].class)
                 .orElseThrow(() -> new TradeException(PRICE_CONNECTION_FAIL));
         return cryptoJsons[0].getTrade_price();
-    }
-
-    // 감지될 예약 거래 등록
-    @Override
-    public void addTrade(String ticker, Long id, TradeType tradeType, Double price) {
-        listener.addTrade(tradeType, ticker, id, price);
     }
 
     private String getUrlWithParameters(List<String> tickers) {

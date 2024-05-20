@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.found_404.funco.crypto.LiveTradeProcessor;
 import com.found_404.funco.feignClient.service.AssetService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,9 +53,10 @@ public class TradeService {
 	private final OpenTradeRepository openTradeRepository;
 	private final ActiveFutureRepository activeFutureRepository;
 
-	private final MemberService memberService;
-
 	private final CryptoPrice cryptoPrice;
+	private final LiveTradeProcessor liveTradeProcessor;
+
+	private final MemberService memberService;
 	private final FollowService followService;
 	private final AssetService assetService;
 
@@ -229,7 +231,7 @@ public class TradeService {
 			.volume(volume)
 			.build());
 
-		cryptoPrice.addTrade(openTrade.getTicker(), openTrade.getId(), openTrade.getTradeType(), openTrade.getPrice());
+		liveTradeProcessor.addTrade(openTrade.getTicker(), openTrade.getId(), openTrade.getTradeType(), openTrade.getPrice());
 
 		// [API UPDATE] 돈 확인 및 감소
 		memberService.updateMemberCash(memberId, -orderCash);
@@ -257,7 +259,7 @@ public class TradeService {
 			.build());
 
 		// 미체결 거래 등록
-		cryptoPrice.addTrade(openTrade.getTicker(), openTrade.getId(), openTrade.getTradeType(), openTrade.getPrice());
+		liveTradeProcessor.addTrade(openTrade.getTicker(), openTrade.getId(), openTrade.getTradeType(), openTrade.getPrice());
 	}
 
 	@Transactional
