@@ -99,18 +99,15 @@ public class UpbitWebSocketListener extends WebSocketListener {
 
     @Async
     public void processTrade(String code, Double tradePrice) {
-        List<Long> concludingTradeIds = new ArrayList<>();
-        List<Long> liquidatedFuturesIds = new ArrayList<>();
-
-        log.info("coin :{}, price:{}", code, tradePrice);
-
         PriorityQueue<ProcessingTrade> buyQueue = buyTrades.get(code);
         while (Objects.nonNull(buyQueue) && !buyQueue.isEmpty() && buyQueue.peek().price >= tradePrice) {
             ProcessingTrade trade = buyQueue.poll();
             if (trade.tradeType.equals(BUY)) {
-                concludingTradeIds.add(trade.id);
+                log.info("현물 {} price:{} ,체결", code, tradePrice);
+                openTradeService.processTrade(trade.id, tradePrice);
             } else {
-                liquidatedFuturesIds.add(trade.id);
+                log.info("선물 {} price:{} ,체결", code, tradePrice);
+                liquidateService.liquidateFutures(trade.id);
             }
         }
 
@@ -118,26 +115,28 @@ public class UpbitWebSocketListener extends WebSocketListener {
         while (Objects.nonNull(sellQueue) && !sellQueue.isEmpty() && sellQueue.peek().price <= tradePrice) {
             ProcessingTrade trade = sellQueue.poll();
             if (trade.tradeType.equals(SELL)) {
-                concludingTradeIds.add(trade.id);
+                log.info("현물 {} price:{} ,체결", code, tradePrice);
+                openTradeService.processTrade(trade.id, tradePrice);
             } else {
-                liquidatedFuturesIds.add(trade.id);
+                log.info("선물 {} price:{} ,체결", code, tradePrice);
+                liquidateService.liquidateFutures(trade.id);
             }
         }
 
         // 거래 처리
-        if (!concludingTradeIds.isEmpty()) {
-            log.info("현물 {} price:{} ,체결: {}개", code, tradePrice, concludingTradeIds.size());
-
-            //int sizeSum = buyTrades.get(code).size() + sellTrades.get(code).size();
-            openTradeService.processTrade(concludingTradeIds, tradePrice);
-        }
-
-        if (!liquidatedFuturesIds.isEmpty()) {
-            log.info("선물 {} price:{} ,체결: {}개", code, tradePrice, liquidatedFuturesIds.size());
-
-            //int sizeSum = buyTrades.get(code).size() + sellTrades.get(code).size();
-            liquidateService.liquidateFutures(liquidatedFuturesIds);
-        }
+        // if (!concludingTradeIds.isEmpty()) {
+        //     log.info("현물 {} price:{} ,체결: {}개", code, tradePrice, concludingTradeIds.size());
+        //
+        //     //int sizeSum = buyTrades.get(code).size() + sellTrades.get(code).size();
+        //     openTradeService.processTrade(concludingTradeIds, tradePrice);
+        // }
+        //
+        // if (!liquidatedFuturesIds.isEmpty()) {
+        //     log.info("선물 {} price:{} ,체결: {}개", code, tradePrice, liquidatedFuturesIds.size());
+        //
+        //     //int sizeSum = buyTrades.get(code).size() + sellTrades.get(code).size();
+        //     liquidateService.liquidateFutures(liquidatedFuturesIds);
+        // }
     }
 
     @Override

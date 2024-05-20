@@ -71,6 +71,38 @@ public class OpenTradeService {
         followService.createFollowTrade(trades);
     }
 
+
+    @Async
+    @Transactional
+    public void processTrade(Long id, Double tradePrice) {
+
+        // 거래 처리할 미체결 거래 가져오기
+        Optional<OpenTrade> OptionalOpenTrade = openTradeRepository.findById(id);
+        if (OptionalOpenTrade.isEmpty()) {
+            return;
+        }
+        OpenTrade openTrade = OptionalOpenTrade.get();
+
+        // 미체결 데이터 삭제
+        openTradeRepository.delete(openTrade);
+
+        // 체결 데이터로 전환
+        Trade trade = OpenTrade.toTrade(openTrade, tradePrice);
+
+        // 체결 데이터 저장
+        tradeRepository.save(trade);
+
+        // 자산 업데이트
+        processAsset(trade, Math.abs(openTrade.getOrderCash() - trade.getOrderCash()));
+
+        // [API async] 알림
+        notificationService.sendNotification(trade.getMemberId(),
+            trade.getTradeType().equals(TradeType.BUY) ? NotificationType.BUY : NotificationType.SELL, getMessage(trade));
+
+        // [API update async ] 팔로우 구매
+        followService.createFollowTrade(trade);
+    }
+
     private String getMessage(Trade trade) {
         StringBuilder message = new StringBuilder();
         message.append("[").append(trade.getTicker()).append("] ")

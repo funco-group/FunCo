@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.found_404.funco.feignClient.dto.NotificationType.FUTURES;
 
@@ -50,6 +51,26 @@ public class LiquidateService {
         futureTrades.forEach(futureTrade ->
                 notificationService.sendNotification(futureTrade.getMemberId(), FUTURES, futureTrade.getTicker() +  " 선물 거래가 강제 청산되었습니다.")
         );
+    }
+
+    @Async
+    @Transactional
+    public void liquidateFutures(Long id) {
+        Optional<ActiveFuture> optionalActiveFuture = activeFutureRepository.findById(id);
+        if (optionalActiveFuture.isEmpty()) {
+            return;
+        }
+        ActiveFuture activeFuture = optionalActiveFuture.get();
+        activeFutureRepository.delete(activeFuture);
+
+        FutureTrade futureTrade = FutureTrade.getLiquidatedFutures(activeFuture);
+
+        // [API] 통합 자산 변동내역
+        assetService.createAssetHistory(futureTrade, memberService.getMemberCash(futureTrade.getMemberId()));
+
+
+        // [API async] 알림
+        notificationService.sendNotification(futureTrade.getMemberId(), FUTURES, futureTrade.getTicker() +  " 선물 거래가 강제 청산되었습니다.");
     }
 
     public List<LoadTrade> getLoadTrades() {
