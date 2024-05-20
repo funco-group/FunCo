@@ -92,13 +92,7 @@ public class UpbitCryptoPrice implements CryptoPrice {
     }
 
     private String getUrlWithParameters(List<String> tickers) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < tickers.size(); i++) {
-            stringBuilder.append(tickers.get(i)).append(',');
-        }
-        stringBuilder.append(tickers.getFirst());
-
-        return PRICE_API_URL + stringBuilder;
+        return PRICE_API_URL + String.join(",", tickers);
     }
 
     private List<String> sendWebSocketAllMarkets() {
