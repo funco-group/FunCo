@@ -9,6 +9,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     sourceCompatibility = '21'
+    targetCompatibility = '21'
 }
 
 configurations {
@@ -77,6 +78,9 @@ dependencyManagement {
     }
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
 
 tasks.named('test') {
     useJUnitPlatform()
