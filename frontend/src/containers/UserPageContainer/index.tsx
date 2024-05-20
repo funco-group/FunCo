@@ -40,7 +40,7 @@ function UserPageContainer({ memberId }: { memberId: number }) {
     }
   }, [])
 
-  if (!memberId || !user || !member) {
+  if (!memberId || !user || !member || !member.topCoins) {
     return null
   }
 
