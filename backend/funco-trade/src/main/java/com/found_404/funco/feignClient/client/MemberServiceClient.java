@@ -15,7 +15,7 @@ public interface MemberServiceClient {
     @PatchMapping(value = "/api/v1/members/{memberId}/cash")
     CashResponse updateCash(@PathVariable("memberId") Long memberId, @RequestBody UpdateCash updateCash);
 
-    @GetMapping("/{memberId}/cash")
+    @GetMapping("/api/v1/members/{memberId}/cash")
     CashResponse getMemberCash(@PathVariable Long memberId);
 
     @GetMapping("/api/v1/hello")
