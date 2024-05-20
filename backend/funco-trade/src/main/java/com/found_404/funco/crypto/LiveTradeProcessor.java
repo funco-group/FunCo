@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,7 +33,11 @@ public class LiveTradeProcessor {
         TradeType tradeType;
     }
 
-    public void loadTradeData() {
+    public void loadTradeData(List<String> markets) {
+        for (String market : markets) {
+            buyTrades.putIfAbsent(market, new PriorityQueue<>((t1, t2) -> Double.compare(t2.price, t1.price))); // 최소힙
+            sellTrades.putIfAbsent(market, new PriorityQueue<>((t1, t2) -> Double.compare(t1.price, t2.price))); // 최대힙
+        }
         log.info("이전에 등록된 감지될 거래 데이터들을 로딩합니다. ");
 
         List<LoadTrade> loadTrades = openTradeService.getLoadTrades();
@@ -47,9 +50,6 @@ public class LiveTradeProcessor {
     }
 
     public void addTrade(String ticker, Long id, TradeType tradeType, Double price) {
-        buyTrades.putIfAbsent(ticker, new PriorityQueue<>((t1, t2) -> Double.compare(t2.price, t1.price))); // 최소힙
-        sellTrades.putIfAbsent(ticker, new PriorityQueue<>((t1, t2) -> Double.compare(t1.price, t2.price))); // 최대힙
-
         if (tradeType.equals(BUY) || tradeType.equals(LONG)) {
             log.info("{} 가 {} 이하면 청산", ticker, price);
             buyTrades.get(ticker).add(new ProcessingTrade(id, price, tradeType));
@@ -61,7 +61,7 @@ public class LiveTradeProcessor {
     @Async
     public void processTrade(String code, Double tradePrice) {
         PriorityQueue<ProcessingTrade> buyQueue = buyTrades.get(code);
-        while (Objects.nonNull(buyQueue) && !buyQueue.isEmpty() && buyQueue.peek().price >= tradePrice) {
+        while (!buyQueue.isEmpty() && buyQueue.peek().price >= tradePrice) {
             ProcessingTrade trade = buyQueue.poll();
             if (trade.tradeType.equals(BUY)) {
                 log.info("현물 {} price:{} ,체결", code, tradePrice);
@@ -73,7 +73,7 @@ public class LiveTradeProcessor {
         }
 
         PriorityQueue<ProcessingTrade> sellQueue = sellTrades.get(code);
-        while (Objects.nonNull(sellQueue) && !sellQueue.isEmpty() && sellQueue.peek().price <= tradePrice) {
+        while (!sellQueue.isEmpty() && sellQueue.peek().price <= tradePrice) {
             ProcessingTrade trade = sellQueue.poll();
             if (trade.tradeType.equals(SELL)) {
                 log.info("현물 {} price:{} ,체결", code, tradePrice);
