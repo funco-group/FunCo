@@ -29,4 +29,5 @@ export interface FuturesType {
   ticker: string
   tradeDate: string
   tradeType: string
+  liquidatedPrice: number
 }
