@@ -15,17 +15,19 @@ public record ActiveFutureDto(
         Long orderCash,
         Double price,
         LocalDateTime tradeDate,
-        Integer leverage
+        Integer leverage,
+        Double liquidatedPrice
 ) {
     public static ActiveFutureDto fromEntity(ActiveFuture activeFuture) {
         return ActiveFutureDto.builder()
-                .id(activeFuture.getId())
-                .ticker(activeFuture.getTicker())
-                .tradeType(activeFuture.getTradeType())
-                .orderCash(activeFuture.getOrderCash())
-                .price(activeFuture.getPrice())
-                .tradeDate(activeFuture.getCreatedAt())
-                .leverage(activeFuture.getLeverage())
-                .build();
+            .id(activeFuture.getId())
+            .ticker(activeFuture.getTicker())
+            .tradeType(activeFuture.getTradeType())
+            .orderCash(activeFuture.getOrderCash())
+            .price(activeFuture.getPrice())
+            .tradeDate(activeFuture.getCreatedAt())
+            .leverage(activeFuture.getLeverage())
+            .liquidatedPrice(activeFuture.getLiquidatedPrice())
+            .build();
     }
 }
