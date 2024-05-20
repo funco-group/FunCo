@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import static com.found_404.funco.trade.domain.type.TradeType.*;
 
@@ -20,11 +20,12 @@ import static com.found_404.funco.trade.domain.type.TradeType.*;
 @RequiredArgsConstructor
 @Component
 public class LiveTradeProcessor {
-    private final ConcurrentHashMap<String, PriorityQueue<ProcessingTrade>> buyTrades = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, PriorityQueue<ProcessingTrade>> sellTrades = new ConcurrentHashMap<>();
+    private final HashMap<String, PriorityBlockingQueue<ProcessingTrade>> buyTrades = new HashMap<>();
+    private final HashMap<String, PriorityBlockingQueue<ProcessingTrade>> sellTrades = new HashMap<>();
 
     private final OpenTradeService openTradeService;
     private final LiquidateService liquidateService;
+    private final int BLOCKING_QUEUE_INITIAL_CAPACITY = 11;
 
     @AllArgsConstructor
     private static class ProcessingTrade {
@@ -34,9 +35,10 @@ public class LiveTradeProcessor {
     }
 
     public void loadTradeData(List<String> markets) {
+
         for (String market : markets) {
-            buyTrades.putIfAbsent(market, new PriorityQueue<>((t1, t2) -> Double.compare(t2.price, t1.price))); // 최소힙
-            sellTrades.putIfAbsent(market, new PriorityQueue<>((t1, t2) -> Double.compare(t1.price, t2.price))); // 최대힙
+            buyTrades.putIfAbsent(market, new PriorityBlockingQueue<>(BLOCKING_QUEUE_INITIAL_CAPACITY, (t1, t2) -> Double.compare(t2.price, t1.price))); // 최소힙
+            sellTrades.putIfAbsent(market, new PriorityBlockingQueue<>(BLOCKING_QUEUE_INITIAL_CAPACITY, (t1, t2) -> Double.compare(t1.price, t2.price))); // 최대힙
         }
         log.info("이전에 등록된 감지될 거래 데이터들을 로딩합니다. ");
 
@@ -60,7 +62,7 @@ public class LiveTradeProcessor {
 
     @Async
     public void processTrade(String code, Double tradePrice) {
-        PriorityQueue<ProcessingTrade> buyQueue = buyTrades.get(code);
+        PriorityBlockingQueue<ProcessingTrade> buyQueue = buyTrades.get(code);
         while (!buyQueue.isEmpty() && buyQueue.peek().price >= tradePrice) {
             ProcessingTrade trade = buyQueue.poll();
             if (trade.tradeType.equals(BUY)) {
@@ -72,7 +74,7 @@ public class LiveTradeProcessor {
             }
         }
 
-        PriorityQueue<ProcessingTrade> sellQueue = sellTrades.get(code);
+        PriorityBlockingQueue<ProcessingTrade> sellQueue = sellTrades.get(code);
         while (!sellQueue.isEmpty() && sellQueue.peek().price <= tradePrice) {
             ProcessingTrade trade = sellQueue.poll();
             if (trade.tradeType.equals(SELL)) {
