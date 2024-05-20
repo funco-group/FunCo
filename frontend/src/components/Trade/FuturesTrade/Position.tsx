@@ -57,6 +57,12 @@ const Position = React.memo(
       setAlert(false)
     }
 
+    const liquidateFunc = () => {
+      setIsTrade(false)
+      setAlert(true)
+      setLiquidate(true)
+    }
+
     useEffect(() => {
       if (isTrade && trade && coin !== null && !liquidate) {
         let priceChange
@@ -67,18 +73,20 @@ const Position = React.memo(
             ((trade.orderCash * (coin.tradePrice - trade.price)) /
               trade.price) *
             trade.leverage
+
+          if (coin.tradePrice <= trade.liquidatedPrice) {
+            liquidateFunc()
+          }
         } else {
           priceChange = ((trade.price - coin.tradePrice) / trade.price) * 100
           profit =
             ((trade.orderCash * (trade.price - coin.tradePrice)) /
               trade.price) *
             trade.leverage
-        }
 
-        if (trade.orderCash <= profit) {
-          setIsTrade(false)
-          setAlert(true)
-          setLiquidate(true)
+          if (coin.tradePrice >= trade.liquidatedPrice) {
+            liquidateFunc()
+          }
         }
 
         setPositions([
