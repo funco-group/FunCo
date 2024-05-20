@@ -201,7 +201,7 @@ function Asset() {
     }
   }, [assets])
 
-  if (!investmentList) return null
+  if (!investmentList || !assets || !totalAsset) return null
 
   return (
     <div>

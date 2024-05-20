@@ -48,11 +48,7 @@ function FuturesTrade() {
           <Position
             isTrade={isTrade}
             setIsTrade={setIsTrade}
-            coin={
-              isTrade
-                ? priceList.find((price) => price.code === coinCode)!
-                : null
-            }
+            coin={priceList.find((price) => price.code === coinCode)!}
             trade={trade}
             liquidate={liquidate}
             setLiquidate={setLiquidate}
