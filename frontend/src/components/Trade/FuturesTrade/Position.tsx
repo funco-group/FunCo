@@ -64,6 +64,7 @@ const Position = React.memo(
     }
 
     useEffect(() => {
+      if (coin?.tradePrice === 0) return
       if (isTrade && trade && coin !== null && !liquidate) {
         let priceChange
         let profit
