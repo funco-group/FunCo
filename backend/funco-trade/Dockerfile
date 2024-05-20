@@ -1,7 +1,7 @@
 FROM docker
 #COPY --from=docker/buildx-bin:latest /buildx /usr/libexec/docker/cli-plugins/docker-buildx
 
-FROM openjdk:17-jdk
+FROM openjdk:21-jdk
 
 EXPOSE 8004
 
