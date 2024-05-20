@@ -25,7 +25,7 @@ function Redirect() {
     }
   }, [])
 
-  return <div>redirect</div>
+  return <div />
 }
 
 export default Redirect

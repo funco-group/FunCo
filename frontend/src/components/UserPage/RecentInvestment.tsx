@@ -26,7 +26,7 @@ function RecentInvestment({ topCoins }: RecentInvestmentProps) {
     <RecentInvestmentContainer>
       <ComponentTitleH3>최근 투자</ComponentTitleH3>
       <RecentInvestmentContentContainer>
-        {topCoins.length !== 0 ? (
+        {topCoins?.length !== 0 ? (
           <RecentInvestmentContentDiv>
             {topCoins.map((coin, idx) => (
               <RecentInvestmentRowDiv key={coin.ticker}>
