@@ -91,6 +91,7 @@ public class UpbitWebSocketListener extends WebSocketListener {
         if (tradePrice.equals(cryptoPrices.get(code))) {
             return; // 가격이 같으면 업데이트 x
         }
+
         cryptoPrices.put(code, tradePrice);
 
         processTrade(code, tradePrice);
@@ -100,6 +101,8 @@ public class UpbitWebSocketListener extends WebSocketListener {
     public void processTrade(String code, Double tradePrice) {
         List<Long> concludingTradeIds = new ArrayList<>();
         List<Long> liquidatedFuturesIds = new ArrayList<>();
+
+        log.info("coin :{}, price:{}", code, tradePrice);
 
         PriorityQueue<ProcessingTrade> buyQueue = buyTrades.get(code);
         while (Objects.nonNull(buyQueue) && !buyQueue.isEmpty() && buyQueue.peek().price >= tradePrice) {
