@@ -40,7 +40,8 @@ public class UpbitCryptoPrice implements CryptoPrice {
     private void connectWebSocket() {
         Request request = new Request.Builder().url(WEBSOCKET_URL).build();
         this.webSocket = httpClientUtil.getWebSocket(request, listener);
-        sendWebSocketAllMarkets();
+        List<String> markets = sendWebSocketAllMarkets();
+        listener.loadTradeData(markets);
     }
 
     @Override
@@ -95,12 +96,12 @@ public class UpbitCryptoPrice implements CryptoPrice {
         for (int i = 1; i < tickers.size(); i++) {
             stringBuilder.append(tickers.get(i)).append(',');
         }
-        stringBuilder.append(tickers.get(0));
+        stringBuilder.append(tickers.getFirst());
 
         return PRICE_API_URL + stringBuilder;
     }
 
-    private void sendWebSocketAllMarkets() {
+    private List<String> sendWebSocketAllMarkets() {
         String apiResponse = httpClientUtil.getApiResponse(MARKET_URL);
         if (Objects.isNull(apiResponse)) {
             throw new TradeException(PRICE_CONNECTION_FAIL);
@@ -117,6 +118,8 @@ public class UpbitCryptoPrice implements CryptoPrice {
         log.info("[upbit API] {}개의 코인 시세 웹소켓으로 받기 시작합니다.",markets.size());
         log.info("[websocket] send message: {}", message);
         webSocket.send(message);
+
+        return markets;
     }
 
 }

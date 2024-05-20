@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,7 +37,6 @@ public class UpbitWebSocketListener extends WebSocketListener {
     @Override
     public void onOpen(@NotNull WebSocket webSocket, Response response) {
         log.info("upbit websocket opened [response: {}]", response.body());
-        liveTradeProcessor.loadTradeData();
     }
 
     /*
@@ -74,4 +74,7 @@ public class UpbitWebSocketListener extends WebSocketListener {
         log.info("upbit websocket closed [code:{}, reason:{}]", code, reason);
     }
 
+    public void loadTradeData(List<String> markets) {
+        liveTradeProcessor.loadTradeData(markets);
+    }
 }
