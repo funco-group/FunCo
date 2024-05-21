@@ -23,7 +23,7 @@ function Asset() {
 
   const getCurPrice = async (assetRes: AssetResponseType) => {
     const curPrice = new Map<string, number>()
-    if (assetRes.holdingCoinInfos.length !== 0) {
+    if (assetRes.holdingCoinInfos?.length !== 0) {
       const codes: string[] = []
 
       assetRes.holdingCoinInfos.forEach((info) => {
