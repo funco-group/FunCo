@@ -26,11 +26,11 @@ function Asset() {
     if (assetRes.holdingCoinInfos?.length !== 0) {
       const codes: string[] = []
 
-      assetRes.holdingCoinInfos.forEach((info) => {
+      assetRes.holdingCoinInfos?.forEach((info) => {
         codes.push(info.ticker)
       })
 
-      assetRes.activeFutureInfos.forEach((info) => {
+      assetRes.activeFutureInfos?.forEach((info) => {
         codes.push(info.ticker)
       })
 
