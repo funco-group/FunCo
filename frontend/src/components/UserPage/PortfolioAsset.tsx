@@ -30,7 +30,7 @@ function PortfolioAsset({ memberId }: PortfolioAssetProps) {
 
   const getCurPrice = async (userAsset: AssetResponseType) => {
     const curPrice = new Map<string, number>()
-    if (userAsset.holdingCoinInfos.length !== 0) {
+    if (userAsset.holdingCoinInfos?.length !== 0) {
       const codes = userAsset.holdingCoinInfos
         .map((coin) => coin.ticker)
         .join(',')
