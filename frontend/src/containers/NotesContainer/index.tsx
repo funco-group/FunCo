@@ -65,7 +65,7 @@ function Notes() {
         ? `sorted=${searchParams.get('sorted')}`
         : 'sorted=LATEST',
       'page=0',
-      'size=3',
+      'size=9',
     ].filter(Boolean)
 
     getNotesList(apiParams.join('&'), (res) => {
@@ -107,7 +107,7 @@ function Notes() {
             keyword ? `keyword=${keyword}` : '',
             `sorted=${sorted}`,
             `page=${page}`,
-            'size=3',
+            'size=9',
           ].filter(Boolean)
 
           getNotesList(apiParams.join('&'), (res) => {
