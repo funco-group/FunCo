@@ -31,8 +31,8 @@
 <a name="deploy-url"></a>
 ## 🕊️ Deploy URL
 
-- ✅ front-server : https://j10a404.p.ssafy.io
-- ✅ back-server : https://j10a404.p.ssafy.io/api
+- ✅ WEB service URL : https://funco.co.kr
+- ✅ API URL : https://api.funco.co.kr
 
 <br>
 
@@ -51,8 +51,8 @@
 ## 📢 Introduction
 
 ### 서비스 소개 한 줄
-- **팔로윙 투자**가 가능한 가상화폐 모의 투자 서비스
-- **팔로윙 투자** : 다른 사람에게 투자하고, 그 사람의 투자 내역과 동일하게 자동 투자되고 정산받을 수 있는 기능
+- 가상화폐 모의 투자 서비스 FUNCO
+- **팔로윙 투자**, **선물 거래**, **랭킹 시스템**, **인사이트 게시판** 등 여러 특출난 기능이 존재하는 모의 투자 서비스입니다!
 
 
 <br>
@@ -75,16 +75,16 @@
 ---
 
 <a name="system-architecture"></a>
-## 🌐 System Architecture
+## 🌐 System Architecture (MSA)
 
-<img src="https://github.com/leetaggg/leetaggg/assets/100212241/d2987fa3-e180-45b7-94fb-719d6471d9f4">
+<img src="https://lab.ssafy.com/s10-final/S10P31A302/-/raw/949a1e34dd9a56fe80e2eb56064777da9d2fd269/docs/Architecture.png">
 
 <br>
 
 <a name="erd"></a>
 ## 💾 ERD
 
-<img src="https://github.com/leetaggg/leetaggg/assets/100212241/a71db26a-9472-46a0-b652-78d32cc6c474">
+<img src="https://lab.ssafy.com/s10-final/S10P31A302/-/raw/readme/docs/ERD.png">
 
 <br>
 
@@ -106,7 +106,7 @@
 ---
 
 <a name="function"></a>
-## ⚙️ Function
+# ⚙️ Function
 
 ### 🎯 가상화폐 거래
 
