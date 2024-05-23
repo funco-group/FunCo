@@ -21,6 +21,7 @@ public class MemberService {
 
 	public Long updateMemberCash(Long memberId, Long cash) {
 		try {
+			log.info("[API PATCH] member server cash");
 			return memberServiceClient.updateCash(memberId, new UpdateCash(cash)).cash();
 		} catch (FeignException e) {
 			log.error("{} update cash error : {}", SERVER_NAME, e.getMessage());
@@ -30,6 +31,7 @@ public class MemberService {
 
 	public Long getMemberCash(Long memberId) {
 		try {
+			log.info("[API GET] member server cash");
 			return memberServiceClient.getMemberCash(memberId).cash();
 		} catch (FeignException e) {
 			log.error("{} get cash error : {}", SERVER_NAME, e.getMessage());
