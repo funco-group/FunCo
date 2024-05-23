@@ -84,7 +84,7 @@ public class FollowService {
 		Long followingCash = memberService.getMemberCash(followingMemberId);
 
 		// [API select] 부모 투자정보
-		CoinValuationResponse coinValuationResponse = tradeService.getCoinValuations(followerMemberId);
+		CoinValuationResponse coinValuationResponse = tradeService.getCoinValuations(request.memberId());
 
 		// 부모의 팔로우 투자금 총액
 		Long followingTotalFollowInvestment = getTotalFollowInvestment(followingMemberId);
