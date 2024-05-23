@@ -45,6 +45,7 @@ public class FollowTradeService {
                 .toList());
     }
 
+    @Transactional
     public FollowTrade getFollowTrade(Trade trade, Follow follow) {
         double volume;
         long orderCash;
@@ -79,7 +80,7 @@ public class FollowTradeService {
             double ratio = divide(trade.volume(), prevVolume, NORMAL_SCALE);
 
             FollowingCoin followerCoin = followingCoinRepository.findByFollowAndTicker(follow, trade.ticker())
-                    .orElseThrow(() -> new RuntimeException("잔액 부족"));
+                    .orElseThrow(() -> new RuntimeException("보유 코인이 없어서 팔로우 코인 판매를 할 수 없습니다."));
 
             volume = multiple(followerCoin.getVolume(), ratio, VOLUME_SCALE);
             orderCash = (long) multiple(trade.price(), volume, NORMAL_SCALE);
