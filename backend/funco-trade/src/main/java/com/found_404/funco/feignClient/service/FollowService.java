@@ -39,6 +39,7 @@ public class FollowService {
 
 	private void callFollowTradeByFutures(FutureTrade futureTrade) {
 		try {
+			log.info("[API POST] FOLLOW SERVER create follow futures trade");
 			followServiceClient.callFollowTradeByFutures(futureTrade);
 		} catch (FeignException e) {
 			log.error("{} create Follow Trade By futures error : {}", SERVER_NAME, e.getMessage());
@@ -48,6 +49,7 @@ public class FollowService {
 
 	private void callFollowTrade(List<FollowTradeRequest> followTradeRequests) {
 		try {
+			log.info("[API POST] FOLLOW SERVER create follow trade");
 			followServiceClient.createFollowTrade(followTradeRequests);
 		} catch (FeignException e) {
 			log.error("{} create Follow Trade error : {}", SERVER_NAME, e.getMessage());
