@@ -99,6 +99,8 @@ public class FollowService {
 				coinValuation -> new RatioPrice(divide(coinValuation.valuation(), followingAsset, NORMAL_SCALE),
 					coinValuation.price())));
 
+		log.info("부모 보유자산 : {}", followingAssetRatio);
+
 		// 팔로우 생성
 		Follow follow = Follow.builder()
 			.followingMemberId(followingMemberId)
@@ -128,15 +130,15 @@ public class FollowService {
 			followTrades.add(getFollowTrade(follow, newCoin));
 		});
 
-		// 엔티티 insert
-		followRepository.save(follow);
-		followingCoinRepository.saveAll(followingCoins);
-		followTradeRepository.saveAll(followTrades);
-
 		// 산 만큼 팔로우 현금 차감
 		follow.decreaseCash(followTrades.stream()
 			.map(FollowTrade::getOrderCash)
 			.reduce(0L, Long::sum));
+
+		// 엔티티 insert
+		followRepository.save(follow);
+		followingCoinRepository.saveAll(followingCoins);
+		followTradeRepository.saveAll(followTrades);
 
 		// [API update] 팔로워 자산 차감
 		memberService.updateMemberCash(followerMemberId, -investment);
