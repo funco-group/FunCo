@@ -26,7 +26,8 @@ public class KafkaProducerService {
     }
 
     public void sendHistory(Long memberId, Object object) {
-        CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(HISTORY, String.valueOf(memberId), object);
-        log.info("kafka [history] send {}에게 {}", memberId, object.toString());
+        kafkaTemplate.send(HISTORY, String.valueOf(memberId), object);
+        log.info("kafka produce [history] {} => member:{}", object.getClass().getSimpleName(), memberId);
+
     }
 }

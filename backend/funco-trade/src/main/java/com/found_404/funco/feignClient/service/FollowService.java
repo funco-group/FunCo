@@ -4,7 +4,6 @@ import com.found_404.funco.feignClient.client.FollowServiceClient;
 import com.found_404.funco.feignClient.dto.FollowTradeRequest;
 import com.found_404.funco.trade.domain.FutureTrade;
 import com.found_404.funco.trade.domain.Trade;
-import com.found_404.funco.trade.exception.TradeException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +11,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static com.found_404.funco.trade.exception.TradeErrorCode.FOLLOW_SERVER_ERROR;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,8 +39,9 @@ public class FollowService {
 			log.info("[API POST] FOLLOW SERVER create follow futures trade");
 			followServiceClient.callFollowTradeByFutures(futureTrade);
 		} catch (FeignException e) {
-			log.error("{} create Follow Trade By futures error : {}", SERVER_NAME, e.getMessage());
-			throw new TradeException(FOLLOW_SERVER_ERROR);
+			log.error("{} memberId:{} create Follow Trade By futures error : {}", SERVER_NAME,
+				futureTrade.getMemberId(), e.getMessage());
+			//throw new TradeException(FOLLOW_SERVER_ERROR);
 		}
 	}
 
@@ -52,8 +50,8 @@ public class FollowService {
 			log.info("[API POST] FOLLOW SERVER create follow trade");
 			followServiceClient.createFollowTrade(followTradeRequests);
 		} catch (FeignException e) {
-			log.error("{} create Follow Trade error : {}", SERVER_NAME, e.getMessage());
-			throw new TradeException(FOLLOW_SERVER_ERROR);
+			log.error("{} create Follow Trades error : {}", SERVER_NAME, e.getMessage());
+			//throw new TradeException(FOLLOW_SERVER_ERROR);
 		}
 	}
 }
