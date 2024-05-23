@@ -3,6 +3,7 @@ package com.found_404.funco.trade.domain.repository.impl;
 import static com.found_404.funco.trade.domain.QOpenTrade.*;
 import static com.querydsl.core.group.GroupBy.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,9 +37,15 @@ public class QueryDslOpenTradeRepositoryImpl implements QueryDslOpenTradeReposit
 
 	@Override
 	public Map<Long, Long> findAllMemberIdToOrderCash() {
-		return jpaQueryFactory
+		Map<Long, Long> map = jpaQueryFactory
 			.from(openTrade)
-			.transform(groupBy(openTrade.memberId).as(openTrade.orderCash.sum().coalesce(0L)));
+			.transform(groupBy(openTrade.memberId)
+				.as(openTrade.orderCash
+					.sum()
+					.coalesce(0L)));
+		map.remove(null);
+
+		return map;
 	}
 
 	private Predicate filterTicker(String ticker) {
