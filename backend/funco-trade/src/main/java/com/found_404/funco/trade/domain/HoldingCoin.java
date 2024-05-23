@@ -12,6 +12,8 @@ import com.found_404.funco.trade.exception.TradeException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +23,13 @@ import lombok.ToString;
 @Entity
 @Getter
 @ToString
+@Table(uniqueConstraints = {
+	@UniqueConstraint(
+		columnNames = {
+			"member_id", "ticker"
+		}
+	)
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HoldingCoin extends BaseEntity {
 
