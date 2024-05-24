@@ -23,7 +23,7 @@
 
 | <a href="https://github.com/Woonggss"><img src="https://github.com/Woonggss.png" width="120"/></a> | <a href="https://github.com/devjy39"><img src="https://github.com/devjy39.png" width="120"/></a> | <a href="https://github.com/sunju5402"><img src="https://github.com/sunju5402.png" width="120"/></a> | <a href="https://github.com/leetaggg"><img src="https://github.com/leetaggg.png" width="120"/></a> | <a href="https://github.com/sohy19"><img src="https://github.com/sohy19.png" width="120"/></a> | <a href="https://github.com/hot-ttu"><img src="https://github.com/hot-ttu.png" width="120"/></a> |
 |:--------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------:|
-|                         [박세웅 [팀장, BE, Infra]](https://github.com/Woonggss)                         |                           [소재열 [CTO, BE]](https://github.com/devjy39)                            |                               [이선주 [BE]](https://github.com/sunju5402)                               |                              [이태호 [BE]](https://github.com/leetaggg)                               |                             [엄소현 [FE]](https://github.com/sohy19)                              |                              [황주영 [FE]](https://github.com/hot-ttu)                              |
+|                         [박세웅 [팀장, BE]](https://github.com/Woonggss)                         |                           [소재열 [CTO, BE, INFRA]](https://github.com/devjy39)                            |                               [이선주 [BE]](https://github.com/sunju5402)                               |                              [이태호 [BE, INFRA]](https://github.com/leetaggg)                               |                             [엄소현 [FE]](https://github.com/sohy19)                              |                              [황주영 [FE]](https://github.com/hot-ttu)                              |
 
 
 ---
@@ -31,8 +31,8 @@
 <a name="deploy-url"></a>
 ## 🕊️ Deploy URL
 
-- ✅ WEB service URL : https://funco.co.kr
-- ✅ API URL : https://api.funco.co.kr
+- ✅ WEB service URL : ~~https://funco.co.kr~~
+- ✅ API URL : ~~https://api.funco.co.kr~~
 
 <br>
 
