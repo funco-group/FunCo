@@ -1,5 +1,17 @@
 <img src="https://github.com/leetaggg/leetaggg/assets/100212241/16216e7b-0695-4a38-bc11-75bb383a67d5" alt="funco-logo">
 
+<a name="introduction"></a>
+## 📢 Introduction
+
+### 서비스 소개
+- 가상화폐 모의투자 플랫폼 지향 웹 서비스 “FUNCO”
+- 실시간 가상화폐 시세로 다른 사람들과 함께 투자하며 즐기는 모의투자 서비스
+- 다른 사람에게 투자하는 **팔로윙 투자**
+- 짜릿한 100배 배율이 가능한 **선물 거래**
+- 모두와 함께 즐기고 경쟁하는 **랭킹 시스템**
+- 투자에 대해 소통하는 **인사이트 게시판**
+- 나의 투자 통계를 보고싶어? **투자내역 및 통계**
+
 ---
 
 ## 📚 Table of Contents
@@ -14,8 +26,6 @@
 - [SERVICE LAYOUT](#service-layout)
 - [FUNCTION](#function)
 - [CHALLENGES](#challenges)
-
-<br>
 
 ---
 <a name="team-member"></a>
@@ -43,20 +53,6 @@
 ### [화면 정의서](https://sohy.notion.site/UI-6dc26623f4554abcbeb9e6984fb4ced8?pvs=4)
 ### [프로젝트 문서 바로가기](https://sohy.notion.site/A404-Project-d3293be33e7d488f9637450b178cf211)
 
-<br>
-
----
-
-<a name="introduction"></a>
-## 📢 Introduction
-
-### 서비스 소개 한 줄
-- 가상화폐 모의 투자 서비스 FUNCO
-- **팔로윙 투자**, **선물 거래**, **랭킹 시스템**, **인사이트 게시판** 등 여러 특출난 기능이 존재하는 모의 투자 서비스입니다!
-
-
-<br>
-
 ---
 
 <a name="skills"></a>
@@ -77,14 +73,14 @@
 <a name="system-architecture"></a>
 ## 🌐 System Architecture (MSA)
 
-<img src="https://lab.ssafy.com/s10-final/S10P31A302/-/raw/949a1e34dd9a56fe80e2eb56064777da9d2fd269/docs/Architecture.png">
+<img src="https://raw.githubusercontent.com/funco-group/FunCo/readme/docs/Architecture.png">
 
 <br>
 
 <a name="erd"></a>
 ## 💾 ERD
 
-<img src="https://lab.ssafy.com/s10-final/S10P31A302/-/raw/readme/docs/ERD.png">
+<img src="https://raw.githubusercontent.com/funco-group/FunCo/readme/docs/ERD.png">
 
 <br>
 
@@ -123,6 +119,13 @@
 - [x] 관심 코인 추가, 조회, 삭제
 - [x] 보유 코인 조회
 
+### 🎯 선물 거래
+- [x] 선물 거래 레버리지(배율) 설정
+- [x] Long 거래
+- [x] Short 거래
+- [x] 자동 청산 및 정산 시스템
+- [x] 선물 거래 내역
+
 ### 🎯 투자내역
 
 - [x] 보유자산 목록 조회
@@ -140,9 +143,16 @@
 
 ### 🎯 랭킹
 
-- [x] 정각 기준 30분 마다 랭킹 업데이트
+- [x] 정각 기준 1분 마다 랭킹 업데이트
 - [x] 총 팔로워 금액에 따른 랭킹 조회
 - [x] 총 자산에 따른 랭킹 조회
+
+### 🎯 투자 인사이트 게시판
+- [x] 코인 별 투자 게시판
+- [x] 다양한 카테고리의 게시판 글쓰기 및 댓글
+
+### 🎯 내 포트폴리오 판매
+- [x] 내 투자내역 ( 포트폴리오 )을 비공개로 가격 설정하여 구독판매
 
 ### 🎯 회원
 
@@ -153,6 +163,10 @@
 - [x] 유저 투자 포트폴리오 조회 
 - [x] 닉네임 수정
 - [x] 한줄 소개 수정
+
+### 🎯 알림
+- [x] 실시간 알림 및 알림 히스토리 조회
+- [x] 투자 정산, 팔로우 정산, 선물 청산, 게시글 댓글, 답글 등 다양한 알림기능
 
 ### ⏰ Batch
 
@@ -177,7 +191,6 @@
 - 정렬 기능을 필요로 했기 때문에 레디스의 ZSet을 활용하여 정렬을 하였고 조회할 때마다 레디스에서 캐싱하여 보여주었습니다.
   - ZSet 연산은 O(log(n))으로 단순히 java의 timsort, Arrays.sort()의 평균 O(nlog(n))보다 훨씬 효율적입니다.
   - zrange의 시간복잡도는 O(log(n) + m(반환받는 멤버들의 개수))로 효율적으로 페이징 처리를 했습니다.
-
 
 ### 지정가 예약 거래
 - 서버에서 실시간으로 등록된 예약 거래가 처리되어야 했다.
