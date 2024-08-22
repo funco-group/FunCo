@@ -12,22 +12,17 @@
 - 투자에 대해 소통하는 **인사이트 게시판**
 - 나의 투자 통계를 보고싶어? **투자내역 및 통계**
 
+<a name="specification"></a>
+## 📝 History
+### [API 명세서](https://sohy.notion.site/API-fca64620f83a417eb177c5ced2de30aa?pvs=4) 
+### [기능 명세서](https://sohy.notion.site/80af001dca7b4de8aa21170ad5a61b27?pvs=4)
+### [화면 정의서](https://sohy.notion.site/UI-6dc26623f4554abcbeb9e6984fb4ced8?pvs=4)
+### [프로젝트 문서 바로가기](https://sohy.notion.site/A404-Project-d3293be33e7d488f9637450b178cf211)
+
+- SPA React.js와 Monolithic Architecture Spring Boot Server로 1차 개발 완료 및 배포
+- ➡️  2차 개발 기간 동안 Next.js와 12개의 MSA Spring Boot Server로 전환 및 고도화 개발 및 배포
 ---
 
-## 📚 Table of Contents
-
-- [TEAM MEMBER](#team-member)
-- [DEPLOY URL](#deploy-url)
-- [SPECIFICATION](#specification)
-- [INTRODUCTION](#introduction)
-- [SKILLS](#skills)
-- [SYSTEM ARCHITECTURE](#system-architecture)
-- [ERD](#erd)
-- [SERVICE LAYOUT](#service-layout)
-- [FUNCTION](#function)
-- [CHALLENGES](#challenges)
-
----
 <a name="team-member"></a>
 ## 🤝 Team Member
 
@@ -44,27 +39,16 @@
 - ✅ WEB service URL : ~~https://funco.co.kr~~
 - ✅ API URL : ~~https://api.funco.co.kr~~
 
-<br>
-
-<a name="specification"></a>
-## 📝 Specification
-### [API 명세서](https://sohy.notion.site/API-fca64620f83a417eb177c5ced2de30aa?pvs=4) 
-### [기능 명세서](https://sohy.notion.site/80af001dca7b4de8aa21170ad5a61b27?pvs=4)
-### [화면 정의서](https://sohy.notion.site/UI-6dc26623f4554abcbeb9e6984fb4ced8?pvs=4)
-### [프로젝트 문서 바로가기](https://sohy.notion.site/A404-Project-d3293be33e7d488f9637450b178cf211)
-
----
-
 <a name="skills"></a>
 ## 🛠️ Skills
 
 
 |  분류   |                                                                                                                                                                                                                                                                                                                                                                                                                                          기술 스택                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |:-----:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-|  BE   | ![Java](https://img.shields.io/badge/JAVA-v17-3B66BC?style=for-the-badge&logoColor=white) ![SpringBoot](https://img.shields.io/badge/Spring%20Boot-v3.2.3-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white) ![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-v3.2.3-6DB33F?style=for-the-badge&logoColor=white) ![Spring Security](https://img.shields.io/badge/Spring%20Security-v6.2.2-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white) ![Spring Batch](https://img.shields.io/badge/Spring%20Batch-v5.1.1-6DB33F?style=for-the-badge&logoColor=white) ![QueryDsl](https://img.shields.io/badge/QueryDsl-v5.0.0-4680C2?style=for-the-badge&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logoColor=white) ![OAuth](https://img.shields.io/badge/OAuth-2.0-black?style=for-the-badge&logoColor=white) |
-|  FE   |                                                                                                     ![TypeScript](https://img.shields.io/badge/TypeScript-v5.2.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-v18.2.0-61DAFB?style=for-the-badge&logo=React&logoColor=white) ![Recoil](https://img.shields.io/badge/Recoil-v0.7.7-3578E5?style=for-the-badge&logo=Recoil&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-v5.1.6-646CFF?style=for-the-badge&logo=Vite&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-v20.10.0-339933?style=for-the-badge&logo=Node.js&logoColor=white) ![npm](https://img.shields.io/badge/npm-v10.3.0-CB3837?style=for-the-badge&logo=npm&logoColor=white)                                                                                                      |
-| Infra |                                          ![AmazonEC2](https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=AmazonEC2&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-v1.18.0-009639?style=for-the-badge&logo=Nginx&logoColor=white) ![Ubuntu](https://img.shields.io/badge/Ubuntu-v20.04.6-E95420?style=for-the-badge&logo=Ubuntu&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-v25.04.6-2496ED?style=for-the-badge&logo=Docker&logoColor=white) ![Jenkins](https://img.shields.io/badge/Jenkins-v2.449-D24939?style=for-the-badge&logo=Jenkins&logoColor=white) ![MariaDB](https://img.shields.io/badge/MariaDB-v11.3.2-003545?style=for-the-badge&logo=MariaDB&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-v7.2.4-DC382D?style=for-the-badge&logo=Redis&logoColor=white)                                          |
-| 협업도구  |                                                                                                                                                                               ![GitLab](https://img.shields.io/badge/GitLab-FC6D26?style=for-the-badge&logo=GitLab&logoColor=white) ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white) ![Mattermost](https://img.shields.io/badge/Mattermost-0058CC?style=for-the-badge&logo=Mattermost&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white) ![Gather](https://img.shields.io/badge/Gather-2196F3?style=for-the-badge&logoColor=white)                                                                                                                                                                                |
+|  BE   | ![Java](https://img.shields.io/badge/JAVA-v17-3B66BC?style=for-the-badge&logoColor=white) ![SpringBoot](https://img.shields.io/badge/Spring%20Boot-v3.2.3-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white) ![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-v3.2.3-6DB33F?style=for-the-badge&logoColor=white) ![Spring Security](https://img.shields.io/badge/Spring%20Security-v6.2.2-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white) ![Spring Batch](https://img.shields.io/badge/Spring%20Batch-v5.1.1-6DB33F?style=for-the-badge&logoColor=white) ![QueryDsl](https://img.shields.io/badge/QueryDsl-v5.0.0-4680C2?style=for-the-badge&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logoColor=white) ![OAuth](https://img.shields.io/badge/OAuth-2.0-black?style=for-the-badge&logoColor=white) ![](https://img.shields.io/badge/SpringCloud-6DB33F?style=for-the-badge&logo&Color=white) ![](https://img.shields.io/badge/NetflixEureka-E50914?style=for-the-badge&logo=netflix&Color=white)|
+|  FE   |                                                                                                     ![TypeScript](https://img.shields.io/badge/TypeScript-v5.2.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-v18.2.0-61DAFB?style=for-the-badge&logo=React&logoColor=white) ![Recoil](https://img.shields.io/badge/Recoil-v0.7.7-3578E5?style=for-the-badge&logo=Recoil&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-v5.1.6-646CFF?style=for-the-badge&logo=Vite&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-v20.10.0-339933?style=for-the-badge&logo=Node.js&logoColor=white) ![npm](https://img.shields.io/badge/npm-v10.3.0-CB3837?style=for-the-badge&logo=npm&logoColor=white) ![](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=fff&style=for-the-badge)                                                                                                      |
+| Infra |                                          ![AmazonEC2](https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=AmazonEC2&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-v1.18.0-009639?style=for-the-badge&logo=Nginx&logoColor=white) ![Ubuntu](https://img.shields.io/badge/Ubuntu-v20.04.6-E95420?style=for-the-badge&logo=Ubuntu&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-v25.04.6-2496ED?style=for-the-badge&logo=Docker&logoColor=white) ![Jenkins](https://img.shields.io/badge/Jenkins-v2.449-D24939?style=for-the-badge&logo=Jenkins&logoColor=white) ![MariaDB](https://img.shields.io/badge/MariaDB-v11.3.2-003545?style=for-the-badge&logo=MariaDB&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-v7.2.4-DC382D?style=for-the-badge&logo=Redis&logoColor=white) ![Portainer](https://camo.githubusercontent.com/8eddbdf34b50c001dc97a4cf50bb2cce4fbdecf6e9c604bfba01e0fa1f9ef1e8/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f506f727461696e65722d3133424546393f7374796c653d666f722d7468652d6261646765266c6f676f3d506f727461696e6572266c6f676f436f6c6f723d7768697465) ![](https://camo.githubusercontent.com/500fb1e4a45615575787c960877675c500bfd0cba6a395bf6adfa84c8964c745/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f47726166616e612d4634363830303f7374796c653d666f722d7468652d6261646765266c6f676f3d67726166616e61266c6f676f436f6c6f723d7768697465) ![](https://camo.githubusercontent.com/05ed3d87a846f86603cb999bb6a27c68ab188dc129619504efa429bc43fce500/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f70726f6d6574686575732d4536353232433f7374796c653d666f722d7468652d6261646765266c6f676f3d70726f6d657468657573266c6f676f436f6c6f723d7768697465) ![](https://img.shields.io/badge/kafka-231F20?style=for-the-badge&logo=apachekafka&Color=white) |
+| 협업도구  |                                                                                                                                                                               ![GitLab](https://img.shields.io/badge/GitLab-FC6D26?style=for-the-badge&logo=GitLab&logoColor=white) ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white) ![Mattermost](https://img.shields.io/badge/Mattermost-0058CC?style=for-the-badge&logo=Mattermost&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white) ![Gather](https://img.shields.io/badge/Gather-2196F3?style=for-the-badge&logo&Color=white)                                                                                                                                                                                |
 
 <br>
 
@@ -207,3 +191,11 @@
 - 가상화폐 거래 사이트 특성상 무수히 많은 거래 내역이 저장 될 것이므로 Cursor Pagination을 사용하여 조회 성능을 최적화 하였습니다.
 - 이러한 방식은 Batch의 ItemReader에도 적용하였습니다.
 - 전날의 모든 거래 내역으로 일별 통계를 생성하는 Job에서 QueryDslNoOffsetItemReader를 사용하여  Offset 없이 Chunk 단위로 데이터를 읽어 프로세싱합니다.
+
+### 고민한 문제들 등등 ( 자세한건 노션 )
+- java 우선순위 큐 동시성문제 (https://sohy.notion.site/632d97099fb94a07a38c62183518b75e)
+- jwt 인증 로직 고민 (https://www.notion.so/sohy/3f5cdc34f3ee4656ac4726f9b09bff69)
+- architecture 개선 고민(https://www.notion.so/sohy/Architecture-75d01b54d0d84e0fb188e85078db3fe4)
+- docker-compose 고민(https://www.notion.so/sohy/docker-compose-a86e09b85ea64963b21ea9dddb95cd62)
+- message queue 뭐 쓸지 고민(https://www.notion.so/sohy/RabbitMQ-vs-Kafka-c2a8d8ecee614a1993b141381d12ec16)
+- cloudflare 속도 문제 (https://www.notion.so/sohy/cloudflare-dns-91d5f7e242b24084a75bcb55cf81f2fd)
