@@ -1,23 +1,28 @@
 <img src="https://github.com/leetaggg/leetaggg/assets/100212241/16216e7b-0695-4a38-bc11-75bb383a67d5" alt="funco-logo">
 
+<a name="introduction"></a>
+## 📢 Introduction
+
+### 서비스 소개
+- 가상화폐 모의투자 플랫폼 지향 웹 서비스 “FUNCO” (ssafy 우수 프로젝트 1등 수상)
+- 실시간 가상화폐 시세로 다른 사람들과 함께 투자하며 즐기는 모의투자 서비스
+- 다른 사람에게 투자하는 **팔로윙 투자**
+- 짜릿한 100배 배율이 가능한 **선물 거래**
+- 모두와 함께 즐기고 경쟁하는 **랭킹 시스템**
+- 투자에 대해 소통하는 **인사이트 게시판**
+- 나의 투자 통계를 보고싶어? **투자내역 및 통계**
+
+<a name="specification"></a>
+## 📝 History
+### [API 명세서](https://sohy.notion.site/API-fca64620f83a417eb177c5ced2de30aa?pvs=4) 
+### [기능 명세서](https://sohy.notion.site/80af001dca7b4de8aa21170ad5a61b27?pvs=4)
+### [화면 정의서](https://sohy.notion.site/UI-6dc26623f4554abcbeb9e6984fb4ced8?pvs=4)
+### [프로젝트 문서 바로가기](https://sohy.notion.site/A404-Project-d3293be33e7d488f9637450b178cf211)
+
+- SPA React.js와 Monolithic Architecture Spring Boot Server로 1차 개발 완료 및 배포
+- ➡️  2차 개발 기간 동안 Next.js와 12개의 MSA Spring Boot Server로 전환 및 고도화 개발 및 배포
 ---
 
-## 📚 Table of Contents
-
-- [TEAM MEMBER](#team-member)
-- [DEPLOY URL](#deploy-url)
-- [SPECIFICATION](#specification)
-- [INTRODUCTION](#introduction)
-- [SKILLS](#skills)
-- [SYSTEM ARCHITECTURE](#system-architecture)
-- [ERD](#erd)
-- [SERVICE LAYOUT](#service-layout)
-- [FUNCTION](#function)
-- [CHALLENGES](#challenges)
-
-<br>
-
----
 <a name="team-member"></a>
 ## 🤝 Team Member
 
@@ -34,41 +39,16 @@
 - ✅ WEB service URL : ~~https://funco.co.kr~~
 - ✅ API URL : ~~https://api.funco.co.kr~~
 
-<br>
-
-<a name="specification"></a>
-## 📝 Specification
-### [API 명세서](https://sohy.notion.site/API-fca64620f83a417eb177c5ced2de30aa?pvs=4) 
-### [기능 명세서](https://sohy.notion.site/80af001dca7b4de8aa21170ad5a61b27?pvs=4)
-### [화면 정의서](https://sohy.notion.site/UI-6dc26623f4554abcbeb9e6984fb4ced8?pvs=4)
-### [프로젝트 문서 바로가기](https://sohy.notion.site/A404-Project-d3293be33e7d488f9637450b178cf211)
-
-<br>
-
----
-
-<a name="introduction"></a>
-## 📢 Introduction
-
-### 서비스 소개 한 줄
-- 가상화폐 모의 투자 서비스 FUNCO
-- **팔로윙 투자**, **선물 거래**, **랭킹 시스템**, **인사이트 게시판** 등 여러 특출난 기능이 존재하는 모의 투자 서비스입니다!
-
-
-<br>
-
----
-
 <a name="skills"></a>
 ## 🛠️ Skills
 
 
 |  분류   |                                                                                                                                                                                                                                                                                                                                                                                                                                          기술 스택                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |:-----:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-|  BE   | ![Java](https://img.shields.io/badge/JAVA-v17-3B66BC?style=for-the-badge&logoColor=white) ![SpringBoot](https://img.shields.io/badge/Spring%20Boot-v3.2.3-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white) ![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-v3.2.3-6DB33F?style=for-the-badge&logoColor=white) ![Spring Security](https://img.shields.io/badge/Spring%20Security-v6.2.2-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white) ![Spring Batch](https://img.shields.io/badge/Spring%20Batch-v5.1.1-6DB33F?style=for-the-badge&logoColor=white) ![QueryDsl](https://img.shields.io/badge/QueryDsl-v5.0.0-4680C2?style=for-the-badge&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logoColor=white) ![OAuth](https://img.shields.io/badge/OAuth-2.0-black?style=for-the-badge&logoColor=white) |
-|  FE   |                                                                                                     ![TypeScript](https://img.shields.io/badge/TypeScript-v5.2.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-v18.2.0-61DAFB?style=for-the-badge&logo=React&logoColor=white) ![Recoil](https://img.shields.io/badge/Recoil-v0.7.7-3578E5?style=for-the-badge&logo=Recoil&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-v5.1.6-646CFF?style=for-the-badge&logo=Vite&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-v20.10.0-339933?style=for-the-badge&logo=Node.js&logoColor=white) ![npm](https://img.shields.io/badge/npm-v10.3.0-CB3837?style=for-the-badge&logo=npm&logoColor=white)                                                                                                      |
-| Infra |                                          ![AmazonEC2](https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=AmazonEC2&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-v1.18.0-009639?style=for-the-badge&logo=Nginx&logoColor=white) ![Ubuntu](https://img.shields.io/badge/Ubuntu-v20.04.6-E95420?style=for-the-badge&logo=Ubuntu&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-v25.04.6-2496ED?style=for-the-badge&logo=Docker&logoColor=white) ![Jenkins](https://img.shields.io/badge/Jenkins-v2.449-D24939?style=for-the-badge&logo=Jenkins&logoColor=white) ![MariaDB](https://img.shields.io/badge/MariaDB-v11.3.2-003545?style=for-the-badge&logo=MariaDB&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-v7.2.4-DC382D?style=for-the-badge&logo=Redis&logoColor=white)                                          |
-| 협업도구  |                                                                                                                                                                               ![GitLab](https://img.shields.io/badge/GitLab-FC6D26?style=for-the-badge&logo=GitLab&logoColor=white) ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white) ![Mattermost](https://img.shields.io/badge/Mattermost-0058CC?style=for-the-badge&logo=Mattermost&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white) ![Gather](https://img.shields.io/badge/Gather-2196F3?style=for-the-badge&logoColor=white)                                                                                                                                                                                |
+|  BE   | ![Java](https://img.shields.io/badge/JAVA-v17-3B66BC?style=for-the-badge&logoColor=white) ![SpringBoot](https://img.shields.io/badge/Spring%20Boot-v3.2.3-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white) ![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-v3.2.3-6DB33F?style=for-the-badge&logoColor=white) ![Spring Security](https://img.shields.io/badge/Spring%20Security-v6.2.2-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white) ![Spring Batch](https://img.shields.io/badge/Spring%20Batch-v5.1.1-6DB33F?style=for-the-badge&logoColor=white) ![QueryDsl](https://img.shields.io/badge/QueryDsl-v5.0.0-4680C2?style=for-the-badge&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logoColor=white) ![OAuth](https://img.shields.io/badge/OAuth-2.0-black?style=for-the-badge&logoColor=white) ![](https://img.shields.io/badge/SpringCloud-6DB33F?style=for-the-badge&logo&Color=white) ![](https://img.shields.io/badge/NetflixEureka-E50914?style=for-the-badge&logo=netflix&Color=white)|
+|  FE   |                                                                                                     ![TypeScript](https://img.shields.io/badge/TypeScript-v5.2.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-v18.2.0-61DAFB?style=for-the-badge&logo=React&logoColor=white) ![Recoil](https://img.shields.io/badge/Recoil-v0.7.7-3578E5?style=for-the-badge&logo=Recoil&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-v5.1.6-646CFF?style=for-the-badge&logo=Vite&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-v20.10.0-339933?style=for-the-badge&logo=Node.js&logoColor=white) ![npm](https://img.shields.io/badge/npm-v10.3.0-CB3837?style=for-the-badge&logo=npm&logoColor=white) ![](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=fff&style=for-the-badge)                                                                                                      |
+| Infra |                                          ![AmazonEC2](https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=AmazonEC2&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-v1.18.0-009639?style=for-the-badge&logo=Nginx&logoColor=white) ![Ubuntu](https://img.shields.io/badge/Ubuntu-v20.04.6-E95420?style=for-the-badge&logo=Ubuntu&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-v25.04.6-2496ED?style=for-the-badge&logo=Docker&logoColor=white) ![Jenkins](https://img.shields.io/badge/Jenkins-v2.449-D24939?style=for-the-badge&logo=Jenkins&logoColor=white) ![MariaDB](https://img.shields.io/badge/MariaDB-v11.3.2-003545?style=for-the-badge&logo=MariaDB&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-v7.2.4-DC382D?style=for-the-badge&logo=Redis&logoColor=white) ![Portainer](https://camo.githubusercontent.com/8eddbdf34b50c001dc97a4cf50bb2cce4fbdecf6e9c604bfba01e0fa1f9ef1e8/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f506f727461696e65722d3133424546393f7374796c653d666f722d7468652d6261646765266c6f676f3d506f727461696e6572266c6f676f436f6c6f723d7768697465) ![](https://camo.githubusercontent.com/500fb1e4a45615575787c960877675c500bfd0cba6a395bf6adfa84c8964c745/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f47726166616e612d4634363830303f7374796c653d666f722d7468652d6261646765266c6f676f3d67726166616e61266c6f676f436f6c6f723d7768697465) ![](https://camo.githubusercontent.com/05ed3d87a846f86603cb999bb6a27c68ab188dc129619504efa429bc43fce500/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f70726f6d6574686575732d4536353232433f7374796c653d666f722d7468652d6261646765266c6f676f3d70726f6d657468657573266c6f676f436f6c6f723d7768697465) ![](https://img.shields.io/badge/kafka-231F20?style=for-the-badge&logo=apachekafka&Color=white) |
+| 협업도구  |                                                                                                                                                                               ![GitLab](https://img.shields.io/badge/GitLab-FC6D26?style=for-the-badge&logo=GitLab&logoColor=white) ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white) ![Mattermost](https://img.shields.io/badge/Mattermost-0058CC?style=for-the-badge&logo=Mattermost&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white) ![Gather](https://img.shields.io/badge/Gather-2196F3?style=for-the-badge&logo&Color=white)                                                                                                                                                                                |
 
 <br>
 
@@ -77,14 +57,14 @@
 <a name="system-architecture"></a>
 ## 🌐 System Architecture (MSA)
 
-<img src="https://lab.ssafy.com/s10-final/S10P31A302/-/raw/949a1e34dd9a56fe80e2eb56064777da9d2fd269/docs/Architecture.png">
+<img src="https://raw.githubusercontent.com/funco-group/FunCo/readme/docs/Architecture.png">
 
 <br>
 
 <a name="erd"></a>
 ## 💾 ERD
 
-<img src="https://lab.ssafy.com/s10-final/S10P31A302/-/raw/readme/docs/ERD.png">
+<img src="https://raw.githubusercontent.com/funco-group/FunCo/readme/docs/ERD.png">
 
 <br>
 
@@ -123,6 +103,13 @@
 - [x] 관심 코인 추가, 조회, 삭제
 - [x] 보유 코인 조회
 
+### 🎯 선물 거래
+- [x] 선물 거래 레버리지(배율) 설정
+- [x] Long 거래
+- [x] Short 거래
+- [x] 자동 청산 및 정산 시스템
+- [x] 선물 거래 내역
+
 ### 🎯 투자내역
 
 - [x] 보유자산 목록 조회
@@ -140,9 +127,16 @@
 
 ### 🎯 랭킹
 
-- [x] 정각 기준 30분 마다 랭킹 업데이트
+- [x] 정각 기준 1분 마다 랭킹 업데이트
 - [x] 총 팔로워 금액에 따른 랭킹 조회
 - [x] 총 자산에 따른 랭킹 조회
+
+### 🎯 투자 인사이트 게시판
+- [x] 코인 별 투자 게시판
+- [x] 다양한 카테고리의 게시판 글쓰기 및 댓글
+
+### 🎯 내 포트폴리오 판매
+- [x] 내 투자내역 ( 포트폴리오 )을 비공개로 가격 설정하여 구독판매
 
 ### 🎯 회원
 
@@ -153,6 +147,10 @@
 - [x] 유저 투자 포트폴리오 조회 
 - [x] 닉네임 수정
 - [x] 한줄 소개 수정
+
+### 🎯 알림
+- [x] 실시간 알림 및 알림 히스토리 조회
+- [x] 투자 정산, 팔로우 정산, 선물 청산, 게시글 댓글, 답글 등 다양한 알림기능
 
 ### ⏰ Batch
 
@@ -178,7 +176,6 @@
   - ZSet 연산은 O(log(n))으로 단순히 java의 timsort, Arrays.sort()의 평균 O(nlog(n))보다 훨씬 효율적입니다.
   - zrange의 시간복잡도는 O(log(n) + m(반환받는 멤버들의 개수))로 효율적으로 페이징 처리를 했습니다.
 
-
 ### 지정가 예약 거래
 - 서버에서 실시간으로 등록된 예약 거래가 처리되어야 했다.
 - 서버가 웹소켓 클라이언트가 돼서 실시간으로 메모리에 코인 시세들을 받아와 저장한다.
@@ -194,3 +191,11 @@
 - 가상화폐 거래 사이트 특성상 무수히 많은 거래 내역이 저장 될 것이므로 Cursor Pagination을 사용하여 조회 성능을 최적화 하였습니다.
 - 이러한 방식은 Batch의 ItemReader에도 적용하였습니다.
 - 전날의 모든 거래 내역으로 일별 통계를 생성하는 Job에서 QueryDslNoOffsetItemReader를 사용하여  Offset 없이 Chunk 단위로 데이터를 읽어 프로세싱합니다.
+
+### 고민한 문제들 등등 ( 자세한건 노션 )
+- java 우선순위 큐 동시성문제 (https://sohy.notion.site/632d97099fb94a07a38c62183518b75e)
+- jwt 인증 로직 고민 (https://www.notion.so/sohy/3f5cdc34f3ee4656ac4726f9b09bff69)
+- architecture 개선 고민(https://www.notion.so/sohy/Architecture-75d01b54d0d84e0fb188e85078db3fe4)
+- docker-compose 고민(https://www.notion.so/sohy/docker-compose-a86e09b85ea64963b21ea9dddb95cd62)
+- message queue 뭐 쓸지 고민(https://www.notion.so/sohy/RabbitMQ-vs-Kafka-c2a8d8ecee614a1993b141381d12ec16)
+- cloudflare 속도 문제 (https://www.notion.so/sohy/cloudflare-dns-91d5f7e242b24084a75bcb55cf81f2fd)
